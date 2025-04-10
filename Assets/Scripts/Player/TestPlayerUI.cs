@@ -36,7 +36,7 @@ public class TestPlayerUI : MonoBehaviour
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");
         //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
-        UpdateCooldownUI();
+        //UpdateCooldownUI();
     }
     //public void UpdateFlashIcon(float time)
     //{
@@ -51,11 +51,11 @@ public class TestPlayerUI : MonoBehaviour
     //    }
     //}
 
-    void UpdateCooldownUI()
-    {
-        float timeLeft = Mathf.Max(0, (_player.lastFlashTime + 5) - Time.time);
-        _flashIcon.fillAmount = timeLeft / 5;
-        _flashTimer.text = timeLeft > 0 ? timeLeft.ToString("F1") : "";
-    }
+    //void UpdateCooldownUI()
+    //{
+    //    float timeLeft = Mathf.Max(0, (_player.lastFlashTime + 5) - Time.time);
+    //    _flashIcon.fillAmount = timeLeft / 5;
+    //    _flashTimer.text = timeLeft > 0 ? timeLeft.ToString("F1") : "";
+    //}
 }
 

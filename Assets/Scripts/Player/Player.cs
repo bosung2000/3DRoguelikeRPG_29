@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 public interface BaseEntity
 {
     void MaxHPUp(float maxHP);
@@ -24,8 +25,9 @@ public class Player : MonoBehaviour, BaseEntity
 
     [SerializeField] FloatingJoystick _floatingJoystick;
     [SerializeField] Rigidbody _rb;
-    [SerializeField] private LayerMask obstacleLayer;
-    public float lastFlashTime = -Mathf.Infinity;
+    [SerializeField] LayerMask _obstacleLayer;
+    private bool _isTumbling = false;
+    private float _lastTumbleTime = -999f;
 
     private CurrencyManager currency;
     public CurrencyManager Currency => currency;
@@ -43,13 +45,12 @@ public class Player : MonoBehaviour, BaseEntity
     }
     public void DirectionCheck()
     {
-        Vector3 direction = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+        Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 keyboardInput = Vector3.forward * v + Vector3.right * h;
+        Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-        Vector3 inputDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : direction;
+        Vector3 inputDir = InputJoystick + InputKeyboard;
+
         if (inputDir.sqrMagnitude > 0.01f)
         {
             inputDir = inputDir.normalized;
@@ -142,31 +143,77 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
-        if (Time.time >= lastFlashTime + 5)
+        if (_isTumbling || Time.time < _lastTumbleTime + 5f)
         {
-            Vector3 direction = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-            Vector3 keyboardInput = Vector3.forward * v + Vector3.right * h;
-
-            Vector3 inputDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : direction;
-            direction = direction.normalized;
-
-            Vector3 targetPos = transform.position + direction * 5;
-
-            if (!Physics.Raycast(transform.position, direction, 5, obstacleLayer))
-            {
-                _rb.MovePosition(targetPos);
-                lastFlashTime = Time.time;
-                Debug.Log("Flash!");
-            }
+            Debug.Log("쿨타임입니다");
+            return;
         }
-        else
+
+        Vector3 joystickInput = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
+
+        if (dir.sqrMagnitude < 0.01f)
         {
-            Debug.Log("Flash blocked by obstacle.");
+            dir = transform.forward;
         }
+
+        dir = dir.normalized;
+
+        Vector3 target = transform.position + dir * 5;
+        StartCoroutine(TumbleRoutine(target));
+        _lastTumbleTime = Time.time;
     }
+    private IEnumerator TumbleRoutine(Vector3 target)
+    {
+        _isTumbling = true;
+
+        Vector3 start = transform.position;
+        float _elapsed = 0f;
+
+        while (_elapsed < 0.3f)
+        {
+            float t = _elapsed / 0.3f;
+            Vector3 newPos = Vector3.Lerp(start, target, t);
+            _rb.MovePosition(newPos);
+            _elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        //_rb.MovePosition(target);
+        _rb.velocity = Vector3.zero;
+        _isTumbling = false;
+    }
+
+    //public void Flash()
+    //{
+    //    if (Time.time >= lastFlashTime + 5)
+    //    {
+    //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+    //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+    //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
+
+    //        if (dashDir.sqrMagnitude < 0.01f)
+    //        {
+    //            dashDir = transform.forward; // 입력 없을 시 정면
+    //        }
+
+    //        dashDir = dashDir.normalized;
+
+    //        Vector3 origin = transform.position + Vector3.up * 0.5f;
+    //        Vector3 targetPos = transform.position + dashDir * 5;
+
+    //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
+    //        {
+    //            _rb.MovePosition(targetPos);
+    //            lastFlashTime = Time.time;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("대쉬가 쿨타임입니다.");
+    //    }
+    //}
 
     public bool IsDead()
     {

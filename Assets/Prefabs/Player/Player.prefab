@@ -124,15 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09cd96357c103d4c8dcaf09ecc2682a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHP: 100
-  _baseHP: 100
-  _maxMP: 50
-  _baseMP: 50
-  _baseSpeed: 5
-  _baseAttack: 10
-  _baseDMGReduction: 0
-  _baseCriticalChance: 5
-  _baseCriticalDamage: 1.25
 --- !u!114 &8767151604966709988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,8 +149,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc948a988d0fa0a44b0d2166085f0b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _floatingJoystick: {fileID: 0}
+  statData: {fileID: 11400000, guid: 0e73e0b7c364caa4e924062601b3b565, type: 2}
+  _playerStat: {fileID: 0}
+  _floatingJoystick: {fileID: 8170153791668043265, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
   _rb: {fileID: 3432494956512628455}
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 32
+  lastFlashTime: -Infinity
 --- !u!114 &5837421193361251359
 MonoBehaviour:
   m_ObjectHideFlags: 0
