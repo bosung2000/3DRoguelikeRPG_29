@@ -27,6 +27,14 @@ public class Test : MonoBehaviour
     {
         _player.SpeedUp(10);
     }
+    public void Damage()
+    {
+        _player.TakeDamage(10);
+    }
+    public void Hit()
+    {
+        _player.Hit();
+    }
     public void AttackUp()
     {
         _player.AttackUp(10);
@@ -44,8 +52,9 @@ public class Test : MonoBehaviour
     {
         _player.CriticalDamageUp(0.25f);
     }
-    public void Damage()
+    
+    public void Dash()
     {
-        _player.TakeDamage(40);
+        _player.Dash();
     }
 }
