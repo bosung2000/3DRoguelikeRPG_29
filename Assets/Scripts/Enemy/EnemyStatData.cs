@@ -18,8 +18,8 @@ public class EnemyStatData : ScriptableObject
     [SerializeField] private int _currency;
 
     [Header("전투 정보")]
-    [SerializeField] private float _attackRange;
-    [SerializeField] private float _attackCooldown;
+    [SerializeField] private float _attackRange;    //공격범위
+    [SerializeField] private float _attackCooldown; //공격 쿨
 
     public int Index => _index;
     public string EnemyName => _enemyName;

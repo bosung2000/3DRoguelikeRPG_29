@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
         Stat = GetComponent<EnemyStat>();
         CachePlayer();
     }
+
     /// <summary>
     /// 플레이어 찾기
     /// </summary>

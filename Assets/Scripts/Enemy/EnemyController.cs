@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
         //animator = GetComponent<Animator>();
     }
 
-    private void OnEnable()
+    private void Start()
     {
 
         if (_enemy == null)
