@@ -17,6 +17,24 @@ public enum PlayerStatType
     DashCooltime
 }
 
+public enum EnemyStatType
+{
+    MaxHP,
+    HP,
+    Speed,
+    Attack,
+    Currency,
+    AttackRange,
+    AttackCooldown
+}
+
+public enum EnemyType
+{
+    Normal,
+    Elite,
+    Boss
+}
+
 public interface IBaseStat<T>
 {
     float GetStatValue(T type);

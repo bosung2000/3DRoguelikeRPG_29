@@ -70,21 +70,18 @@ public class UIPopupInventory : PopupUI
 
         if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(item.equipType, out ItemData equipitem))
         {
+            var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
+            selectedItemPopup.EquipBtn_interactable_true();
             //선택한 아이템이 장착아이템과 같은가 ?
             if (equipitem.id == item.id)
             {
-                var equipitempopup_02 = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
-                if (equipitempopup_02 != null)
-                {
-                    equipitempopup_02.Show(GameManager.Instance.EquipMananger.EquipDicionary[equipitem.equipType]);
-                }
+                selectedItemPopup.EquipBtn_interactable_flase();
             }
-            var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
-            var equipitempopup = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
             if (selectedItemPopup != null)
             {
                 selectedItemPopup.Show(item);
             }
+            var equipitempopup = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
             if (equipitempopup != null)
             {
                 equipitempopup.Show(GameManager.Instance.EquipMananger.EquipDicionary[item.equipType]);
@@ -93,6 +90,8 @@ public class UIPopupInventory : PopupUI
         else
         {
             var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
+            selectedItemPopup.EquipBtn_interactable_true();
+            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
             //내가 장착한 아이템이 없을때 
             if (selectedItemPopup != null)
             {
