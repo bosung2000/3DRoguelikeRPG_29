@@ -579,8 +579,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 449826031921124830, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7835975912242621800}
   m_SourcePrefab: {fileID: 100100000, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
+--- !u!1 &7835975912242621799 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 449826031921124830, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
+  m_PrefabInstance: {fileID: 7835975912242621798}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7835975912242621800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7835975912242621799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f96df03cec7ba47a2dcbd5dabc141f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemImage: {fileID: 0}
+  itemNameText: {fileID: 0}
+  enhancementLevelText: {fileID: 0}
+  successRateText: {fileID: 0}
+  costText: {fileID: 0}
+  resultText: {fileID: 0}
+  enhanceButton: {fileID: 0}
+  enhancer: {fileID: 0}
+  player: {fileID: 2360628105991517155, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
