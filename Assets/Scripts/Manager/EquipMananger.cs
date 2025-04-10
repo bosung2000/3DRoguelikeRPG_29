@@ -19,20 +19,25 @@ public class EquipMananger : MonoBehaviour
         EquipDicionary = new Dictionary<EquipType, ItemData>();
     }
 
-    public void Equipitem(ItemData itemData)
+    public bool Equipitem(ItemData itemData)
     {
         // 장작된 아이템이 있는가 ?
         if (EquipDicionary.TryGetValue(itemData.equipType, out ItemData Equipeditemed))
         {
+            //같은 아이템을 장착할려고 하는것 막아야한다.
+            if (itemData.id == Equipeditemed.id)
+            {
+                return false;
+            }
             //장착된 아이템을 제거 
             UnEquipitem(Equipeditemed);
         }
-
         //장착 
         EquipDicionary.Add(itemData.equipType, itemData);
         // 능력치 더해주고 
         AddStats();
 
+        return true;
         // 장착 관련 이벤트를 발생
 
     }
@@ -56,7 +61,6 @@ public class EquipMananger : MonoBehaviour
         // 모든 장착된 아이템에서 스탯 보너스 계산
         foreach (var item in EquipDicionary.Values)
         {
-
             // 아이템의 모든 옵션을 순회
             foreach (var option in item.options)
             {
@@ -74,7 +78,6 @@ public class EquipMananger : MonoBehaviour
                 totalconditionTypes[statType] += value;
             }
         }
-
         playerStat.AddEquipmentBonus(totalconditionTypes);
 
     }
