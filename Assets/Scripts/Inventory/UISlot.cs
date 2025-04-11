@@ -66,4 +66,14 @@ public class UISlot : MonoBehaviour
         }
     }
 
+    internal void ClearSlot()
+    {
+        // 슬롯 데이터 초기화
+        SetSlotData(new SlotItemData());
+
+        // 또는 필요한 경우 직접 초기화
+        //iconImage.sprite = null;
+        //iconImage.enabled = false;
+        //amount.text = "";
+    }
 }

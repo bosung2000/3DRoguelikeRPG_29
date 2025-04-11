@@ -134,9 +134,9 @@ public class InventoryManager : MonoBehaviour
 
     }
     // UI에게 데이터를 전달
-    public void LinkUI(UIInventory uiInventory)
-    {
-        // 나머지는 데이터만 업데이트 
-        uiInventory.UpdateInventory(this);
-    }
+    //public void LinkUI(UIInventory uiInventory)
+    //{
+    //    // 나머지는 데이터만 업데이트 
+    //    uiInventory.UpdateInventory(this);
+    //}
 }

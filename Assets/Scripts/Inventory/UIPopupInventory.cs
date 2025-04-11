@@ -25,6 +25,7 @@ public class UIPopupInventory : PopupUI
     //각 class 요소들 
     private UIInventory uIInventory;
     private EquipMananger equipMananger;
+    private InventoryManager inventoryMananger;
 
     public enum InventoryTabType
     {
@@ -41,6 +42,10 @@ public class UIPopupInventory : PopupUI
 
         uIInventory = GetComponentInChildren<UIInventory>();
         equipMananger = GameManager.Instance.EquipMananger;
+        inventoryMananger =GameManager.Instance.InventoryManager;
+
+        uIInventory.UpdateInventory(inventoryMananger);
+
         // 탭 버튼 이벤트 등록
         if (TotalTabButton != null)
             TotalTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.All));
@@ -62,8 +67,7 @@ public class UIPopupInventory : PopupUI
         //초기화 작업
         base.OnEnable();
 
-        //InventoryManager 와 UIInventory 연결 
-        GameManager.Instance.InventoryManager.LinkUI(uIInventory);
+
 
         // 인벤토리가 활성화될 때마다 최신 정보로 업데이트
         RefreshInventory();
@@ -140,7 +144,7 @@ public class UIPopupInventory : PopupUI
         if (uIInventory == null) return;
 
         // 인벤토리에 필터링 정보 전달
-        //uIInventory.FilterByTabType(tabType);
+        uIInventory.FilterByTabType(tabType);
     }
 
     // 인벤토리 새로고침
