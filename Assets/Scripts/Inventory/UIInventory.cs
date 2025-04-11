@@ -56,6 +56,8 @@ public class UIInventory : MonoBehaviour
                 slots[i].SetSlotData(inventoryManager.slotItemDatas[i]);
             }
         }
+
+
     }
 
     /// <summary>
