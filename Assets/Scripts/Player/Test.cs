@@ -13,6 +13,7 @@ public class Test : MonoBehaviour
     public void Healing()
     {
         _player.Healing(40);
+        //최대체력비례
     }
 
     public void MaxMPUp()
@@ -43,7 +44,7 @@ public class Test : MonoBehaviour
 
     public void DMGReductionUp()
     {
-        _player.DMGReductionUp(0.1f);
+        _player.DMGReductionUp(10);
     }
     public void CriticalChanceUp()
     {
