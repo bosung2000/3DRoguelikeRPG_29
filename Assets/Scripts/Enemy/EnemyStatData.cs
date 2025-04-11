@@ -21,9 +21,6 @@ public class EnemyStatData : ScriptableObject
     [SerializeField] private float _attackRange;    //공격범위
     [SerializeField] private float _attackCooldown; //공격 쿨
 
-    [Header("탐지 정보")]
-    [SerializeField] private float _chaseRange; //탐지 범위
-
     public int Index => _index;
     public string EnemyName => _enemyName;
     public EnemyType EnemyType => _enemyType;
@@ -34,5 +31,4 @@ public class EnemyStatData : ScriptableObject
     public int Currency => _currency;
     public float AttackRange => _attackRange;
     public float AttackCooldown => _attackCooldown;
-    public float ChaseRange => _chaseRange;
 }

@@ -23,11 +23,12 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] private PlayerStatData statData;
     public PlayerStat _playerStat;
 
+    [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
     [SerializeField] Rigidbody _rb;
     [SerializeField] LayerMask _obstacleLayer;
     private bool _isTumbling = false;
-    private float _lastTumbleTime = -999f;
+    private float _lastTumbleTime = -100f;
 
     private CurrencyManager currency;
     public CurrencyManager Currency => currency;
@@ -37,7 +38,15 @@ public class Player : MonoBehaviour, BaseEntity
         _playerStat = GetComponent<PlayerStat>();
         currency = GetComponent<CurrencyManager>();
         // 골드 기본값 
-        currency.AddCurrency(CurrencyType.Gold, 1000);
+        if (currency != null)
+        {
+            if (currency.currencies == null || currency.currencies.Count == 0)
+            {
+                currency.init();  //딕셔너리 강제 초기화
+            }
+
+            currency.AddCurrency(CurrencyType.Gold, 9000);  //골드추가
+        }
     }
     private void Start()
     {
@@ -97,10 +106,6 @@ public class Player : MonoBehaviour, BaseEntity
     public void TakeDamage(int damage)
     {
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
-        float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-
-        damage = Mathf.RoundToInt(damage * (1 - damageReduction / 100));
-        damage = Mathf.Max(damage, 1);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
     }
     public void Hit()
@@ -109,7 +114,7 @@ public class Player : MonoBehaviour, BaseEntity
         float critChance = _playerStat.GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = _playerStat.GetStatValue(PlayerStatType.CriticalDamage);
 
-        bool isCrit = Random.Range(0f, 100f) < critChance;
+        bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage : baseAttack;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f); // 2.5f 범위 안의 적
@@ -147,13 +152,15 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
-        if (_isTumbling || Time.time < _lastTumbleTime + 5f)
+        float dashDistance = 5f;
+
+        if (_isTumbling || Time.time < _lastTumbleTime + _playerStat.GetStatValue(PlayerStatType.DashCooltime))
         {
             Debug.Log("쿨타임입니다");
             return;
         }
 
-        Vector3 joystickInput = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+        Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
         Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
@@ -164,9 +171,18 @@ public class Player : MonoBehaviour, BaseEntity
 
         dir = dir.normalized;
 
-        Vector3 target = transform.position + dir * 5;
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 target = transform.position + dir * dashDistance;
+
+        if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
+        {
+            float safeDist = hit.distance - 0.05f; // 끼임방지
+            target = transform.position + dir * safeDist;
+        }
+
         StartCoroutine(TumbleRoutine(target));
         _lastTumbleTime = Time.time;
+        dashCooldownUI.StartDashCooldown();
     }
     private IEnumerator TumbleRoutine(Vector3 target)
     {
@@ -174,22 +190,23 @@ public class Player : MonoBehaviour, BaseEntity
 
         Vector3 start = transform.position;
         float _elapsed = 0f;
+        float duration = 0.2f;
 
-        while (_elapsed < 0.3f)
+        while (_elapsed < duration)
         {
-            float t = _elapsed / 0.3f;
+            float t = _elapsed / duration;
             Vector3 newPos = Vector3.Lerp(start, target, t);
             _rb.MovePosition(newPos);
+
             _elapsed += Time.deltaTime;
             yield return null;
         }
 
-        //_rb.MovePosition(target);
+        _rb.MovePosition(target);
         _rb.velocity = Vector3.zero;
         _isTumbling = false;
     }
 
-    //스킬중 플래시넣을거면 사용할 코드
     //public void Flash()
     //{
     //    if (Time.time >= lastFlashTime + 5)
