@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UIPopupInventory : PopupUI
 {
@@ -16,6 +17,7 @@ public class UIPopupInventory : PopupUI
 
 
     // 탭 버튼들
+    [SerializeField] private Button TotalTabButton;
     [SerializeField] private Button equipmentTabButton;
     [SerializeField] private Button consumableTabButton;
     [SerializeField] private Button materialTabButton;
@@ -23,6 +25,14 @@ public class UIPopupInventory : PopupUI
     //각 class 요소들 
     private UIInventory uIInventory;
     private EquipMananger equipMananger;
+
+    public enum InventoryTabType
+    {
+        All,        // 전체
+        Equipment,  // 장비
+        Consumable, // 소비
+        Material    // 재료
+    }
 
     protected virtual void Awake()
     {
@@ -32,14 +42,17 @@ public class UIPopupInventory : PopupUI
         uIInventory = GetComponentInChildren<UIInventory>();
         equipMananger = GameManager.Instance.EquipMananger;
         // 탭 버튼 이벤트 등록
+        if (TotalTabButton != null)
+            TotalTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.All));
+
         if (equipmentTabButton != null)
-            equipmentTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Equipment));
+            equipmentTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Equipment));
 
         if (consumableTabButton != null)
-            consumableTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Consumable));
+            consumableTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Consumable));
 
         if (materialTabButton != null)
-            materialTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Material));
+            materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
 
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
     }
@@ -56,7 +69,7 @@ public class UIPopupInventory : PopupUI
         RefreshInventory();
 
         // 기본 탭 선택
-        OnTabChanged(ItemType.Equipment);
+        OnTabChanged(InventoryTabType.All);
     }
 
     protected override void Init()
@@ -106,18 +119,28 @@ public class UIPopupInventory : PopupUI
     }
 
     // 탭 변경 처리
-    private void OnTabChanged(ItemType type)
+    private void OnTabChanged(InventoryTabType tabType)
     {
         // 선택된 탭에 따라 아이템 필터링 및 UI 업데이트
-        Debug.Log($"탭 변경: {type}");
+        Debug.Log($"탭 변경: {tabType}");
 
         // 버튼 시각적 상태 업데이트
-        equipmentTabButton.interactable = (type != ItemType.Equipment);
-        consumableTabButton.interactable = (type != ItemType.Consumable);
-        materialTabButton.interactable = (type != ItemType.Material);
+        TotalTabButton.interactable = (tabType != InventoryTabType.All);
+        equipmentTabButton.interactable = (tabType != InventoryTabType.Equipment);
+        consumableTabButton.interactable = (tabType != InventoryTabType.Consumable);
+        materialTabButton.interactable = (tabType != InventoryTabType.Material);
 
         // 아이템 필터링 및 표시
-        // FilterItems(type);
+        FilterItems(tabType);
+    }
+
+    // 아이템 필터링 메서드 추가
+    private void FilterItems(InventoryTabType tabType)
+    {
+        if (uIInventory == null) return;
+
+        // 인벤토리에 필터링 정보 전달
+        //uIInventory.FilterByTabType(tabType);
     }
 
     // 인벤토리 새로고침
