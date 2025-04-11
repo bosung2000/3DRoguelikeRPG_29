@@ -97,6 +97,10 @@ public class Player : MonoBehaviour, BaseEntity
     public void TakeDamage(int damage)
     {
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
+        float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
+
+        damage = Mathf.RoundToInt(damage * (1 - damageReduction / 100));
+        damage = Mathf.Max(damage, 1);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
     }
     public void Hit()
@@ -105,7 +109,7 @@ public class Player : MonoBehaviour, BaseEntity
         float critChance = _playerStat.GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = _playerStat.GetStatValue(PlayerStatType.CriticalDamage);
 
-        bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
+        bool isCrit = Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage : baseAttack;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f); // 2.5f 범위 안의 적
@@ -185,6 +189,7 @@ public class Player : MonoBehaviour, BaseEntity
         _isTumbling = false;
     }
 
+    //스킬중 플래시넣을거면 사용할 코드
     //public void Flash()
     //{
     //    if (Time.time >= lastFlashTime + 5)
