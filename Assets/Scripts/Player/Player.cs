@@ -37,7 +37,15 @@ public class Player : MonoBehaviour, BaseEntity
         _playerStat = GetComponent<PlayerStat>();
         currency = GetComponent<CurrencyManager>();
         // 골드 기본값 
-        currency.AddCurrency(CurrencyType.Gold, 1000);
+        if (currency != null)
+        {
+            if (currency.currencies == null || currency.currencies.Count == 0)
+            {
+                currency.init();  //딕셔너리 강제 초기화
+            }
+
+            currency.AddCurrency(CurrencyType.Gold, 9000);  //골드추가
+        }
     }
     private void Start()
     {
