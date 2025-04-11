@@ -25,17 +25,24 @@ public class UISelectedItem : PopupUI
         UIManager.Instance.RegisterUI(this);
         btn_equip.onClick.AddListener(OnEquipButtonClicked);
         btn_Release.onClick.AddListener(OnReleaseButtonClicked);
+        Initialize();
     }
 
     public void Initialize()
     {
         // 초기화 로직
+        
+    }
+
+    private void OnEnable()
+    {
+        btn_equip.interactable= true;
     }
 
     public void Show(ItemData item)
     {
         if (item == null) return;
-        
+
         currentItem = item;
         base.Show();
         UpdateUI();
@@ -69,11 +76,21 @@ public class UISelectedItem : PopupUI
     {
         if (currentItem != null)
         {
-            // 직접 장착 로직 구현
-            GameManager.Instance.EquipMananger.Eqipitem(currentItem);
-            Debug.Log($"{currentItem.itemName} 장착");
+            //장착된 아이템은 다시장착하지 못하게 해야한다.
+            //1.equipitem의 데이터를 안넣기 
+            //2.장착 버튼을 비활성화 해주는것 
+
+            //false 반환은 같은 아이템을 선택했다는것  >데이터를 안넣기 
+            GameManager.Instance.EquipMananger.Equipitem(currentItem);
+            
             // 팝업 닫기
+            Debug.Log($"{currentItem.itemName} 장착");
             UIManager.Instance.ClosePopupUI(this);
+            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+        }
+        else
+        {
+            Debug.Log("선택된 아이템의 정보가 없습니다.");
         }
     }
 
@@ -81,11 +98,12 @@ public class UISelectedItem : PopupUI
     {
         if (currentItem != null)
         {
-            // 직접 해제 로직 구현
+            // 장착 list에서 제거 
             GameManager.Instance.EquipMananger.UnEquipitem(currentItem);
             Debug.Log($"{currentItem.itemName} 해제");
             // 팝업 닫기
             UIManager.Instance.ClosePopupUI(this);
+            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
         }
     }
 
@@ -93,5 +111,14 @@ public class UISelectedItem : PopupUI
     {
         base.Clear();
         currentItem = null;
+    }
+
+    public void EquipBtn_interactable_flase()
+    {
+        btn_equip.interactable = false;
+    }
+    public void EquipBtn_interactable_true()
+    {
+        btn_equip.interactable = true;
     }
 }
