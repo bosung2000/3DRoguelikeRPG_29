@@ -14,7 +14,7 @@ public class UIPopupInventory : PopupUI
     [SerializeField] private Image slotEquipCoat;
     [SerializeField] private Image slotEquipShoes;
     [SerializeField] private Image slotEquipGlove;
-
+    [SerializeField] private Button AddSlotBtn;
 
     // 탭 버튼들
     [SerializeField] private Button TotalTabButton;
@@ -46,6 +46,7 @@ public class UIPopupInventory : PopupUI
 
         uIInventory.UpdateInventory(inventoryMananger);
 
+
         // 탭 버튼 이벤트 등록
         if (TotalTabButton != null)
             TotalTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.All));
@@ -59,7 +60,14 @@ public class UIPopupInventory : PopupUI
         if (materialTabButton != null)
             materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
 
+        if (AddSlotBtn !=null)
+        {
+            AddSlotBtn.onClick.AddListener(() =>OnAddSlot());
+        }
+
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
+        inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
+        inventoryMananger.OnSlotChanged +=HandleSlotChanged;
     }
 
     protected override void OnEnable()
@@ -256,4 +264,13 @@ public class UIPopupInventory : PopupUI
         }
     }
 
+    private void OnAddSlot()
+    {
+        UIManager.Instance.ShowPopupUI<UIItemSlotAdd>();
+    }
+
+    private void HandleSlotChanged()
+    {
+        OnTabChanged(InventoryTabType.All);
+    }
 }

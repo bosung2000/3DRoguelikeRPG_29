@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIInventory : MonoBehaviour
 {
     public List<UISlot> slots;
-    public int MaxSlots = 12;
+    //public int MaxSlots = 12;
     [SerializeField] private UISlot uiSlotPrefab;
     [SerializeField] private Transform SlotParent;
 
@@ -16,22 +16,51 @@ public class UIInventory : MonoBehaviour
     private void Awake()
     {
         uiPopupInventory = gameObject.GetComponentInParent<UIPopupInventory>();
-    }
 
+    }
 
     // 초기화 (한 번만 실행)
     public void InitSlots()
     {
         if (!isInitialized)
         {
-            slots = new List<UISlot>();
-            for (int i = 0; i < MaxSlots; i++)
-            {
-                UISlot slotobj = Instantiate(uiSlotPrefab, SlotParent);
-                slots.Add(slotobj);
-                slotobj.OnItemClicked += HandleItemOneClick;
-            }
+            InitSlotShow();
             isInitialized = true;
+        }
+    }
+
+
+    private void RemoveSlots()
+    {
+        {
+            // 모든 슬롯의 이벤트 구독 해제
+            foreach (var slot in slots)
+            {
+                if (slot != null)
+                {
+                    slot.OnItemClicked -= HandleItemOneClick;
+                }
+            }
+
+            // 모든 슬롯 오브젝트 파괴
+            foreach (var slot in slots)
+            {
+                if (slot != null)
+                {
+                    Destroy(slot.gameObject);
+                }
+            }
+        }
+    }
+    public void InitSlotShow()
+    {
+        RemoveSlots();
+        slots = new List<UISlot>();
+        for (int i = 0; i < inventoryManager.ReturnTotalSlotCount(); i++)
+        {
+            UISlot slotobj = Instantiate(uiSlotPrefab, SlotParent);
+            slots.Add(slotobj);
+            slotobj.OnItemClicked += HandleItemOneClick;
         }
     }
 
@@ -140,14 +169,7 @@ public class UIInventory : MonoBehaviour
         DisplayFilteredItems(filteredItems);
     }
 
-    private void ResetSlots()
-    {
-        // 모든 슬롯 비우기
-        foreach (var slot in slots)
-        {
-            slot.ClearSlot();
-        }
-    }
+
 
     private void DisplayFilteredItems(List<SlotItemData> filteredItems)
     {
@@ -165,6 +187,14 @@ public class UIInventory : MonoBehaviour
                 slots[slotIndex].SetSlotData(filteredItems[i]);
                 slotIndex++;
             }
+        }
+    }
+    private void ResetSlots()
+    {
+        // 모든 슬롯 비우기
+        foreach (var slot in slots)
+        {
+            slot.ClearSlot();
         }
     }
 }
