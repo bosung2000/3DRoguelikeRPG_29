@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class EquipMananger : MonoBehaviour
 {
     public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
 
+    public event Action<EquipType,ItemData,bool> OnEquipedChanged;
 
     private void Start()
     {
@@ -36,9 +38,9 @@ public class EquipMananger : MonoBehaviour
         EquipDicionary.Add(itemData.equipType, itemData);
         // 능력치 더해주고 
         AddStats();
-
-        return true;
         // 장착 관련 이벤트를 발생
+        OnEquipedChange(itemData.equipType,itemData,true);
+        return true;
 
     }
     public void UnEquipitem(ItemData itemData)
@@ -48,6 +50,7 @@ public class EquipMananger : MonoBehaviour
             EquipDicionary.Remove(eqipeditemed.equipType);
         }
         AddStats();
+        OnEquipedChange(itemData.equipType,itemData,false);
     }
     private void AddStats()
     {
@@ -106,5 +109,10 @@ public class EquipMananger : MonoBehaviour
                 Debug.LogWarning($"Unsupported ConditionType: {conditionType}");
                 return PlayerStatType.MaxHP;  // 기본값 반환
         }
+    }
+
+    private void OnEquipedChange(EquipType equipType,ItemData itemData,bool AddorRemove)
+    {
+        OnEquipedChanged?.Invoke(equipType,itemData,AddorRemove);
     }
 }

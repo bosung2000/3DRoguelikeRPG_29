@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ public class UIPopupInventory : PopupUI
 
     //각 class 요소들 
     private UIInventory uIInventory;
+    private EquipMananger equipMananger;
 
     protected virtual void Awake()
     {
@@ -28,6 +30,7 @@ public class UIPopupInventory : PopupUI
         UIManager.Instance.RegisterUI(this);
 
         uIInventory = GetComponentInChildren<UIInventory>();
+        equipMananger = GameManager.Instance.EquipMananger;
         // 탭 버튼 이벤트 등록
         if (equipmentTabButton != null)
             equipmentTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Equipment));
@@ -37,6 +40,8 @@ public class UIPopupInventory : PopupUI
 
         if (materialTabButton != null)
             materialTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Material));
+
+        GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
     }
 
     protected override void OnEnable()
@@ -125,6 +130,7 @@ public class UIPopupInventory : PopupUI
 
         // 장비 슬롯 업데이트
         // UpdateEquipmentSlots();
+        HandleAllEquipmentReset();
     }
 
     // 오버라이드: 닫기 버튼 클릭 처리
@@ -142,4 +148,85 @@ public class UIPopupInventory : PopupUI
         base.Clear();
 
     }
+
+    /// <summary>
+    /// 특정 슬롯 1개만 업데이트 해주기  / Add =true / Remove =flase
+    /// </summary>
+    /// <param name="equipType"></param>
+    /// <param name="itemData"></param>
+    private void HandleSingleItemChanged(EquipType equipType, ItemData itemData, bool AddorRemove)
+    {
+        if (AddorRemove == true)
+        {
+            switch (equipType)
+            {
+                case EquipType.Weapon:
+                    slotEquipWeapon.sprite = itemData.Icon;
+                    break;
+                case EquipType.Coat:
+                    slotEquipCoat.sprite = itemData.Icon;
+                    break;
+                case EquipType.Shoes:
+                    slotEquipShoes.sprite = itemData.Icon;
+                    break;
+                case EquipType.Glove:
+                    slotEquipGlove.sprite = itemData.Icon;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            switch (equipType)
+            {
+                case EquipType.Weapon:
+                    slotEquipWeapon.sprite = null;
+                    break;
+                case EquipType.Coat:
+                    slotEquipCoat.sprite = null;
+                    break;
+                case EquipType.Shoes:
+                    slotEquipShoes.sprite = null;
+                    break;
+                case EquipType.Glove:
+                    slotEquipGlove.sprite = null;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    /// <summary>
+    /// 전체 아이템 슬롯 업데이트 /처음에 아이템 초기화를 할때 해야겠지 ?
+    /// </summary>
+    private void HandleAllEquipmentReset()
+    {
+        if (equipMananger !=null)
+        {
+            foreach (var item in equipMananger.EquipDicionary.Values)
+            {
+                switch (item.equipType)
+                {
+                    case EquipType.None:
+                        break;
+                    case EquipType.Weapon:
+                        slotEquipWeapon.sprite = item.Icon;
+                        break;
+                    case EquipType.Coat:
+                        slotEquipCoat.sprite = item.Icon;
+                        break;
+                    case EquipType.Shoes:
+                        slotEquipShoes.sprite = item.Icon;
+                        break;
+                    case EquipType.Glove:
+                        slotEquipGlove.sprite = item.Icon;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
 }
