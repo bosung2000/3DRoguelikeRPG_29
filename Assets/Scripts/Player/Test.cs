@@ -42,7 +42,7 @@ public class Test : MonoBehaviour
 
     public void DMGReductionUp()
     {
-        _player.DMGReductionUp(0.1f);
+        _player.DMGReductionUp(10f);
     }
     public void CriticalChanceUp()
     {
