@@ -18,8 +18,9 @@ public class TestPlayerUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI _dmgReductionText;
     [SerializeField] TextMeshProUGUI _criticalChanceText;
     [SerializeField] TextMeshProUGUI _criticalDamageText;
-    [SerializeField] Image _flashIcon;
-    [SerializeField] TextMeshProUGUI _flashTimer;
+
+    [SerializeField] TextMeshProUGUI _cooldownText;
+    private Coroutine _cooldownRoutine;
 
     private void Start()
     {
@@ -38,24 +39,30 @@ public class TestPlayerUI : MonoBehaviour
         //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
         //UpdateCooldownUI();
     }
-    //public void UpdateFlashIcon(float time)
-    //{
-    //    if (time > 0)
-    //    {
-    //        _flashIcon.gameObject.SetActive(true);
-    //        _flashTimer.text = time.ToString("F1");
-    //    }
-    //    else
-    //    {
-    //        _flashIcon.gameObject.SetActive(false);
-    //    }
-    //}
 
-    //void UpdateCooldownUI()
-    //{
-    //    float timeLeft = Mathf.Max(0, (_player.lastFlashTime + 5) - Time.time);
-    //    _flashIcon.fillAmount = timeLeft / 5;
-    //    _flashTimer.text = timeLeft > 0 ? timeLeft.ToString("F1") : "";
-    //}
+    public void StartDashCooldown()
+    {
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
+
+        if (_cooldownRoutine != null)
+        { 
+            StopCoroutine(_cooldownRoutine); 
+        }
+
+        _cooldownRoutine = StartCoroutine(ShowCooldownRoutine(dashCooldown));
+    }
+    private IEnumerator ShowCooldownRoutine(float total)
+    {
+        float remaining = total;
+
+        while (remaining > 0)
+        {
+            _cooldownText.text = $"{remaining:F1}";
+            remaining -= Time.deltaTime;
+            yield return null;
+        }
+
+        _cooldownText.text = "Dash";
+    }
 }
 

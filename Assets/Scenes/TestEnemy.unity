@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 351fc4e00b53eba4cbd127adc6189905, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &330497563
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,38 +224,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &693481366 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4661205358422543490, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
-  m_PrefabInstance: {fileID: 1007062600}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &693481375
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693481366}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &794512377
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +241,7 @@ GameObject:
   - component: {fileID: 794512380}
   - component: {fileID: 794512379}
   - component: {fileID: 794512378}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -355,7 +328,7 @@ Transform:
   m_GameObject: {fileID: 794512377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0.5, z: 33}
+  m_LocalPosition: {x: -1, y: 0.5, z: 11.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -416,10 +389,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4661205358422543490, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 693481375}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
 --- !u!1 &1312659532
 GameObject:
@@ -506,13 +476,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1312659532}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.510843, y: 0, z: 0, w: 0.8596741}
-  m_LocalPosition: {x: 0, y: 20.38, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 61.44, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1552593965
 GameObject:
   m_ObjectHideFlags: 0
