@@ -17,14 +17,13 @@ public class InventoryManager : MonoBehaviour
 
     public event Action OnSlotChanged;
 
-    private void Start()
+    private void Awake()
     {
-        //인베토리 관련 초기화 
         InitSlot();
-
         playerManager = GameManager.Instance.PlayerManager;
         OnSlotChanged += AddSlotCostIncrease;
     }
+
 
 
     public void InitSlot()

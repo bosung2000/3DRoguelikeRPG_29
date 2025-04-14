@@ -13,14 +13,17 @@ public class UIEnhancementInventory : MonoBehaviour
     private UIPopupInventory uiPopupInventory;
     private bool isInitialized = false;
 
+    private void Start()
+    {
+        UpdateInventory();
+        FilterByTabType(UIPopupInventory.InventoryTabType.Equipment);
+    }
 
 
     private void Awake()
     {
         uiPopupInventory = gameObject.GetComponentInParent<UIPopupInventory>();
         inventoryManager = GameManager.Instance.InventoryManager;
-        UpdateInventory();
-
     }
 
     // 초기화 (한 번만 실행)
