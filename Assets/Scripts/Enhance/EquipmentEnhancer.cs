@@ -7,7 +7,7 @@ public class EquipmentEnhancer : MonoBehaviour
     [Range(0f, 1f)]
     public float successRate = 0.9f;
 
-    public bool Enhance(ItemData equipment, Player player)
+    public bool Enhance(ItemData equipment, PlayerManager playerManager)
     {
         if (equipment == null)
         {
@@ -15,37 +15,39 @@ public class EquipmentEnhancer : MonoBehaviour
             return false;
         }
 
-        //아이템 타입확인
         if (equipment.itemType != ItemType.Equipment)
         {
             Debug.Log("해당 아이템은 장비가 아닙니다.");
             return false;
         }
 
-        //최대강화레벨
         if (equipment.enhancementLevel >= equipment.maxEnhancementLevel)
         {
             Debug.Log("이미 최대 강화 레벨에 도달했습니다.");
             return false;
         }
 
-        //현재강화비용
         float currentCost = equipment.enhancementCost * Mathf.Pow(equipment.enhancementCostMultiplier, equipment.enhancementLevel);
         Debug.Log($"현재 강화 비용: {currentCost}");
 
-        //플레이어의 골드를 CurrencyManager의 딕셔너리에 직접 접근하여 확인
-        //int playerGold = player.Currency.currencies[CurrencyType.Gold];
-        //if (playerGold < currentCost)
-        //{
-        //    Debug.Log("골드가 부족합니다.");
-        //    return false;
-        //}
+        //PlayerManager를 통해 골드 확인
+        int playerGold = playerManager.Currency.currencies[CurrencyType.Gold];
+        if (playerGold < currentCost)
+        {
+            Debug.Log("골드가 부족합니다.");
+            return false;
+        }
 
         //골드차감
-        //player.Currency.currencies[CurrencyType.Gold] = playerGold - (int)currentCost;
-        //Debug.Log($"{(int)currentCost} 골드를 차감하였습니다. 남은 골드: {player.Currency.currencies[CurrencyType.Gold]}");
+        bool deducted = playerManager.Currency.AddCurrency(CurrencyType.Gold, -(int)currentCost);
+        if (!deducted)
+        {
+            Debug.Log("골드 차감 실패");
+            return false;
+        }
 
-        //강화성공여부판정
+        Debug.Log($"{(int)currentCost} 골드를 차감하였습니다. 남은 골드: {playerManager.Currency.currencies[CurrencyType.Gold]}");
+
         if (Random.value <= successRate)
         {
             equipment.enhancementLevel++;
@@ -58,4 +60,6 @@ public class EquipmentEnhancer : MonoBehaviour
             return false;
         }
     }
+
 }
+
