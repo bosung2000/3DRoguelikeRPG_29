@@ -34,16 +34,16 @@ public class EquipmentEnhancer : MonoBehaviour
         Debug.Log($"현재 강화 비용: {currentCost}");
 
         //플레이어의 골드를 CurrencyManager의 딕셔너리에 직접 접근하여 확인
-        int playerGold = player.Currency.currencies[CurrencyType.Gold];
-        if (playerGold < currentCost)
-        {
-            Debug.Log("골드가 부족합니다.");
-            return false;
-        }
+        //int playerGold = player.Currency.currencies[CurrencyType.Gold];
+        //if (playerGold < currentCost)
+        //{
+        //    Debug.Log("골드가 부족합니다.");
+        //    return false;
+        //}
 
         //골드차감
-        player.Currency.currencies[CurrencyType.Gold] = playerGold - (int)currentCost;
-        Debug.Log($"{(int)currentCost} 골드를 차감하였습니다. 남은 골드: {player.Currency.currencies[CurrencyType.Gold]}");
+        //player.Currency.currencies[CurrencyType.Gold] = playerGold - (int)currentCost;
+        //Debug.Log($"{(int)currentCost} 골드를 차감하였습니다. 남은 골드: {player.Currency.currencies[CurrencyType.Gold]}");
 
         //강화성공여부판정
         if (Random.value <= successRate)

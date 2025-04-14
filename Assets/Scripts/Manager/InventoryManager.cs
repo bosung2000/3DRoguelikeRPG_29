@@ -11,6 +11,7 @@ public class InventoryManager : MonoBehaviour
     private int AddSlotsCount = 0;
     private int Total_SLOTS = 0;
     private int MaxSlotCount = 15;
+    //private int slotAdd
 
     [SerializeField] private List<SlotItemData> TestItemData;
 
@@ -162,15 +163,22 @@ public class InventoryManager : MonoBehaviour
         //최대치 검사 
         if (ReturnTotalSlotCount() < MaxSlotCount)
         {
-            //골드 검사를 해야됨 player정보를 받아와
-            //UIPopupInventory +uiitemSlotAdd에서 해결하고 여기에 이벤트로 연결하든지 아니든지 해야할듯 
+            if (true)
+            {
+                //골드 검사를 해야됨 player정보를 받아와
+                //UIPopupInventory +uiitemSlotAdd에서 해결하고 여기에 이벤트로 연결하든지 아니든지 해야할듯 
 
 
-            //슬롯의 총량을 더해주고 + 생성 
-            AddSlotsCount++;
-            slotItemDatas.Add(new SlotItemData());
-            //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
-            OnSlotChanged?.Invoke();
+                //슬롯의 총량을 더해주고 + 생성 
+                AddSlotsCount++;
+                slotItemDatas.Add(new SlotItemData());
+                //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
+                OnSlotChanged?.Invoke();
+            }
+            else
+            {
+                Debug.Log($"골드가 부족합니다 / 플레이어 소유 골드: /필요 골드");
+            }
         }
         else
         {

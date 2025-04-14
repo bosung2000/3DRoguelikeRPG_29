@@ -30,23 +30,12 @@ public class Player : MonoBehaviour, BaseEntity
     private bool _isTumbling = false;
     private float _lastTumbleTime = -100f;
 
-    private CurrencyManager currency;
-    public CurrencyManager Currency => currency;
+    
 
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
-        currency = GetComponent<CurrencyManager>();
-        // 골드 기본값 
-        if (currency != null)
-        {
-            if (currency.currencies == null || currency.currencies.Count == 0)
-            {
-                currency.init();  //딕셔너리 강제 초기화
-            }
-
-            currency.AddCurrency(CurrencyType.Gold, 9000);  //골드추가
-        }
+       
     }
     private void Start()
     {

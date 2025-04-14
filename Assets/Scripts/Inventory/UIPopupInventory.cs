@@ -26,7 +26,7 @@ public class UIPopupInventory : PopupUI
     private UIInventory uIInventory;
     private EquipMananger equipMananger;
     private InventoryManager inventoryMananger;
-
+    private PlayerManager playerManager;
     public enum InventoryTabType
     {
         All,        // 전체
@@ -43,6 +43,7 @@ public class UIPopupInventory : PopupUI
         uIInventory = GetComponentInChildren<UIInventory>();
         equipMananger = GameManager.Instance.EquipMananger;
         inventoryMananger =GameManager.Instance.InventoryManager;
+        playerManager =GameManager.Instance.PlayerManager;
 
         uIInventory.UpdateInventory(inventoryMananger);
 
@@ -158,9 +159,11 @@ public class UIPopupInventory : PopupUI
     // 인벤토리 새로고침
     private void RefreshInventory()
     {
+        
+
         // 플레이어 정보 업데이트
-        playerName.text = "플레이어1";
-        gold.text = "1000 G";
+        playerName.text = playerManager.PlayerName;
+        //gold.text = playerManager.Player.Currency;
         inventoryVolume.text = "10/50";
 
         // 장비 슬롯 업데이트
