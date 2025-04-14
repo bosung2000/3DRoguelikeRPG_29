@@ -14,6 +14,7 @@ public enum PlayerStatType
     DMGReduction,
     CriticalChance,
     CriticalDamage,
+    DashDistance,
     DashCooltime
 }
 
