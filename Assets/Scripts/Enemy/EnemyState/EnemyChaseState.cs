@@ -23,13 +23,13 @@ public class EnemyChaseState : IEnemyState
         controller.agent.acceleration = 999f;
         controller.agent.updateRotation = true;
 
-        //controller.animator?.SetBool("isMoving", true);
+        controller.animator?.SetBool("isMoving", true);
         Debug.Log("Chase 상태 진입");
     }
 
     public void ExitState(EnemyController controller)
     {
-        //controller.animator?.SetBool("isMoving",false);
+        controller.animator?.SetBool("isMoving",false);
         controller.agent.isStopped = true;
         Debug.Log("Chase 상태 종료");
     }

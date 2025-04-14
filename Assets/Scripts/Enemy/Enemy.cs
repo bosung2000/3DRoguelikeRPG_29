@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget {  get; private set; }
+    public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
 
     private void Awake()
     {

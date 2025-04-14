@@ -6,6 +6,8 @@ public class EnemyStat : BaseStat<EnemyStatType>
 {
     [SerializeField] private EnemyStatData statData;
 
+    public EnemyStatData StatData => statData;
+
     private void Awake()
     {
         InitializeStats();

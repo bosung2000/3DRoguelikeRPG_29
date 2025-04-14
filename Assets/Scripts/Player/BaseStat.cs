@@ -30,13 +30,6 @@ public enum EnemyStatType
     ChaseRange
 }
 
-public enum EnemyType
-{
-    Normal,
-    Elite,
-    Boss
-}
-
 public interface IBaseStat<T>
 {
     float GetStatValue(T type);

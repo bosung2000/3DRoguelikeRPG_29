@@ -22,6 +22,7 @@ public class EnemyAttackState : IEnemyState
         attackRange = controller.GetStat(EnemyStatType.AttackRange);
         attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
         lastAttackTime = Time.time;
+        controller.animator?.SetTrigger("Attack");
     }
 
     public void ExitState(EnemyController controller)
