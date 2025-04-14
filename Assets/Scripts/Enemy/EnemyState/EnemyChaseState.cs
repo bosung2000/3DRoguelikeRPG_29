@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyChaseState : IEnemyState
 {
     private Transform _target;
-    private float stopDistance; //플레리어를 공격하기 전 멈추는 거리
+    private float stopDistance = 1.5f; //플레리어를 공격하기 전 멈추는 거리
 
     public void EnterState(EnemyController controller)
     {        
@@ -16,12 +16,6 @@ public class EnemyChaseState : IEnemyState
             controller.ChageState(EnemyStateType.Idle);
         }
         stopDistance = controller.GetStat(EnemyStatType.AttackRange);
-        
-        controller.agent.isStopped = false;
-        controller.agent.angularSpeed = 1000f;
-        controller.agent.acceleration = 999f;
-        controller.agent.updateRotation = true;
-
         //controller.animator?.SetBool("isMoving", true);
         Debug.Log("Chase 상태 진입");
     }
@@ -29,7 +23,6 @@ public class EnemyChaseState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         //controller.animator?.SetBool("isMoving",false);
-        controller.agent.isStopped = true;
         Debug.Log("Chase 상태 종료");
     }
 
@@ -40,27 +33,16 @@ public class EnemyChaseState : IEnemyState
             return;
         }
 
-        //공격 범위 내면 상태 전환용
         float distance = Vector3.Distance(controller.transform.position, _target.position);
 
-        float chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
-
-        if(distance > chaseRange * 1.5)
-        {
-            Debug.Log("Chase: 플레이어가 추적 범위를 벗어났습니다.");
-            controller.ChageState(EnemyStateType.Idle);
-            return;
-        }
-
-
-
-
         //플레이어와 거리가 가까워지면 공격 상태로 전환
-        if (distance <= stopDistance)
+        if(distance <= stopDistance)
         {
             controller.ChageState(EnemyStateType.Attack);
             return;
         }
-        controller.agent.SetDestination(_target.position);
+        float speed = controller.GetSpeed();
+        Vector3 direction = (_target.position - controller.transform.position).normalized;
+        controller.transform.position += direction * speed * Time.deltaTime;
     }
 }
