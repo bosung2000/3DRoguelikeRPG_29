@@ -48,10 +48,12 @@ public class SkillManager : MonoBehaviour
         for (int i = 0; i < enabledSkills.Length; i++)
         {
             uiSkill.skillConditions[i].index = i;
+            uiSkill.skillConditions[i].joystick.index = i;
             //enabledSkills의 고유 번호 지정 및 해당 enabledSkills로 UI 초기화
             enabledSkills[i] = new EnabledSkills();
             enabledSkills[i].index = i;
             ResetSkillUI(i);
+            Debug.Log($"조이스틱 인덱스:{uiSkill.skillConditions[i].joystick.index}, 착용 스킬 인덱스: {enabledSkills[i].index}, 현재 순환:{i}");
         }
     }
 
