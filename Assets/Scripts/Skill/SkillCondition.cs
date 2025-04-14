@@ -56,6 +56,11 @@ public class SkillCondition : MonoBehaviour
 
     public void ResetCondition()
     {
+        if (skill==null)
+        {
+            Debug.Log($"{index+1}번째 스킬 칸에 스킬이 할당되지 않았습니다.");
+            return;
+        }
         if (skill.icon != null)
         {
             skillIcon.sprite = skill.icon;

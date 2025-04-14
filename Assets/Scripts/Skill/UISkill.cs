@@ -10,7 +10,6 @@ public class UISkill : MonoBehaviour
     private void Awake()
     {
         skillConditions = new SkillCondition[this.transform.childCount];
-        SkillManager.Instance.uiSkill = this;
         for (int i = 0; i < skillConditions.Length; i++)
         {
             skillConditions[i] = this.transform.GetChild(i).GetComponent<SkillCondition>(); //객체 안에서 SkillCondition 클래스를 찾아 지정하고 
