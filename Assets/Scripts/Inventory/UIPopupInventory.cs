@@ -35,15 +35,17 @@ public class UIPopupInventory : PopupUI
         Material    // 재료
     }
 
-    protected virtual void Awake()
+    protected  void Awake()
     {
-        // UI 매니저에 등록
-        UIManager.Instance.RegisterUI(this);
+        Inittialize();
+    }
 
+    private void Inittialize()
+    {
         uIInventory = GetComponentInChildren<UIInventory>();
         equipMananger = GameManager.Instance.EquipMananger;
-        inventoryMananger =GameManager.Instance.InventoryManager;
-        playerManager =GameManager.Instance.PlayerManager;
+        inventoryMananger = GameManager.Instance.InventoryManager;
+        playerManager = GameManager.Instance.PlayerManager;
 
         uIInventory.UpdateInventory(inventoryMananger);
 
@@ -61,14 +63,14 @@ public class UIPopupInventory : PopupUI
         if (materialTabButton != null)
             materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
 
-        if (AddSlotBtn !=null)
+        if (AddSlotBtn != null)
         {
-            AddSlotBtn.onClick.AddListener(() =>OnAddSlot());
+            AddSlotBtn.onClick.AddListener(() => OnAddSlot());
         }
 
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
-        inventoryMananger.OnSlotChanged +=HandleSlotChanged;
+        inventoryMananger.OnSlotChanged += HandleSlotChanged;
         inventoryMananger.OnSlotChanged += RefreshInventory;
     }
 
@@ -183,7 +185,6 @@ public class UIPopupInventory : PopupUI
     protected override void Clear()
     {
         base.Clear();
-
     }
 
     /// <summary>
@@ -275,4 +276,6 @@ public class UIPopupInventory : PopupUI
     {
         OnTabChanged(InventoryTabType.All);
     }
+
+
 }

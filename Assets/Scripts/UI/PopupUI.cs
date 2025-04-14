@@ -5,12 +5,30 @@ public abstract class PopupUI : BaseUI
 {
     [SerializeField] protected Button closeButton;  // 팝업 닫기 버튼
 
+
     protected virtual void Init()
     {
 
     }
+    /// <summary>
+    /// sealed로 인하여 자식이 더이상 override가 불가능 /자식 사용을 강제할때 사용 
+    /// </summary>
+    protected sealed override void Awake()
+    {
+        base.Awake();
+        RegisterToUIManager();
+        InitializePopUp();
+    }
 
-    protected virtual void Awake()
+    private void RegisterToUIManager()
+    {
+        if (UIManager.Instance !=null)
+        {
+            UIManager.Instance.RegisterUI(this);
+        }
+    }
+
+    protected virtual void InitializePopUp()
     {
         // 닫기 버튼 이벤트 등록
         if (closeButton != null)
@@ -18,7 +36,8 @@ public abstract class PopupUI : BaseUI
             closeButton.onClick.AddListener(OnCloseButtonClick);
         }
     }
-    
+
+
     protected virtual void OnEnable()
     {
         // 활성화될 때마다 초기화 필요한 작업
@@ -36,7 +55,7 @@ public abstract class PopupUI : BaseUI
         Hide();
         Clear();
     }
-    
+
     // 닫기 버튼 클릭 이벤트
     protected virtual void OnCloseButtonClick()
     {
@@ -44,4 +63,4 @@ public abstract class PopupUI : BaseUI
         UIManager.Instance.ClosePopupUI(this);
     }
 
-} 
+}

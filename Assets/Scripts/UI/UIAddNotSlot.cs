@@ -8,8 +8,6 @@ public class UIAddNotSlot : PopupUI
     [SerializeField] private Button Btn_ok;
     private void Awake()
     {
-        //등록
-        UIManager.Instance.RegisterUI(this);
         Btn_ok = GetComponentInChildren<Button>();
         Btn_ok.onClick.AddListener(() => OnClosePopup());
     }

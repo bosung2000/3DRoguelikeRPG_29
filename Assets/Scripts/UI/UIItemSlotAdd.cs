@@ -29,7 +29,7 @@ public class UIItemSlotAdd : PopupUI
 
     private void OnEnable()
     {
-        UIManager.Instance.RegisterUI(this);
+        
         Txt_playerGold.text = $"보유골드 : {playerManager.Currency.currencies[CurrencyType.Gold]}";
         Txt_AddCost.text = $"필요골드 : {inventoryManager.AddSlotCost}";
     }
