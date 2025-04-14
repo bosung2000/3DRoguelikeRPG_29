@@ -11,8 +11,8 @@ public class InventoryManager : MonoBehaviour
     private int AddSlotsCount = 0;
     private int Total_SLOTS = 0;
     private int MaxSlotCount = 15;
-    //private int slotAdd
-
+    public int AddSlotCost { get; private set; } = 100;
+    private PlayerManager playerManager;
     [SerializeField] private List<SlotItemData> TestItemData;
 
     public event Action OnSlotChanged;
@@ -21,6 +21,9 @@ public class InventoryManager : MonoBehaviour
     {
         //인베토리 관련 초기화 
         InitSlot();
+
+        playerManager = GameManager.Instance.PlayerManager;
+        OnSlotChanged += AddSlotCostIncrease;
     }
 
 
@@ -158,32 +161,40 @@ public class InventoryManager : MonoBehaviour
         return Total_SLOTS;
     }
 
-    public void AddSlots()
+    public bool AddSlots()
     {
         //최대치 검사 
         if (ReturnTotalSlotCount() < MaxSlotCount)
         {
-            if (true)
+            //골드차감 
+            if (playerManager.Currency.AddCurrency(CurrencyType.Gold, -AddSlotCost))
             {
-                //골드 검사를 해야됨 player정보를 받아와
-                //UIPopupInventory +uiitemSlotAdd에서 해결하고 여기에 이벤트로 연결하든지 아니든지 해야할듯 
-
-
                 //슬롯의 총량을 더해주고 + 생성 
                 AddSlotsCount++;
                 slotItemDatas.Add(new SlotItemData());
                 //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
                 OnSlotChanged?.Invoke();
+                return true;
             }
             else
             {
-                Debug.Log($"골드가 부족합니다 / 플레이어 소유 골드: /필요 골드");
+                Debug.Log($"골드가 부족합니다 / 플레이어 소유 골드{playerManager.Currency.currencies[CurrencyType.Gold]}: /필요 골드 :{AddSlotCost}");
+                return false;
             }
         }
         else
         {
-            Debug.Log("슬롯의 최대수량을 넘었습니다 :더이상 추가가 불가능합니다.");
-            return;
+            //popup창을 1개 추가해서 해주는게 맞지 ?
+            UIManager.Instance.ShowPopupUI<UIAddNotSlot>();
+            return false;
+        }
+    }
+
+    public void AddSlotCostIncrease()
+    {
+        if (AddSlotCost != null && AddSlotCost > 0)
+        {
+            AddSlotCost += 100;
         }
     }
 

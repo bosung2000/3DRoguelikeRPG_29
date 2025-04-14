@@ -69,6 +69,7 @@ public class UIPopupInventory : PopupUI
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
         inventoryMananger.OnSlotChanged +=HandleSlotChanged;
+        inventoryMananger.OnSlotChanged += RefreshInventory;
     }
 
     protected override void OnEnable()
@@ -159,12 +160,10 @@ public class UIPopupInventory : PopupUI
     // 인벤토리 새로고침
     private void RefreshInventory()
     {
-        
-
         // 플레이어 정보 업데이트
         playerName.text = playerManager.PlayerName;
-        //gold.text = playerManager.Player.Currency;
-        inventoryVolume.text = "10/50";
+        gold.text = playerManager.Currency.currencies[CurrencyType.Gold].ToString();
+        inventoryVolume.text = $"{inventoryMananger.CountingSlotItemData()}/{inventoryMananger.ReturnTotalSlotCount()}";
 
         // 장비 슬롯 업데이트
         // UpdateEquipmentSlots();
