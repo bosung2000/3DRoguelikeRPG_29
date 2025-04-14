@@ -95,7 +95,11 @@ public class Player : MonoBehaviour, BaseEntity
     public void TakeDamage(int damage)
     {
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
-        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+        float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
+        //damage에서 damageReduction%만큼   감소
+        damage = damage - (int)(damage * damageReduction / 100);
+        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 1));
+
     }
     public void Hit()
     {
@@ -141,9 +145,10 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
-        float dashDistance = 5f;
+        float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
 
-        if (_isTumbling || Time.time < _lastTumbleTime + _playerStat.GetStatValue(PlayerStatType.DashCooltime))
+        if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
         {
             Debug.Log("쿨타임입니다");
             return;
@@ -154,40 +159,42 @@ public class Player : MonoBehaviour, BaseEntity
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
         if (dir.sqrMagnitude < 0.01f)
-        {
             dir = transform.forward;
-        }
 
+        dir.y = 0f;
         dir = dir.normalized;
 
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 origin = transform.position + Vector3.up * 0.01f;
         Vector3 target = transform.position + dir * dashDistance;
 
         if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
         {
-            float safeDist = hit.distance - 0.05f; // 끼임방지
+            float safeDist = Mathf.Max(hit.distance - 0.01f, 0f);
             target = transform.position + dir * safeDist;
         }
 
-        StartCoroutine(TumbleRoutine(target));
+        float actualDistance = Vector3.Distance(transform.position, target);
+        float dashDuration = actualDistance / dashDistance * 0.2f;
+
+        StartCoroutine(TumbleRoutine(target, dashDuration));
         _lastTumbleTime = Time.time;
         dashCooldownUI.StartDashCooldown();
     }
-    private IEnumerator TumbleRoutine(Vector3 target)
+
+    private IEnumerator TumbleRoutine(Vector3 target, float duration)
     {
         _isTumbling = true;
 
         Vector3 start = transform.position;
-        float _elapsed = 0f;
-        float duration = 0.2f;
+        float elapsed = 0f;
 
-        while (_elapsed < duration)
+        while (elapsed < duration)
         {
-            float t = _elapsed / duration;
+            float t = elapsed / duration;
             Vector3 newPos = Vector3.Lerp(start, target, t);
             _rb.MovePosition(newPos);
 
-            _elapsed += Time.deltaTime;
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
