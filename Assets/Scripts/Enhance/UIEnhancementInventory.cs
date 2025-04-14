@@ -94,31 +94,11 @@ public class UIEnhancementInventory : MonoBehaviour
         //장착 무기 
         if (slotItemData.item.itemType == ItemType.Equipment)
         {
-            if (slotItemData.item.equipType != EquipType.None && slotItemData.item.useType == UseType.None)
-            {
-                uiPopupInventory.OnItemSelected(slotItemData.item);
-            }
-            else
-            {
-                Debug.Log("ItemType은 Equip인데 equipType이 잘못된 type을 가지고 있습니다.");
-            }
-        }
-        else if (slotItemData.item.itemType == ItemType.Consumable)
-        {
-            // 사용타입 (물약)
-            if (slotItemData.item.equipType == EquipType.None && slotItemData.item.useType != UseType.None)
-            {
-                //포션이 클릭으로 장착되어있는가 ? 아닌가 ?
-
-            }
-            else
-            {
-                Debug.Log("ItemType은 Consumable인데 useType이 잘못된 type을 가지고 있습니다.");
-            }
-        }
+            //정보가져오기
+        } 
         else
         {
-            Debug.Log("잘못된 ItemType을 가지고 있습니다.");
+            Debug.Log("장비 타입이 아닙니다.");
         }
 
     }
