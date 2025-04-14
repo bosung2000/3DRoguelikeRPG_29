@@ -56,6 +56,11 @@ public class SkillCondition : MonoBehaviour
 
     public void ResetCondition()
     {
+        if (skill==null)
+        {
+            Debug.Log("스킬이 없습니다.");
+            return;
+        }
         if (skill.icon != null)
         {
             skillIcon.sprite = skill.icon;
