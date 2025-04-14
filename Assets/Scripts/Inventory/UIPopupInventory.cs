@@ -1,8 +1,6 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class UIPopupInventory : PopupUI
 {
@@ -14,26 +12,15 @@ public class UIPopupInventory : PopupUI
     [SerializeField] private Image slotEquipCoat;
     [SerializeField] private Image slotEquipShoes;
     [SerializeField] private Image slotEquipGlove;
-    [SerializeField] private Button AddSlotBtn;
+
 
     // 탭 버튼들
-    [SerializeField] private Button TotalTabButton;
     [SerializeField] private Button equipmentTabButton;
     [SerializeField] private Button consumableTabButton;
     [SerializeField] private Button materialTabButton;
 
     //각 class 요소들 
     private UIInventory uIInventory;
-    private EquipMananger equipMananger;
-    private InventoryManager inventoryMananger;
-    private PlayerManager playerManager;
-    public enum InventoryTabType
-    {
-        All,        // 전체
-        Equipment,  // 장비
-        Consumable, // 소비
-        Material    // 재료
-    }
 
     protected virtual void Awake()
     {
@@ -41,34 +28,15 @@ public class UIPopupInventory : PopupUI
         UIManager.Instance.RegisterUI(this);
 
         uIInventory = GetComponentInChildren<UIInventory>();
-        equipMananger = GameManager.Instance.EquipMananger;
-        inventoryMananger =GameManager.Instance.InventoryManager;
-        playerManager =GameManager.Instance.PlayerManager;
-
-        uIInventory.UpdateInventory(inventoryMananger);
-
-
         // 탭 버튼 이벤트 등록
-        if (TotalTabButton != null)
-            TotalTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.All));
-
         if (equipmentTabButton != null)
-            equipmentTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Equipment));
+            equipmentTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Equipment));
 
         if (consumableTabButton != null)
-            consumableTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Consumable));
+            consumableTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Consumable));
 
         if (materialTabButton != null)
-            materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
-
-        if (AddSlotBtn !=null)
-        {
-            AddSlotBtn.onClick.AddListener(() =>OnAddSlot());
-        }
-
-        GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
-        inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
-        inventoryMananger.OnSlotChanged +=HandleSlotChanged;
+            materialTabButton.onClick.AddListener(() => OnTabChanged(ItemType.Material));
     }
 
     protected override void OnEnable()
@@ -76,13 +44,14 @@ public class UIPopupInventory : PopupUI
         //초기화 작업
         base.OnEnable();
 
-
+        //InventoryManager 와 UIInventory 연결 
+        GameManager.Instance.InventoryManager.LinkUI(uIInventory);
 
         // 인벤토리가 활성화될 때마다 최신 정보로 업데이트
         RefreshInventory();
 
         // 기본 탭 선택
-        OnTabChanged(InventoryTabType.All);
+        OnTabChanged(ItemType.Equipment);
     }
 
     protected override void Init()
@@ -132,43 +101,30 @@ public class UIPopupInventory : PopupUI
     }
 
     // 탭 변경 처리
-    private void OnTabChanged(InventoryTabType tabType)
+    private void OnTabChanged(ItemType type)
     {
         // 선택된 탭에 따라 아이템 필터링 및 UI 업데이트
-        Debug.Log($"탭 변경: {tabType}");
+        Debug.Log($"탭 변경: {type}");
 
         // 버튼 시각적 상태 업데이트
-        TotalTabButton.interactable = (tabType != InventoryTabType.All);
-        equipmentTabButton.interactable = (tabType != InventoryTabType.Equipment);
-        consumableTabButton.interactable = (tabType != InventoryTabType.Consumable);
-        materialTabButton.interactable = (tabType != InventoryTabType.Material);
+        equipmentTabButton.interactable = (type != ItemType.Equipment);
+        consumableTabButton.interactable = (type != ItemType.Consumable);
+        materialTabButton.interactable = (type != ItemType.Material);
 
         // 아이템 필터링 및 표시
-        FilterItems(tabType);
-    }
-
-    // 아이템 필터링 메서드 추가
-    private void FilterItems(InventoryTabType tabType)
-    {
-        if (uIInventory == null) return;
-
-        // 인벤토리에 필터링 정보 전달
-        uIInventory.FilterByTabType(tabType);
+        // FilterItems(type);
     }
 
     // 인벤토리 새로고침
     private void RefreshInventory()
     {
-        
-
         // 플레이어 정보 업데이트
-        playerName.text = playerManager.PlayerName;
-        //gold.text = playerManager.Player.Currency;
+        playerName.text = "플레이어1";
+        gold.text = "1000 G";
         inventoryVolume.text = "10/50";
 
         // 장비 슬롯 업데이트
         // UpdateEquipmentSlots();
-        HandleAllEquipmentReset();
     }
 
     // 오버라이드: 닫기 버튼 클릭 처리
@@ -185,95 +141,5 @@ public class UIPopupInventory : PopupUI
     {
         base.Clear();
 
-    }
-
-    /// <summary>
-    /// 특정 슬롯 1개만 업데이트 해주기  / Add =true / Remove =flase
-    /// </summary>
-    /// <param name="equipType"></param>
-    /// <param name="itemData"></param>
-    private void HandleSingleItemChanged(EquipType equipType, ItemData itemData, bool AddorRemove)
-    {
-        if (AddorRemove == true)
-        {
-            switch (equipType)
-            {
-                case EquipType.Weapon:
-                    slotEquipWeapon.sprite = itemData.Icon;
-                    break;
-                case EquipType.Coat:
-                    slotEquipCoat.sprite = itemData.Icon;
-                    break;
-                case EquipType.Shoes:
-                    slotEquipShoes.sprite = itemData.Icon;
-                    break;
-                case EquipType.Glove:
-                    slotEquipGlove.sprite = itemData.Icon;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            switch (equipType)
-            {
-                case EquipType.Weapon:
-                    slotEquipWeapon.sprite = null;
-                    break;
-                case EquipType.Coat:
-                    slotEquipCoat.sprite = null;
-                    break;
-                case EquipType.Shoes:
-                    slotEquipShoes.sprite = null;
-                    break;
-                case EquipType.Glove:
-                    slotEquipGlove.sprite = null;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    /// <summary>
-    /// 전체 아이템 슬롯 업데이트 /처음에 아이템 초기화를 할때 해야겠지 ?
-    /// </summary>
-    private void HandleAllEquipmentReset()
-    {
-        if (equipMananger !=null)
-        {
-            foreach (var item in equipMananger.EquipDicionary.Values)
-            {
-                switch (item.equipType)
-                {
-                    case EquipType.None:
-                        break;
-                    case EquipType.Weapon:
-                        slotEquipWeapon.sprite = item.Icon;
-                        break;
-                    case EquipType.Coat:
-                        slotEquipCoat.sprite = item.Icon;
-                        break;
-                    case EquipType.Shoes:
-                        slotEquipShoes.sprite = item.Icon;
-                        break;
-                    case EquipType.Glove:
-                        slotEquipGlove.sprite = item.Icon;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    private void OnAddSlot()
-    {
-        UIManager.Instance.ShowPopupUI<UIItemSlotAdd>();
-    }
-
-    private void HandleSlotChanged()
-    {
-        OnTabChanged(InventoryTabType.All);
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     [SerializeField] Player _player;
-    [SerializeField] PlayerStat _playerStat;
     public void MaxHPUp()
     {
         _player.MaxHPUp(100);
@@ -13,7 +12,6 @@ public class Test : MonoBehaviour
     public void Healing()
     {
         _player.Healing(40);
-        //최대체력비례
     }
 
     public void MaxMPUp()
@@ -29,9 +27,9 @@ public class Test : MonoBehaviour
     {
         _player.SpeedUp(10);
     }
-    public void TakeDamage()
+    public void Damage()
     {
-        _player.TakeDamage((int)_playerStat.GetStatValue(PlayerStatType.Attack));
+        _player.TakeDamage(10);
     }
     public void Hit()
     {
@@ -44,12 +42,11 @@ public class Test : MonoBehaviour
 
     public void DMGReductionUp()
     {
-        _player.DMGReductionUp(10);
+        _player.DMGReductionUp(0.1f);
     }
     public void CriticalChanceUp()
     {
         _player.CriticalChanceUp(5);
-        Debug.Log("CriticalChanceUp");
     }
     public void CriticalDamageUp()
     {

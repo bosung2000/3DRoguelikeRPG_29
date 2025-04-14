@@ -23,19 +23,21 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] private PlayerStatData statData;
     public PlayerStat _playerStat;
 
-    [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
     [SerializeField] Rigidbody _rb;
     [SerializeField] LayerMask _obstacleLayer;
     private bool _isTumbling = false;
-    private float _lastTumbleTime = -100f;
+    private float _lastTumbleTime = -999f;
 
-    
+    private CurrencyManager currency;
+    public CurrencyManager Currency => currency;
 
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
-       
+        currency = GetComponent<CurrencyManager>();
+        // 골드 기본값 
+        currency.AddCurrency(CurrencyType.Gold, 1000);
     }
     private void Start()
     {
@@ -141,15 +143,13 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
-        float dashDistance = 5f;
-
-        if (_isTumbling || Time.time < _lastTumbleTime + _playerStat.GetStatValue(PlayerStatType.DashCooltime))
+        if (_isTumbling || Time.time < _lastTumbleTime + 5f)
         {
             Debug.Log("쿨타임입니다");
             return;
         }
 
-        Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
+        Vector3 joystickInput = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
         Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
@@ -160,18 +160,9 @@ public class Player : MonoBehaviour, BaseEntity
 
         dir = dir.normalized;
 
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        Vector3 target = transform.position + dir * dashDistance;
-
-        if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
-        {
-            float safeDist = hit.distance - 0.05f; // 끼임방지
-            target = transform.position + dir * safeDist;
-        }
-
+        Vector3 target = transform.position + dir * 5;
         StartCoroutine(TumbleRoutine(target));
         _lastTumbleTime = Time.time;
-        dashCooldownUI.StartDashCooldown();
     }
     private IEnumerator TumbleRoutine(Vector3 target)
     {
@@ -179,19 +170,17 @@ public class Player : MonoBehaviour, BaseEntity
 
         Vector3 start = transform.position;
         float _elapsed = 0f;
-        float duration = 0.2f;
 
-        while (_elapsed < duration)
+        while (_elapsed < 0.3f)
         {
-            float t = _elapsed / duration;
+            float t = _elapsed / 0.3f;
             Vector3 newPos = Vector3.Lerp(start, target, t);
             _rb.MovePosition(newPos);
-
             _elapsed += Time.deltaTime;
             yield return null;
         }
 
-        _rb.MovePosition(target);
+        //_rb.MovePosition(target);
         _rb.velocity = Vector3.zero;
         _isTumbling = false;
     }

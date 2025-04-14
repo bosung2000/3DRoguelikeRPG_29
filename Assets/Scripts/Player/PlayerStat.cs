@@ -39,7 +39,6 @@ public class PlayerStat : BaseStat<PlayerStatType>
                 float baseValue = playerStatData.GetBaseValue(type);
                 SetStatValue(type, baseValue);
             }
-            OnStatChanged();
         }
         else
         {
