@@ -15,6 +15,7 @@ public class EquipmentEnhanceUI : MonoBehaviour
     public EquipmentEnhancer enhancer;
     public Player player;
     private ItemData currentEquipment;
+    public PlayerManager playerManager;
 
     void Start()
     {
@@ -49,7 +50,7 @@ public class EquipmentEnhanceUI : MonoBehaviour
             return;
         }
 
-        bool success = enhancer.Enhance(currentEquipment, player);
+        bool success = enhancer.Enhance(currentEquipment, playerManager);
 
         if (success)
         {
