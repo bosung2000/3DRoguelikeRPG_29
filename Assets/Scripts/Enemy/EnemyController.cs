@@ -23,11 +23,13 @@ public class EnemyController : MonoBehaviour
     private IEnemyState _currentState;
 
     public EnemyStateType CurrentStateType { get; private set; }
+    public NavMeshAgent agent { get; private set; }//NavMeshAgent 접근용
     //public Animator animator {  get; private set; }
 
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
+        agent = GetComponent<NavMeshAgent>();
         //animator = GetComponent<Animator>();
     }
 
@@ -45,6 +47,7 @@ public class EnemyController : MonoBehaviour
             Debug.LogError("EnemyController: _enemy.Stat이 null!");
             return;
         }
+        agent.speed = GetSpeed();
         ChageState(EnemyStateType.Idle);
     }
 
@@ -99,5 +102,26 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Dead => new EnemyDeadState(),
             _ => null
         };
+    }
+
+    /// <summary>
+    /// 디버깅용 함수들
+    /// </summary>
+    public void OnDrawGizmos()
+    {
+        if (_enemy == null || _enemy.Stat == null) return;
+
+        Gizmos.color = Color.red;
+
+        float chaseRange = _enemy.Stat.GetStatValue(EnemyStatType.ChaseRange);
+        Debug.Log($"[Gizmos] chaseRange = {chaseRange}");
+        Gizmos.DrawWireSphere(transform.position, chaseRange);
+        
+        float attackRange = _enemy.Stat.GetStatValue(EnemyStatType.AttackRange);
+        Debug.Log($"[Gizmos] attackRange = {attackRange}");
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
     }
 }

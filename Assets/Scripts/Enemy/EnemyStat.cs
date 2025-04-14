@@ -18,6 +18,7 @@ public class EnemyStat : BaseStat<EnemyStatType>
             SetStatValue(EnemyStatType.Currency, statData.Currency);
             SetStatValue(EnemyStatType.AttackRange, statData.AttackRange);
             SetStatValue(EnemyStatType.AttackCooldown, statData.AttackCooldown);
+            SetStatValue(EnemyStatType.ChaseRange, statData.ChaseRange);
         }
     }
 }

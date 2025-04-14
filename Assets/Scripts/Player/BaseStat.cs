@@ -25,7 +25,8 @@ public enum EnemyStatType
     Attack,
     Currency,
     AttackRange,
-    AttackCooldown
+    AttackCooldown,
+    ChaseRange
 }
 
 public enum EnemyType

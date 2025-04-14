@@ -17,15 +17,14 @@ public class UIEquipedItem : PopupUI
 
     private ItemData EquipItem;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-        UIManager.Instance.RegisterUI(this);
+
     }
     public void Show(ItemData item)
     {
         if (item == null) return;
-        
+
         EquipItem = item;
         base.Show();
         UpdateUI();
