@@ -58,7 +58,7 @@ public class SkillCondition : MonoBehaviour
     {
         if (skill==null)
         {
-            Debug.Log("스킬이 없습니다.");
+            Debug.Log($"{index+1}번째 스킬 칸에 스킬이 할당되지 않았습니다.");
             return;
         }
         if (skill.icon != null)

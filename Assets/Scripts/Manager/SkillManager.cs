@@ -47,6 +47,7 @@ public class SkillManager : MonoBehaviour
 
         for (int i = 0; i < enabledSkills.Length; i++)
         {
+            uiSkill.skillConditions[i].index = i;
             //enabledSkills의 고유 번호 지정 및 해당 enabledSkills로 UI 초기화
             enabledSkills[i] = new EnabledSkills();
             enabledSkills[i].index = i;
