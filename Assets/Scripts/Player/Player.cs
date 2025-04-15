@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, BaseEntity
 {
     [SerializeField] private PlayerStatData statData;
     public PlayerStat _playerStat;
-    private PlayerController playerController;
+    private PlayerController _playerController;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -54,11 +54,12 @@ public class Player : MonoBehaviour, BaseEntity
         {
             inputDir = inputDir.normalized;
             _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
-            playerController.SetAnimatorBool("Run", true);
+            _playerController.SetFloat("Run", _playerStat.GetStatValue(PlayerStatType.Speed));
         }
         else
         {
             _rb.velocity = Vector3.zero;
+            _playerController.SetFloat("Run", 0);
         }
     }
     public void FixedUpdate()
