@@ -71,6 +71,8 @@ public class ItemData : ScriptableObject
     public UseType useType;
     public string itemName;
     public string description;
+    [Range(1,10)]
+    public int Tier;
 
     [Header("장비 옵션")]
     public int enhancementLevel = 0;

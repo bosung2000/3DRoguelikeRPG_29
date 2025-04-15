@@ -8,19 +8,9 @@ public class EnabledSkills
 }
 public class SkillManager : MonoBehaviour
 {
-    private static SkillManager _instance;
+    private static SkillManager instance;
 
-    public static SkillManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new GameObject("SkillManager").AddComponent<SkillManager>();
-            }
-            return _instance;
-        }
-    }
+    public static SkillManager Instance { get; set; }
 
     public Player player;
     public UISkill uiSkill;
@@ -32,14 +22,14 @@ public class SkillManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null)
+        if (instance != null)
         {
-            _instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            if (_instance != null)
+            if (instance != null)
             {
                 Destroy(gameObject);
             }
@@ -54,9 +44,12 @@ public class SkillManager : MonoBehaviour
 
         //스킬 ui가 표시할 수 있는 스킬 수만큼 스킬배열 길이를 정하고 반복문 시작
         enabledSkills = new EnabledSkills[uiSkill.transform.childCount];
+
         for (int i = 0; i < enabledSkills.Length; i++)
         {
+            uiSkill.skillConditions[i].index = i;
             //enabledSkills의 고유 번호 지정 및 해당 enabledSkills로 UI 초기화
+            enabledSkills[i] = new EnabledSkills();
             enabledSkills[i].index = i;
             ResetSkillUI(i);
         }

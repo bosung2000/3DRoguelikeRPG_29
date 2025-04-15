@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIInventory : MonoBehaviour
+public class UIEnhancementInventory : MonoBehaviour
 {
     public List<UISlot> slots;
     //public int MaxSlots = 12;
@@ -14,10 +13,17 @@ public class UIInventory : MonoBehaviour
     private UIPopupInventory uiPopupInventory;
     private bool isInitialized = false;
 
+    private void Start()
+    {
+        UpdateInventory();
+        FilterByTabType(UIPopupInventory.InventoryTabType.Equipment);
+    }
+
+
     private void Awake()
     {
         uiPopupInventory = gameObject.GetComponentInParent<UIPopupInventory>();
-
+        inventoryManager = GameManager.Instance.InventoryManager;
     }
 
     // 초기화 (한 번만 실행)
@@ -63,38 +69,11 @@ public class UIInventory : MonoBehaviour
             slots.Add(slotobj);
             slotobj.OnItemClicked += HandleItemOneClick;
         }
-
-        // Grid Layout 및 Content 크기 업데이트
-        SetupGridLayout();
-    }
-
-    private void SetupGridLayout()
-    {
-        GridLayoutGroup grid = SlotParent.GetComponent<GridLayoutGroup>();
-        if (grid != null)
-        {
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 4;  // 한 줄에 4개의 슬롯
-            grid.spacing = new Vector2(20, 20);
-            
-            // Content 크기 자동 조절
-            int totalSlots = inventoryManager.ReturnTotalSlotCount();
-            int rows = Mathf.CeilToInt(totalSlots / 4f);
-            float totalHeight = (grid.cellSize.y + grid.spacing.y) * rows;
-            
-            RectTransform contentRect = SlotParent.GetComponent<RectTransform>();
-            contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, totalHeight);
-        }
     }
 
     // 데이터 업데이트 (필요할 때마다 실행)
-    public void UpdateInventory(InventoryManager manager)
+    public void UpdateInventory()
     {
-        if (inventoryManager == null)
-        {
-            inventoryManager = manager;
-        }
-
         // UI가 초기화되지 않았다면 초기화
         if (!isInitialized)
         {
@@ -115,31 +94,11 @@ public class UIInventory : MonoBehaviour
         //장착 무기 
         if (slotItemData.item.itemType == ItemType.Equipment)
         {
-            if (slotItemData.item.equipType != EquipType.None && slotItemData.item.useType == UseType.None)
-            {
-                uiPopupInventory.OnItemSelected(slotItemData.item);
-            }
-            else
-            {
-                Debug.Log("ItemType은 Equip인데 equipType이 잘못된 type을 가지고 있습니다.");
-            }
-        }
-        else if (slotItemData.item.itemType == ItemType.Consumable)
-        {
-            // 사용타입 (물약)
-            if (slotItemData.item.equipType == EquipType.None && slotItemData.item.useType != UseType.None)
-            {
-                //포션이 클릭으로 장착되어있는가 ? 아닌가 ?
-
-            }
-            else
-            {
-                Debug.Log("ItemType은 Consumable인데 useType이 잘못된 type을 가지고 있습니다.");
-            }
-        }
+            //정보가져오기
+        } 
         else
         {
-            Debug.Log("잘못된 ItemType을 가지고 있습니다.");
+            Debug.Log("장비 타입이 아닙니다.");
         }
 
     }
@@ -221,3 +180,4 @@ public class UIInventory : MonoBehaviour
         }
     }
 }
+    
