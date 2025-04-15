@@ -7,24 +7,23 @@ public class InventoryManager : MonoBehaviour
 {
     //가방에 대한 데이터 
     public List<SlotItemData> slotItemDatas;
-    private const int baseSlots = 12;// UI에 의존하지 않도록 상수로 정의
+    private const int baseSlots = 30;// UI에 의존하지 않도록 상수로 정의
     private int AddSlotsCount = 0;
     private int Total_SLOTS = 0;
-    private int MaxSlotCount = 15;
+    private int MaxSlotCount = 40;
     public int AddSlotCost { get; private set; } = 100;
     private PlayerManager playerManager;
     [SerializeField] private List<SlotItemData> TestItemData;
 
     public event Action OnSlotChanged;
 
-    private void Start()
+    private void Awake()
     {
-        //인베토리 관련 초기화 
         InitSlot();
-
         playerManager = GameManager.Instance.PlayerManager;
         OnSlotChanged += AddSlotCostIncrease;
     }
+
 
 
     public void InitSlot()
