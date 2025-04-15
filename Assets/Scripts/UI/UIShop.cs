@@ -11,7 +11,7 @@ public class UIShop : PopupUI
     //판매해야할 아이템 list 가지고있고 
     //buy > inventory읽어와서 show 
     //sell > uishop(판매list)이중에서 색출해서(뭐 등급이 맞게 높은 등급일수록 좋은아이템이 나와야하잔아)
-    // 그럼 아아템의 등급이 있어야하겠는데 ?            
+    // 그럼 아아템의 등급이 있어야하겠는데 > tier            
     [SerializeField] TextMeshProUGUI goldTxt;
     [SerializeField] GameObject completePopup;
     [SerializeField] Button completeBtn;
