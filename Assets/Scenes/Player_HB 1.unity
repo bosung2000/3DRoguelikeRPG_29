@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4497736, g: 0.49984246, b: 0.5756143, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -828,7 +828,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2086376223
 Transform:
   m_ObjectHideFlags: 0
@@ -3121,6 +3121,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Height
+      value: 1.8303605
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Radius
+      value: 0.13894035
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Center.y
+      value: 0.89013404
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Center.z
+      value: -0.008515313
+      objectReference: {fileID: 0}
     - target: {fileID: 6527788016433440651, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: m_Constraints
       value: 112
@@ -3141,7 +3157,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2174090918272729807, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+    - {fileID: 8575302898808265813, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2472773911475716344, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
@@ -3396,7 +3414,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: cb1f2f9873f36594f9189712a2521cb4, type: 3}
   m_Controller: {fileID: 9100000, guid: 7151951447356d047b2e703a79bbe9f3, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -3953,6 +3971,7 @@ MonoBehaviour:
   _player: {fileID: 7736338525454489197}
   offset: {x: 0, y: 15, z: -10}
   followSpeed: 5
+  _playerStat: {fileID: 7736338525454489190}
 --- !u!1 &8817898888450735067
 GameObject:
   m_ObjectHideFlags: 0

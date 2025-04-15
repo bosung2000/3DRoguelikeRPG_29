@@ -20,9 +20,9 @@ public interface BaseEntity
 
 public class Player : MonoBehaviour, BaseEntity
 {
-    [SerializeField] private PlayerStatData statData;
+    [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
-    private PlayerController playerController;
+    [SerializeField] PlayerController _playerController;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -36,7 +36,6 @@ public class Player : MonoBehaviour, BaseEntity
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
-       
     }
     private void Start()
     {
@@ -54,16 +53,18 @@ public class Player : MonoBehaviour, BaseEntity
         {
             inputDir = inputDir.normalized;
             _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
-            playerController.SetAnimatorBool("Run", true);
+            _playerController.SetBool("Run", true);
         }
         else
         {
             _rb.velocity = Vector3.zero;
+            _playerController.SetBool("Run", false);
         }
     }
     public void FixedUpdate()
     {
         DirectionCheck();
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed))/5;
     }
 
     public void MaxHPUp(float value)
@@ -93,14 +94,35 @@ public class Player : MonoBehaviour, BaseEntity
         //float currentSpeed = _stats.GetStatValue(PlayerStatType.Speed);
         //_stats.SetStatValue(PlayerStatType.Speed, currentSpeed + speed);
         _playerStat.ModifyStat(PlayerStatType.Speed, speed);
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed)) / 5;
     }
     public void TakeDamage(int damage)
     {
+        _playerController.SetTrigger("Attack");
+
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-        //damage에서 damageReduction%만큼   감소
+        //damage에서 damageReduction%만큼 감소
         damage = damage - (int)(damage * damageReduction / 100);
-        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 1));
+        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+
+        if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
+        {
+            _playerController.SetTrigger("Die");
+            Time.timeScale = 0f;
+            StartCoroutine(PlayDeathAnimThenPauseGame());
+            Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+        }
+    }
+    private IEnumerator PlayDeathAnimThenPauseGame()
+    {
+        AnimatorStateInfo state = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+
+        _playerController._anim.speed = 1f;
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).IsName("Die"));
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
     }
     public void Hit()
@@ -147,6 +169,7 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
+        _playerController.SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
 
