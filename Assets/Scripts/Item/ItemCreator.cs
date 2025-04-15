@@ -51,12 +51,6 @@ public class ItemCreator : EditorWindow
         itemName = EditorGUILayout.TextField("아이템 이름", itemName);
         description = EditorGUILayout.TextField("설명", description);
 
-        // Tier 추가
-        if (itemType == ItemType.Equipment)
-        {
-            tier = Mathf.Clamp(EditorGUILayout.IntField("티어", tier), 1, 10);
-        }
-
         // 아이템 타입 선택
         EditorGUI.BeginChangeCheck();
         itemType = (ItemType)EditorGUILayout.EnumPopup("아이템 타입", itemType);
@@ -84,6 +78,7 @@ public class ItemCreator : EditorWindow
         if (itemType == ItemType.Equipment)
         {
             equipType = (EquipType)EditorGUILayout.EnumPopup("장비 타입", equipType);
+            tier = Mathf.Clamp(EditorGUILayout.IntField("티어", tier), 1, 10);
         }
         else if (itemType == ItemType.Consumable)
         {
