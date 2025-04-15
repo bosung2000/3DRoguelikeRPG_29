@@ -17,6 +17,11 @@ public class SlotItemData : ScriptableObject
         item = null;
         amount = 0;
     }
+    public SlotItemData(ItemData item, int amount)
+    {
+        this.item = item;
+        this.amount = amount;
+    }
 
     public void AddItem(ItemData item, int count = 1)
     {
