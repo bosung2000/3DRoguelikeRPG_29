@@ -13,6 +13,9 @@ public class UIEnhancementInventory : MonoBehaviour
     private UIPopupInventory uiPopupInventory;
     private bool isInitialized = false;
 
+
+    public EquipmentEnhanceUI enhanceUI;
+
     private void Start()
     {
         UpdateInventory();
@@ -91,10 +94,11 @@ public class UIEnhancementInventory : MonoBehaviour
     /// <param name="slotItemData"></param>
     private void HandleItemOneClick(SlotItemData slotItemData)
     {
+        
         //장착 무기 
         if (slotItemData.item.itemType == ItemType.Equipment)
         {
-            //정보가져오기
+            enhanceUI.SetEquipment(slotItemData.item);
         } 
         else
         {
