@@ -18,9 +18,8 @@ public enum BuffType
 }
 
 [CreateAssetMenu(fileName = "Skill", menuName = "New Skill")]
-public class Skill : MonoBehaviour
+public class Skill : ScriptableObject
 {
-
     [Header("Info")]
     public int index;
     public string _name;

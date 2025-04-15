@@ -6,10 +6,16 @@ public class EnabledSkills
     public Skill skill;
     public int index;
 }
+
+public class SkillInstance
+{
+    public Skill skill;
+    public int index;
+}
+
 public class SkillManager : MonoBehaviour
 {
     private static SkillManager instance;
-
     public static SkillManager Instance { get; set; }
 
     public Player player;
@@ -18,6 +24,7 @@ public class SkillManager : MonoBehaviour
     public float attackRate;
     private Camera _camera; 
     private Skill[] skills;
+    private SkillInstance[] SkillInstances;
     public EnabledSkills[] enabledSkills;
 
     private void Awake()
@@ -41,6 +48,12 @@ public class SkillManager : MonoBehaviour
     {
         //Resources폴더의 /PlayerSkill 폴더의 모든 것을 가져와 배열로 만들고
         skills = Resources.LoadAll<Skill>("/PlayerSkills");
+
+        for(int i=0;i<skills.Length;i++)
+        {
+            SkillInstances[i].skill = skills[i];
+            SkillInstances[i].index = i;
+        }
 
         //스킬 ui가 표시할 수 있는 스킬 수만큼 스킬배열 길이를 정하고 반복문 시작
         enabledSkills = new EnabledSkills[uiSkill.transform.childCount];
@@ -120,14 +133,16 @@ public class SkillManager : MonoBehaviour
     /// 스킬을 눌렀을 때, 스킬 애니메이션이 시전되며 시전 중임을 알리는 불리언을 활성화키는 메서드
     /// 스킬의 적중은 애니메이션 진행 도중 OnSkillHit 메서드를 발동시킴으로써 적용시킬 것
     /// </summary>
-    public void OnSkillClick(Skill skill)
+    public void OnSkillClick(Skill skill, Vector3 direction)
     {
-
+        //스킬이 공격중이지 않고 플레이어의 마나가 스킬의 마나보다 많다면
         //if (!skill.isAttacking && player.mana>skill.requiredMana())
         //{
+        //    //공격 활성화시키고
         //    skill.isAttacking = true;
         //    if (!Skill)
         //    {
+        //        //애니메이션 재생 이후 
         //        animator.SetTrigger("Skill");
         //        Skill = true;
         //    }
@@ -136,6 +151,7 @@ public class SkillManager : MonoBehaviour
         //        animator.SetTrigger("Skill_Alternative");
         //        Skill = false;
         //    }
+        //    // 이후 재사용 가능하게 attackRate초 뒤 활성화시키기
         //    Invoke(nameof(OnCanUseSkill), attackRate);
         //}
     }
@@ -143,7 +159,7 @@ public class SkillManager : MonoBehaviour
     /// <summary>
     /// 스킬이 시전되고 나서, 시전 중이라는 불리언을 비활성화시키는 메서드
     /// </summary>
-    void OnCanUseSkill()
+    void OnCanUseSkill(Skill skill)
     {
         attacking = false;
     }
