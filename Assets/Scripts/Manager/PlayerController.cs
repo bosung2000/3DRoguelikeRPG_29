@@ -6,22 +6,15 @@ public class PlayerController : MonoBehaviour
 {
     public Animator _anim;
 
-    private void Awake()
-    {
-        _anim = GetComponent<Animator>();
-    }
     public void SetBool(string name, bool value)
     {
         _anim.SetBool(name, value);
     }
     public void SetTrigger(string name)
     {
-        _anim.SetTrigger(name);
+        if (!_anim.GetCurrentAnimatorStateInfo(0).IsName(name))
+        {
+            _anim.SetTrigger(name);
+        }
     }
-
-    public void SetFloat(string name , float speed)
-    {
-        _anim.SetFloat(name, speed);
-    }
-
 }
