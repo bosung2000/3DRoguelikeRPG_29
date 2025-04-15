@@ -18,4 +18,36 @@ public class UIShop : PopupUI
     [SerializeField] TextMeshProUGUI completeTxt;
     [SerializeField] Button exitBtn;
 
+
+    [SerializeField] private Transform itemSlotParent;
+    [SerializeField] private UISlot slotPrefab;
+    private List<UISlot> slots = new List<UISlot>();
+    private Shop shop;
+
+    private void Awake()
+    {
+        //shop = GameManager.Instance.Shop;
+    }
+
+    public void ShowShopItems()
+    {
+        //ClearSlots();
+        var availableItems = shop.GetAvailableItems();
+
+        foreach (var item in availableItems)
+        {
+            var slot = Instantiate(slotPrefab, itemSlotParent);
+            slot.SetSlotData(item);
+            slot.OnItemClicked += OnShopItemSelected;
+            slots.Add(slot);
+        }
+    }
+
+    private void OnShopItemSelected(SlotItemData item)
+    {
+        //아이템 정보를 보여주는 창 1개 띄운다. > 구매 창 
+
+        var purchasePopup = UIManager.Instance.ShowPopupUI<UIPurchasePopup>();
+        //purchasePopup.Show(item);
+    }
 }

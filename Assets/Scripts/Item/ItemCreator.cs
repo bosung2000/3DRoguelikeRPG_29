@@ -278,24 +278,19 @@ public class ItemCreator : EditorWindow
     {
         if (itemData != null)
         {
-            string path = EditorUtility.SaveFilePanelInProject(
-                "아이템 저장",
-                itemData.itemName,
-                "asset",
-                "저장할 위치를 선택하세요."
-            );
-
-            if (!string.IsNullOrEmpty(path))
+            // Resources/Items 폴더에 저장
+            string folderPath = "Assets/Resources/Items";
+            if (!Directory.Exists(folderPath))
             {
-                AssetDatabase.CreateAsset(itemData, path);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = itemData;
-
-                Debug.Log($"아이템이 저장되었습니다: {path}");
+                Directory.CreateDirectory(folderPath);
             }
+
+            string path = $"{folderPath}/{itemData.itemName}.asset";
+            AssetDatabase.CreateAsset(itemData, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log($"아이템이 저장되었습니다: {path}");
         }
     }
 }
