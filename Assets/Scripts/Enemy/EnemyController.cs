@@ -20,11 +20,13 @@ public enum EnemyStateType
 public class EnemyController : MonoBehaviour
 {
     private Enemy _enemy;
-    private IEnemyState _currentState;
+    public Enemy Enemy => _enemy;
 
+    private IEnemyState _currentState;
     public EnemyStateType CurrentStateType { get; private set; }
     public NavMeshAgent agent { get; private set; }
     public Animator animator {  get; private set; }
+
 
     private void Awake()
     {
