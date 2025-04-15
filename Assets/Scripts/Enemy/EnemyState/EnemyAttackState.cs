@@ -47,6 +47,7 @@ public class EnemyAttackState : IEnemyState
 
         if(Time.time >= lastAttackTime + attackCooldown)
         {
+            lastAttackTime = Time.time;
             PerformAttack(controller);
         }
     }
