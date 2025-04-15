@@ -52,7 +52,11 @@ public class Player : MonoBehaviour, BaseEntity
         if (inputDir.sqrMagnitude > 0.01f)
         {
             inputDir = inputDir.normalized;
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
+
+            Quaternion targetRotation = Quaternion.LookRotation(inputDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+
+            _rb.velocity = transform.forward * _playerStat.GetStatValue(PlayerStatType.Speed);
             _playerController.SetBool("Run", true);
         }
         else
@@ -186,7 +190,6 @@ public class Player : MonoBehaviour, BaseEntity
         if (dir.sqrMagnitude < 0.01f)
             dir = transform.forward;
 
-        dir.y = 0f;
         dir = dir.normalized;
 
         Vector3 origin = transform.position + Vector3.up * 0.01f;
