@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, BaseEntity
 {
     [SerializeField] private PlayerStatData statData;
     public PlayerStat _playerStat;
+    private PlayerController playerController;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour, BaseEntity
         {
             inputDir = inputDir.normalized;
             _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
+            playerController.SetAnimatorBool("Run", true);
         }
         else
         {
