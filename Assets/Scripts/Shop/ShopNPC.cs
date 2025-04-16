@@ -6,6 +6,12 @@ public class ShopNPC : MonoBehaviour
 {
     [SerializeField] private Shop shop;
     [SerializeField] private float interactionDistance = 2f;
+    [SerializeField] private PlayerManager playerManager;
+
+    private void Start()
+    {
+        playerManager =GameManager.Instance.PlayerManager;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,6 +33,6 @@ public class ShopNPC : MonoBehaviour
     private void OpenShop()
     {
         var shopUI = UIManager.Instance.ShowPopupUI<UIShop>();
-        shopUI.Initialize(shop); // 해당 NPC의 Shop 컴포넌트를 전달
+        shopUI.Initialize(shop,playerManager); // 해당 NPC의 Shop 컴포넌트를 전달
     }
 }
