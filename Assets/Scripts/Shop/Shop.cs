@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,8 @@ public class Shop : MonoBehaviour
     private List<SlotItemData> availableItems = new List<SlotItemData>();
     [SerializeField] private int shopTier = 10;
     private PlayerManager playerManager;
-    int totalslotsCount = 0;
+
+    public event Action ShopitemChange;
 
     private void Start()
     {
@@ -17,7 +19,7 @@ public class Shop : MonoBehaviour
     {
         playerManager = GameManager.Instance.PlayerManager;
         availableItems.Clear();
-        totalslotsCount= 0;
+        
         // List로 받아오고 이걸 slotitemdata형태로 변경해야됨 
         List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, 10);
 
@@ -26,7 +28,6 @@ public class Shop : MonoBehaviour
             SlotItemData slotItemData = new SlotItemData(item, 1);
             availableItems.Add(slotItemData);
         }
-        totalslotsCount= availableItems.Count;
     }
 
     public List<SlotItemData> GetAvailableItems()
@@ -41,6 +42,7 @@ public class Shop : MonoBehaviour
         if (availableItems.Contains(Slotitem))
         {
             availableItems.Remove(Slotitem);
+            ShopitemChange?.Invoke();
         }
         else
         {
@@ -58,7 +60,7 @@ public class Shop : MonoBehaviour
     {
         if (playerManager.Currency.CanAfford(CurrencyType.Gold, item.gold))
         {
-            playerManager.Currency.AddCurrency(CurrencyType.Gold, item.gold);
+            playerManager.Currency.AddCurrency(CurrencyType.Gold, -item.gold);
             return true;
         }
         return false;
@@ -66,7 +68,7 @@ public class Shop : MonoBehaviour
 
     public int ReTurnTotalSlotCount()
     {
-        return totalslotsCount;
+        return availableItems.Count;
     }
 
 }

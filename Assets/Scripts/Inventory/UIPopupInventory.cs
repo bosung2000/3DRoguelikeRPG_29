@@ -67,6 +67,10 @@ public class UIPopupInventory : PopupUI
         {
             AddSlotBtn.onClick.AddListener(() => OnAddSlot());
         }
+        if (closeButton !=null)
+        {
+            closeButton.onClick.AddListener(() =>OnCloseButtonClick());
+        }
 
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
