@@ -117,14 +117,12 @@ public class EnemyController : MonoBehaviour
 
         //추적범위
         float chaseRange = _enemy.Stat.GetStatValue(EnemyStatType.ChaseRange);
-        Debug.Log($"[Gizmos] chaseRange = {chaseRange}");
         Gizmos.DrawWireSphere(transform.position, chaseRange);
         //추적범위 이탈
         Gizmos.color = new Color(255f/255f, 0f/255f, 221f/255);
         Gizmos.DrawWireSphere(transform.position, chaseRange * 1.5f);
         //공격범위
         float attackRange = _enemy.Stat.GetStatValue(EnemyStatType.AttackRange);
-        Debug.Log($"[Gizmos] attackRange = {attackRange}");
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 

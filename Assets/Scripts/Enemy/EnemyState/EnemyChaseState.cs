@@ -31,7 +31,6 @@ public class EnemyChaseState : IEnemyState
     {
         controller.animator?.SetBool("isMoving",false);
         controller.agent.isStopped = true;
-        Debug.Log("Chase 상태 종료");
     }
 
     public void UpdateState(EnemyController controller)

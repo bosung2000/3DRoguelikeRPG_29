@@ -19,15 +19,17 @@ public class EnemyAttackState : IEnemyState
             Debug.Log("타겟이 없어 Idle상태로 전환");
             controller.ChageState(EnemyStateType.Idle);
         }
+
         attackRange = controller.GetStat(EnemyStatType.AttackRange);
         attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
         lastAttackTime = Time.time;
-        controller.animator?.SetTrigger("Attack");
+
+        controller.animator?.SetBool("isMoving", false);
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator?.ResetTrigger("Attack");
     }
 
     public void UpdateState(EnemyController controller)
@@ -46,6 +48,7 @@ public class EnemyAttackState : IEnemyState
         {
             lastAttackTime = Time.time;
 
+            controller.animator?.SetTrigger("Attack");
             PerformAttack(controller);
         }
     }

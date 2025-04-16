@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2757196997137046735}
   - component: {fileID: 6989626496270678351}
   - component: {fileID: 4131601597733009817}
+  - component: {fileID: -8423301338365569332}
   m_Layer: 0
   m_Name: TrainingMeleeBot
   m_TagString: Untagged
@@ -106,7 +107,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -198,3 +199,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce238e373242964b949b014492e0645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &-8423301338365569332
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4661205358422543490}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4124768f31afdda43b322839173050da, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
