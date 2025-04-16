@@ -312,7 +312,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 449826031921124830, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1610283976}
+      addedObject: {fileID: 1610283974}
   m_SourcePrefab: {fileID: 100100000, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
 --- !u!224 &181547537 stripped
 RectTransform:
@@ -445,7 +445,7 @@ MonoBehaviour:
   slots: []
   uiSlotPrefab: {fileID: 8089998739211312202, guid: f1e38d9f8c4b1314ea32742e0bff1082, type: 3}
   SlotParent: {fileID: 2785199426486817251, guid: 96a7b939cea504c4295a18ce9fad73a6, type: 3}
-  enhanceUI: {fileID: 0}
+  enhanceUI: {fileID: 1610283974}
 --- !u!4 &518128552
 Transform:
   m_ObjectHideFlags: 0
@@ -454,12 +454,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518128550}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 357.59186, y: 182.65515, z: -1.8909681}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -82.01345, y: -91.67765, z: -4.6421266}
+  m_LocalScale: {x: 2.454894, y: 2.454894, z: 2.454894}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 802058723}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &535300914
 GameObject:
@@ -718,6 +718,7 @@ RectTransform:
   - {fileID: 5687348951290209317}
   - {fileID: 181547537}
   - {fileID: 1714408112}
+  - {fileID: 518128552}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1119,7 +1120,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 449826031921124830, guid: 7c4fb63493880c04d9ee3632dcc46b05, type: 3}
   m_PrefabInstance: {fileID: 181547536}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1610283976
+--- !u!114 &1610283974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1128,13 +1129,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1610283973}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d905087b4913f164ea7edf8b270c2020, type: 3}
+  m_Script: {fileID: 11500000, guid: f1fc8adda4a3bbd4fac622d6b456e05c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slots: []
-  uiSlotPrefab: {fileID: 0}
-  SlotParent: {fileID: 0}
-  enhanceUI: {fileID: 0}
+  itemNameText: {fileID: 0}
+  enhancementLevelText: {fileID: 0}
+  successRateText: {fileID: 0}
+  costText: {fileID: 0}
+  itemIcon: {fileID: 0}
+  enhanceButton: {fileID: 0}
+  resultText: {fileID: 0}
+  enhancer: {fileID: 0}
+  player: {fileID: 0}
+  playerManager: {fileID: 0}
 --- !u!1 &1624021061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,4 +1903,3 @@ SceneRoots:
   - {fileID: 831775801}
   - {fileID: 3981039239470564612}
   - {fileID: 1230696928}
-  - {fileID: 518128552}
