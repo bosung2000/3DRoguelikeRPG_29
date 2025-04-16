@@ -59,4 +59,14 @@ public class CurrencyManager : MonoBehaviour
         }
     }
 
+    internal bool CanAfford(CurrencyType _currencyType,int _gold)
+    {
+        if (currencies[_currencyType] >_gold)
+        {
+            return true;
+        }
+        Debug.Log("골드가 부족합니다");
+        return false;
+        
+    }
 }

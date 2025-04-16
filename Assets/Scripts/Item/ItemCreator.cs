@@ -11,6 +11,7 @@ public class ItemCreator : EditorWindow
     private EquipType equipType = EquipType.Weapon;
     private UseType useType = UseType.None;
     private int id = 0;
+    private int tier = 0; // 변수 추가
     private string description = "";
     private int gold = 100;
     private int maxEnhancementLevel = 10;
@@ -23,12 +24,12 @@ public class ItemCreator : EditorWindow
     private Vector2 scrollPosition;
     private bool showOptions = true;
     private bool showConsumableEffects = true;
-    
+
     // 장비 옵션 관련
     private ConditionType newOptionType = ConditionType.Power;
     private float newOptionBaseValue = 10f;
     private float newOptionIncreasePerLevel = 1f;
-    
+
     // 소모품 효과 관련
     private ConditionType newEffectType = ConditionType.Health;
     private float newEffectValue = 50f;
@@ -49,7 +50,7 @@ public class ItemCreator : EditorWindow
         id = EditorGUILayout.IntField("아이템 ID", id);
         itemName = EditorGUILayout.TextField("아이템 이름", itemName);
         description = EditorGUILayout.TextField("설명", description);
-        
+
         // 아이템 타입 선택
         EditorGUI.BeginChangeCheck();
         itemType = (ItemType)EditorGUILayout.EnumPopup("아이템 타입", itemType);
@@ -72,18 +73,19 @@ public class ItemCreator : EditorWindow
                 useType = UseType.None;
             }
         }
-        
+
         // 아이템 타입에 따라 다른 옵션 표시
         if (itemType == ItemType.Equipment)
         {
             equipType = (EquipType)EditorGUILayout.EnumPopup("장비 타입", equipType);
+            tier = Mathf.Clamp(EditorGUILayout.IntField("티어", tier), 1, 10);
         }
         else if (itemType == ItemType.Consumable)
         {
             useType = (UseType)EditorGUILayout.EnumPopup("사용 타입", useType);
             maxStack = EditorGUILayout.IntField("최대 중첩 개수", maxStack);
         }
-        
+
         gold = EditorGUILayout.IntField("가격", gold);
         icon = (Sprite)EditorGUILayout.ObjectField("아이콘", icon, typeof(Sprite), false);
         itemObj = (GameObject)EditorGUILayout.ObjectField("아이템 오브젝트", itemObj, typeof(GameObject), false);
@@ -109,32 +111,32 @@ public class ItemCreator : EditorWindow
             // 장비 옵션 설정
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             showOptions = EditorGUILayout.Foldout(showOptions, "장비 옵션");
-            
+
             if (showOptions)
             {
                 if (itemData != null)
                 {
                     EditorGUI.indentLevel++;
-                    
+
                     for (int i = 0; i < itemData.options.Count; i++)
                     {
                         EditorGUILayout.BeginHorizontal();
-                        
+
                         itemData.options[i].type = (ConditionType)EditorGUILayout.EnumPopup("옵션 유형", itemData.options[i].type);
                         itemData.options[i].baseValue = EditorGUILayout.FloatField("기본값", itemData.options[i].baseValue);
                         itemData.options[i].increasePerLevel = EditorGUILayout.FloatField("레벨당 증가량", itemData.options[i].increasePerLevel);
-                        
+
                         if (GUILayout.Button("제거", GUILayout.Width(60)))
                         {
                             itemData.options.RemoveAt(i);
                             GUIUtility.ExitGUI();
                         }
-                        
+
                         EditorGUILayout.EndHorizontal();
                     }
 
                     EditorGUI.indentLevel--;
-                    
+
                     EditorGUILayout.Space(5);
                     EditorGUILayout.LabelField("새 옵션 추가", EditorStyles.boldLabel);
                     EditorGUILayout.BeginHorizontal();
@@ -142,7 +144,7 @@ public class ItemCreator : EditorWindow
                     newOptionBaseValue = EditorGUILayout.FloatField("기본값", newOptionBaseValue);
                     newOptionIncreasePerLevel = EditorGUILayout.FloatField("증가량", newOptionIncreasePerLevel);
                     EditorGUILayout.EndHorizontal();
-                    
+
                     if (GUILayout.Button("옵션 추가"))
                     {
                         ItemOption newOption = new ItemOption
@@ -151,7 +153,7 @@ public class ItemCreator : EditorWindow
                             baseValue = newOptionBaseValue,
                             increasePerLevel = newOptionIncreasePerLevel
                         };
-                        
+
                         itemData.options.Add(newOption);
                     }
                 }
@@ -167,32 +169,32 @@ public class ItemCreator : EditorWindow
             // 소모품 효과 설정
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             showConsumableEffects = EditorGUILayout.Foldout(showConsumableEffects, "소모품 효과");
-            
+
             if (showConsumableEffects)
             {
                 if (itemData != null)
                 {
                     EditorGUI.indentLevel++;
-                    
+
                     for (int i = 0; i < itemData.consumableEffects.Count; i++)
                     {
                         EditorGUILayout.BeginHorizontal();
-                        
+
                         itemData.consumableEffects[i].type = (ConditionType)EditorGUILayout.EnumPopup("효과 유형", itemData.consumableEffects[i].type);
                         itemData.consumableEffects[i].value = EditorGUILayout.FloatField("효과 수치", itemData.consumableEffects[i].value);
                         itemData.consumableEffects[i].duration = EditorGUILayout.FloatField("지속 시간", itemData.consumableEffects[i].duration);
-                        
+
                         if (GUILayout.Button("제거", GUILayout.Width(60)))
                         {
                             itemData.consumableEffects.RemoveAt(i);
                             GUIUtility.ExitGUI();
                         }
-                        
+
                         EditorGUILayout.EndHorizontal();
                     }
 
                     EditorGUI.indentLevel--;
-                    
+
                     EditorGUILayout.Space(5);
                     EditorGUILayout.LabelField("새 효과 추가", EditorStyles.boldLabel);
                     EditorGUILayout.BeginHorizontal();
@@ -200,7 +202,7 @@ public class ItemCreator : EditorWindow
                     newEffectValue = EditorGUILayout.FloatField("효과 수치", newEffectValue);
                     newEffectDuration = EditorGUILayout.FloatField("지속 시간(초)", newEffectDuration);
                     EditorGUILayout.EndHorizontal();
-                    
+
                     if (GUILayout.Button("효과 추가"))
                     {
                         ConsumableEffect newEffect = new ConsumableEffect
@@ -209,7 +211,7 @@ public class ItemCreator : EditorWindow
                             value = newEffectValue,
                             duration = newEffectDuration
                         };
-                        
+
                         itemData.consumableEffects.Add(newEffect);
                     }
                 }
@@ -252,7 +254,8 @@ public class ItemCreator : EditorWindow
         itemData.gold = gold;
         itemData.Icon = icon;
         itemData.itemObj = itemObj;
-        
+        itemData.Tier = tier;
+
         if (itemType == ItemType.Equipment)
         {
             itemData.maxEnhancementLevel = maxEnhancementLevel;
@@ -265,7 +268,7 @@ public class ItemCreator : EditorWindow
             itemData.maxStack = maxStack;
             itemData.consumableEffects = new System.Collections.Generic.List<ConsumableEffect>();
         }
-        
+
         itemData.Initialize(); // 아이템 초기화
 
         EditorUtility.SetDirty(itemData);
@@ -275,25 +278,20 @@ public class ItemCreator : EditorWindow
     {
         if (itemData != null)
         {
-            string path = EditorUtility.SaveFilePanelInProject(
-                "아이템 저장",
-                itemData.itemName,
-                "asset",
-                "저장할 위치를 선택하세요."
-            );
-
-            if (!string.IsNullOrEmpty(path))
+            // Resources/Items 폴더에 저장
+            string folderPath = "Assets/Resources/Items";
+            if (!Directory.Exists(folderPath))
             {
-                AssetDatabase.CreateAsset(itemData, path);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-                
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = itemData;
-                
-                Debug.Log($"아이템이 저장되었습니다: {path}");
+                Directory.CreateDirectory(folderPath);
             }
+
+            string path = $"{folderPath}/{itemData.itemName}.asset";
+            AssetDatabase.CreateAsset(itemData, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log($"아이템이 저장되었습니다: {path}");
         }
     }
 }
-#endif 
+#endif

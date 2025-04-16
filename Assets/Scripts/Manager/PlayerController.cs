@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Animator anim;
+    public Animator _anim;
 
-    public void SetAnimatorBool(string name, bool value)
+    public void SetBool(string name, bool value)
     {
-        anim.SetBool(name, value);
+        _anim.SetBool(name, value);
+    }
+    public void SetTrigger(string name)
+    {
+        if (!_anim.GetCurrentAnimatorStateInfo(0).IsName(name))
+        {
+            _anim.SetTrigger(name);
+        }
     }
 }

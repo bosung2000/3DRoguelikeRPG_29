@@ -3121,6 +3121,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6527788016433440651, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 7190216306476448888, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: dashCooldownUI
       value: 
@@ -3129,6 +3133,10 @@ PrefabInstance:
       propertyPath: _floatingJoystick
       value: 
       objectReference: {fileID: 610024461}
+    - target: {fileID: 7190216306476448888, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: _playerController
+      value: 
+      objectReference: {fileID: 7736338525454489203}
     - target: {fileID: 8976010896831269288, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3409,7 +3417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28a7b285a0458af4fa793b6577a19360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 7736338525454489202}
+  _anim: {fileID: 7736338525454489202}
 --- !u!1001 &7765804083892841321
 PrefabInstance:
   m_ObjectHideFlags: 0

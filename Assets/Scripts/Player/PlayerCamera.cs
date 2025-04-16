@@ -4,7 +4,8 @@ public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private Transform _player;
     [SerializeField] private Vector3 offset = new Vector3(0, 15, -10);
-    [SerializeField] private float followSpeed = 5f;//플레이어속도에 맞춰 수정
+    [SerializeField] private float followSpeed = 5f;
+    [SerializeField] private PlayerStat _playerStat;
 
     private void LateUpdate()
     {
@@ -12,6 +13,7 @@ public class PlayerCamera : MonoBehaviour
 
         Vector3 desiredPosition = _player.position + offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
+        followSpeed = _playerStat.GetStatValue(PlayerStatType.Speed);
     }
     void LookAt()
 

@@ -20,17 +20,19 @@ public enum EnemyStateType
 public class EnemyController : MonoBehaviour
 {
     private Enemy _enemy;
-    private IEnemyState _currentState;
+    public Enemy Enemy => _enemy;
 
+    private IEnemyState _currentState;
     public EnemyStateType CurrentStateType { get; private set; }
-    public NavMeshAgent agent { get; private set; }//NavMeshAgent 접근용
-    //public Animator animator {  get; private set; }
+    public NavMeshAgent agent { get; private set; }
+    public Animator animator {  get; private set; }
+
 
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
         agent = GetComponent<NavMeshAgent>();
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -113,13 +115,14 @@ public class EnemyController : MonoBehaviour
 
         Gizmos.color = Color.red;
 
+        //추적범위
         float chaseRange = _enemy.Stat.GetStatValue(EnemyStatType.ChaseRange);
-        Debug.Log($"[Gizmos] chaseRange = {chaseRange}");
         Gizmos.DrawWireSphere(transform.position, chaseRange);
-        
+        //추적범위 이탈
+        Gizmos.color = new Color(255f/255f, 0f/255f, 221f/255);
+        Gizmos.DrawWireSphere(transform.position, chaseRange * 1.5f);
+        //공격범위
         float attackRange = _enemy.Stat.GetStatValue(EnemyStatType.AttackRange);
-        Debug.Log($"[Gizmos] attackRange = {attackRange}");
-
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 

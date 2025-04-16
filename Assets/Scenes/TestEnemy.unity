@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: e66b705fe7346924f857350b68c7402e, type: 2}
 --- !u!1 &330497563
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 794512380}
   - component: {fileID: 794512379}
   - component: {fileID: 794512378}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1007062600
+--- !u!1001 &1251142507
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -344,7 +344,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4661205358422543490, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
       propertyPath: m_Name
-      value: TrainingBot
+      value: TrainingMeleeBot
       objectReference: {fileID: 0}
     - target: {fileID: 5974974504619294570, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -585,4 +585,4 @@ SceneRoots:
   - {fileID: 1552593967}
   - {fileID: 330497567}
   - {fileID: 794512381}
-  - {fileID: 1007062600}
+  - {fileID: 1251142507}

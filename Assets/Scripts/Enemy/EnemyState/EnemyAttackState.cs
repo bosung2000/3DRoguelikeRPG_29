@@ -19,22 +19,22 @@ public class EnemyAttackState : IEnemyState
             Debug.Log("타겟이 없어 Idle상태로 전환");
             controller.ChageState(EnemyStateType.Idle);
         }
+
         attackRange = controller.GetStat(EnemyStatType.AttackRange);
         attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
         lastAttackTime = Time.time;
+
+        controller.animator?.SetBool("isMoving", false);
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator?.ResetTrigger("Attack");
     }
 
     public void UpdateState(EnemyController controller)
     {
-        if (_target == null)
-        {
-            return;
-        }
+        if (_target == null)return;
 
         float distance = Vector3.Distance(controller.transform.position, _target.position);
 
@@ -46,6 +46,9 @@ public class EnemyAttackState : IEnemyState
 
         if(Time.time >= lastAttackTime + attackCooldown)
         {
+            lastAttackTime = Time.time;
+
+            controller.animator?.SetTrigger("Attack");
             PerformAttack(controller);
         }
     }
@@ -53,6 +56,18 @@ public class EnemyAttackState : IEnemyState
     private void PerformAttack(EnemyController controller)
     {
         float damage = controller.GetAttack();
+
+        switch(controller.Enemy.Role)
+        {
+            case EnemyRoleType.Melee:
+
+                break;
+            case EnemyRoleType.Ranged:
+                break;
+            case EnemyRoleType.Support:
+                break;
+        }
+
         _target.GetComponent<Player>()?.TakeDamage((int)damage);
         Debug.Log($"Attack {damage}");
     }
