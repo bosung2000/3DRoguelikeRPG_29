@@ -34,5 +34,8 @@ public class ShopNPC : MonoBehaviour
     {
         var shopUI = UIManager.Instance.ShowPopupUI<UIShop>();
         shopUI.Initialize(shop,playerManager); // 해당 NPC의 Shop 컴포넌트를 전달
+
+        
     }
+
 }
