@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        Stat.ModifyStat(EnemyStatType.HP, damage);
+        Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
         
         if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
         {
