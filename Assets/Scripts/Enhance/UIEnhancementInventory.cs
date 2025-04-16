@@ -62,10 +62,11 @@ public class UIEnhancementInventory : MonoBehaviour
             }
         }
     }
-    public void InitSlotShow()
+    private void InitSlotShow()
     {
         RemoveSlots();
         slots = new List<UISlot>();
+        
         for (int i = 0; i < inventoryManager.ReturnTotalSlotCount(); i++)
         {
             UISlot slotobj = Instantiate(uiSlotPrefab, SlotParent);
