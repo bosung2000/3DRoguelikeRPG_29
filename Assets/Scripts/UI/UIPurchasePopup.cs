@@ -24,9 +24,12 @@ public class UIPurchasePopup : PopupUI
         btn_Buy.onClick.AddListener(OnBuyItem);
         closeButton.onClick.AddListener(ClosePopup);
     }
-    public void Initialize(Shop _shop)
+    public void Initialize(Shop _shop, SlotItemData item)
     {
         shop = _shop;
+        currentSlotItem = item;
+        base.Show();
+        UpdateUI();
     }
 
     private void OnBuyItem()
@@ -55,12 +58,7 @@ public class UIPurchasePopup : PopupUI
         UIManager.Instance.ClosePopupUI(this);
     }
 
-    public void Show(SlotItemData item)
-    {
-        currentSlotItem = item;
-        base.Show();
-        UpdateUI();
-    }
+
 
     private void UpdateUI()
     {
