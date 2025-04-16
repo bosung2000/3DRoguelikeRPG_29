@@ -56,7 +56,7 @@ public class Player : MonoBehaviour, BaseEntity
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-            _rb.velocity = transform.forward * _playerStat.GetStatValue(PlayerStatType.Speed);
+            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
             _playerController.SetBool("Run", true);
         }
         else
