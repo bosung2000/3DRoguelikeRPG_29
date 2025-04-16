@@ -21,7 +21,6 @@ public class InventoryManager : MonoBehaviour
     {
         InitSlot();
         playerManager = GameManager.Instance.PlayerManager;
-        OnSlotChanged += AddSlotCostIncrease;
     }
 
 
@@ -73,9 +72,9 @@ public class InventoryManager : MonoBehaviour
         {
             emptySlot.AddItem(itemData);
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
-
         return false;
     }
     /// <summary>
@@ -100,6 +99,7 @@ public class InventoryManager : MonoBehaviour
             //slotItemDatas.Remove(ExistItme);
             //OnInventoryChanged?.Invoke();
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
 
@@ -172,6 +172,7 @@ public class InventoryManager : MonoBehaviour
                 AddSlotsCount++;
                 slotItemDatas.Add(new SlotItemData());
                 //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
+                AddSlotCostIncrease();
                 OnSlotChanged?.Invoke();
                 return true;
             }

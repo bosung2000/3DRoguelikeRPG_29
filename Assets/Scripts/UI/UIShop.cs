@@ -17,21 +17,25 @@ public class UIShop : PopupUI
 
     [SerializeField] private Transform SlotParent;
     [SerializeField] private ShopBuySlot slotPrefab;
-    private List<ShopBuySlot> slots;
+    private List<ShopBuySlot> ShopBuyslots;
     private Shop shop;
-    private Player player;
+    private PlayerManager playerManager;
 
 
-
-    public void Initialize(Shop shop)
+    public void Initialize(Shop _shop,PlayerManager _playerManager)
     {
-        this.shop = shop;
+        shop = _shop;
+        playerManager = _playerManager;
+        shop.ShopitemChange += ShowShopItems;
+        shop.ShopitemChange += ShowShopGold;
         ShowShopItems();
+        ShowShopGold();
     }
+    //UI 다시 보여주는 로직 만들어야됨 >변경되는곳에 이벤트를 달아주자 slotdata가 
     public void ShowShopItems()
     {
         RemoveSlots();
-        slots = new List<ShopBuySlot>();
+        ShopBuyslots = new List<ShopBuySlot>();
         var availableItems = shop.GetAvailableItems();
 
         foreach (var item in availableItems)
@@ -39,42 +43,22 @@ public class UIShop : PopupUI
             var slot = Instantiate(slotPrefab, SlotParent);
             slot.SetSlotData(item);
             slot.OnitemClicked += OnShopItemSelected;
-            slots.Add(slot);
+            ShopBuyslots.Add(slot);
         }
-
-        //Grid 설정 
-        //SetupGridLayout();
     }
-
-    private void SetupGridLayout()
+    public void ShowShopGold()
     {
-        GridLayoutGroup grid = SlotParent.GetComponent<GridLayoutGroup>();
-        if (grid != null)
-        {
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 4;  // 한 줄에 4개의 슬롯
-            grid.spacing = new Vector2(20, 20);
-
-            //Content 크기 자동 조절
-            int totalSlots = shop.ReTurnTotalSlotCount();
-            int rows = Mathf.CeilToInt(totalSlots / 4f);
-            float totalHeight = (grid.cellSize.y + grid.spacing.y) * rows;
-
-            RectTransform contentRect = SlotParent.GetComponent<RectTransform>();
-            contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, totalHeight);
-        }
+        goldTxt.text = playerManager.Currency.currencies[CurrencyType.Gold].ToString();
     }
-
-    //UI 다시 보여주는 로직 만들어야됨 
 
     private void RemoveSlots()
     {
-        if (slots ==null)
+        if (ShopBuyslots ==null)
         {
             return;
         }
         // 모든 슬롯의 이벤트 구독 해제
-        foreach (var slot in slots)
+        foreach (var slot in ShopBuyslots)
         {
             if (slot != null)
             {
@@ -83,7 +67,7 @@ public class UIShop : PopupUI
         }
 
         // 모든 슬롯 오브젝트 파괴
-        foreach (var slot in slots)
+        foreach (var slot in ShopBuyslots)
         {
             if (slot != null)
             {
@@ -104,7 +88,7 @@ public class UIShop : PopupUI
     }
     private void ResetSlots()
     {
-        foreach (var slot in slots)
+        foreach (var slot in ShopBuyslots)
         {
             slot.ClearSlot();
         }
