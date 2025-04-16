@@ -415,7 +415,7 @@ GameObject:
   - component: {fileID: 5141206188562801759}
   - component: {fileID: 667516992556136782}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Btn_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1501,7 +1501,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9aef40029ac86442b23fe2e193facfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeButton: {fileID: 0}
+  closeButton: {fileID: 667516992556136782}
+  itemimage: {fileID: 6386464236261701975}
+  power: {fileID: 5034787262050110023}
+  mana: {fileID: 8746078877476245391}
+  health: {fileID: 5406696886510721370}
+  speed: {fileID: 2821409687241492429}
+  Reduction: {fileID: 5388287518964634856}
+  CriticalChance: {fileID: 8338158659547443932}
+  CriticalDamage: {fileID: 3177759609231598064}
+  btn_Buy: {fileID: 2089388757354099685}
 --- !u!1 &7093908196780688805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1515,7 +1524,7 @@ GameObject:
   - component: {fileID: 3494859848063764951}
   - component: {fileID: 2089388757354099685}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Btn_Buy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

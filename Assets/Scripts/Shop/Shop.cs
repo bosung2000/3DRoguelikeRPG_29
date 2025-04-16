@@ -7,6 +7,7 @@ public class Shop : MonoBehaviour
     private List<SlotItemData> availableItems = new List<SlotItemData>();
     [SerializeField] private int shopTier = 10;
     private PlayerManager playerManager;
+    int totalslotsCount = 0;
 
     private void Start()
     {
@@ -16,6 +17,7 @@ public class Shop : MonoBehaviour
     {
         playerManager = GameManager.Instance.PlayerManager;
         availableItems.Clear();
+        totalslotsCount= 0;
         // List로 받아오고 이걸 slotitemdata형태로 변경해야됨 
         List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, 10);
 
@@ -24,6 +26,7 @@ public class Shop : MonoBehaviour
             SlotItemData slotItemData = new SlotItemData(item, 1);
             availableItems.Add(slotItemData);
         }
+        totalslotsCount= availableItems.Count;
     }
 
     public List<SlotItemData> GetAvailableItems()
@@ -61,5 +64,9 @@ public class Shop : MonoBehaviour
         return false;
     }
 
+    public int ReTurnTotalSlotCount()
+    {
+        return totalslotsCount;
+    }
 
 }

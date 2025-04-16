@@ -244,8 +244,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000036239624}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 30, y: -0.000036239624}
+  m_SizeDelta: {x: -60, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5592509558452769364
 MonoBehaviour:
@@ -266,9 +266,9 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 20
-  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -1069,7 +1069,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7347567929404911590}
   m_HandleRect: {fileID: 897843566009530269}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3633,9 +3633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc74b4289dd8cd343aa15b7bf5d2a23c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeButton: {fileID: 0}
-  goldTxt: {fileID: 0}
-  completePopup: {fileID: 0}
-  completeBtn: {fileID: 0}
-  completeTxt: {fileID: 0}
-  exitBtn: {fileID: 0}
+  closeButton: {fileID: 2200682216259010538}
+  goldTxt: {fileID: 4159921969114302141}
+  SlotParent: {fileID: 4487137332945392391}
+  slotPrefab: {fileID: 418602824144204978, guid: 028dd869c1fae4649a17481a3abec435, type: 3}

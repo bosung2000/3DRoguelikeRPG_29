@@ -9,6 +9,7 @@ public class EnemyDeadState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         _timer = 0;
+        controller.animator?.SetTrigger("DIe");
     }
 
     public void ExitState(EnemyController controller)
