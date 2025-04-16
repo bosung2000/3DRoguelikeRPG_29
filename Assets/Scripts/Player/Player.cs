@@ -50,7 +50,7 @@ public class Player : MonoBehaviour, BaseEntity
 
         Vector3 inputDir = InputJoystick + InputKeyboard;
 
-        if (inputDir.sqrMagnitude > 0.01f)
+        if (inputDir.sqrMagnitude > 0.05f)
         {
             inputDir = inputDir.normalized;
 
@@ -107,7 +107,6 @@ public class Player : MonoBehaviour, BaseEntity
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-        //damage에서 damageReduction%만큼 감소
         damage = damage - (int)(damage * damageReduction / 100);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
 
