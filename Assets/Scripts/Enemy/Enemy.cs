@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget {  get; private set; }
+    public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
 
     private void Awake()
     {
@@ -39,7 +40,7 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        Stat.ModifyStat(EnemyStatType.HP, damage);
+        Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
         
         if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
         {

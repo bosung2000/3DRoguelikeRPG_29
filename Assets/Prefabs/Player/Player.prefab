@@ -1537,6 +1537,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7009088478533663554}
+  - component: {fileID: 550137205101643837}
   m_Layer: 0
   m_Name: mixamorig:Hips
   m_TagString: Untagged
@@ -1562,6 +1563,29 @@ Transform:
   - {fileID: 5277344233733795367}
   m_Father: {fileID: 2472773911475716344}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &550137205101643837
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385789243196035812}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.14626868
+  m_Height: 1.809793
+  m_Direction: 1
+  m_Center: {x: -1.7810818e-14, y: -0.13752127, z: -0.012524917}
 --- !u!1 &6676569739622076022
 GameObject:
   m_ObjectHideFlags: 0
@@ -2128,12 +2152,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.13894035
-  m_Height: 1.8303605
+  m_Height: 1.8293364
   m_Direction: 1
-  m_Center: {x: 0, y: 0.89013404, z: -0.008515313}
+  m_Center: {x: 0, y: 0.88754284, z: -0.008515313}
 --- !u!114 &8596859512789446181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2201,8 +2225,8 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1

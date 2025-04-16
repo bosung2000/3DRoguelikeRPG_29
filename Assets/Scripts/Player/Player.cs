@@ -23,6 +23,7 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
+    [SerializeField] TestWeapon _testWeapon;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour, BaseEntity
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-            _rb.velocity = transform.forward * _playerStat.GetStatValue(PlayerStatType.Speed);
+            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
             _playerController.SetBool("Run", true);
         }
         else
@@ -113,6 +114,7 @@ public class Player : MonoBehaviour, BaseEntity
         if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
         {
             _playerController.SetTrigger("Die");
+            _testWeapon.Drop();
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
