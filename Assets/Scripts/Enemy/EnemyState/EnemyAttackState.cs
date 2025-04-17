@@ -29,7 +29,7 @@ public class EnemyAttackState : IEnemyState
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator?.ResetTrigger("Attack");
+
     }
 
     public void UpdateState(EnemyController controller)

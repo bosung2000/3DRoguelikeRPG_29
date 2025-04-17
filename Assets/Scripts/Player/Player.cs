@@ -31,8 +31,7 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] LayerMask _obstacleLayer;
     private bool _isTumbling = false;
     private float _lastTumbleTime = -100f;
-
-    
+    public float hitCooldown = 1f;
 
     private void Awake()
     {
@@ -103,6 +102,7 @@ public class Player : MonoBehaviour, BaseEntity
     }
     public void TakeDamage(int damage)
     {
+        if (Time.time - _lastTumbleTime < hitCooldown) return;
         _playerController.SetTrigger("Attack");
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
@@ -113,7 +113,6 @@ public class Player : MonoBehaviour, BaseEntity
         if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
         {
             _playerController.SetTrigger("Die");
-            _testWeapon.Drop();
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");

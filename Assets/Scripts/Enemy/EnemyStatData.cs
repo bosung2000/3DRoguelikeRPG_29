@@ -30,7 +30,8 @@ public class EnemyStatData : ScriptableObject
     [SerializeField] private int _HP;
     [SerializeField] private int _attack;
     [SerializeField] private int _speed;
-    [SerializeField] private int _currency;
+    [SerializeField] private int _gold;
+    [SerializeField] private int _soul;
 
     [Header("전투 정보")]
     [SerializeField] private float _attackRange;    //공격범위
@@ -47,7 +48,8 @@ public class EnemyStatData : ScriptableObject
     public int HP => _HP;
     public int Attack => _attack;
     public int Speed => _speed;
-    public int Currency => _currency;
+    public int Gold => _gold;
+    public int Soul => _soul;
     public float AttackRange => _attackRange;
     public float AttackCooldown => _attackCooldown;
     public float ChaseRange => _chaseRange;
