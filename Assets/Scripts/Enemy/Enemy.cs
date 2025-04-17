@@ -5,6 +5,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
+    public EnemyController enemyController {  get; private set; }
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget {  get; private set; }
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
@@ -42,9 +43,14 @@ public class Enemy : MonoBehaviour
     {
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
         
+        
         if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
         {
             Die();
+        }
+        else
+        {
+            enemyController.ChageState(EnemyStateType.Hit);
         }
     }
     public void Die()
@@ -55,4 +61,9 @@ public class Enemy : MonoBehaviour
         Debug.Log($"사망, 골드 {drop} 드랍");
     }
 
+    public void FixedUpdate()
+    {
+        float currentHP = Stat.GetStatValue(EnemyStatType.HP);
+        Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
+    }
 }
