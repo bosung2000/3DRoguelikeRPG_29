@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class EnemyDeadState : IEnemyState
 {
-    private float _deadDuration;//죽은 후 몇 초 뒤 제거
+    private float _deadDuration = 1.5f;
     private float _timer = 0f;
+    private bool _animationEnded = false;
+
     public void EnterState(EnemyController controller)
     {
-        _timer = 0;
+        _timer = 0f;
+        controller.agent.isStopped = true; ;
+
         controller.animator.SetTrigger("DIe");
     }
 
@@ -19,11 +23,20 @@ public class EnemyDeadState : IEnemyState
 
     public void UpdateState(EnemyController controller)
     {
-        _timer += Time.deltaTime;
-        if (_timer >= _deadDuration)
+        Enemy enemy = controller.Enemy;
+
+        if(enemy == null ) return;
+
+        if(!enemy.IsDeadAnimationEnded())
         {
-            Object.Destroy(controller.gameObject);
-            Debug.Log("오브젝트 제거");
+            return;
+        }
+
+        _timer += Time.deltaTime;
+
+        if( _timer >= _deadDuration )
+        {
+            GameObject.Destroy(controller.gameObject);
         }
     }
 }
