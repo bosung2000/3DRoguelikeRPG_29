@@ -29,6 +29,7 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] FloatingJoystick _floatingJoystick;
     [SerializeField] Rigidbody _rb;
     [SerializeField] LayerMask _obstacleLayer;
+
     private bool _isTumbling = false;
     private float _lastTumbleTime = -100f;
     public float hitCooldown = 1f;
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour, BaseEntity
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
+            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
             _playerController.SetBool("Run", true);
         }
         else
@@ -68,7 +69,7 @@ public class Player : MonoBehaviour, BaseEntity
     public void FixedUpdate()
     {
         DirectionCheck();
-        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed))/5;
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed))/5;
     }
 
     public void MaxHPUp(float value)
@@ -97,8 +98,8 @@ public class Player : MonoBehaviour, BaseEntity
     {
         //float currentSpeed = _stats.GetStatValue(PlayerStatType.Speed);
         //_stats.SetStatValue(PlayerStatType.Speed, currentSpeed + speed);
-        _playerStat.ModifyStat(PlayerStatType.Speed, speed);
-        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed)) / 5;
+        _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
     public void TakeDamage(int damage)
     {
@@ -107,7 +108,12 @@ public class Player : MonoBehaviour, BaseEntity
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
+        float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
+
+        damage = damage + (int)(damage * dmgIncrease / 100);
         damage = damage - (int)(damage * damageReduction / 100);
+        _lastTumbleTime = Time.time;
+
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
 
         if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)

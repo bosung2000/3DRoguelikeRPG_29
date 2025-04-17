@@ -32,7 +32,7 @@ public class TestPlayerUI : MonoBehaviour
         _hpText.text = playerStat.GetStatValue(PlayerStatType.HP).ToString("F0");
         //_maxMPText.text = playerStat.GetStatValue(PlayerStatType.MaxMP).ToString("F0");
         //_mpText.text = playerStat.GetStatValue(PlayerStatType.MP).ToString("F0");
-        _speedText.text = playerStat.GetStatValue(PlayerStatType.Speed).ToString("F0");
+        _speedText.text = playerStat.GetStatValue(PlayerStatType.MoveSpeed).ToString("F0");
         //_attackText.text = playerStat.GetStatValue(PlayerStatType.Attack).ToString("F0");
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");
