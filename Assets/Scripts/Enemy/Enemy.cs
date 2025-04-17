@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         Stat = GetComponent<EnemyStat>();
+        enemyController = GetComponent<EnemyController>();
         CachePlayer();
     }
 
@@ -42,15 +43,26 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
-        
-        
-        if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
+
+        Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
+
+        if (Stat.GetStatValue(EnemyStatType.HP) <= 0)
         {
+            Debug.Log("데미지를 받아 죽음");
             Die();
         }
         else
         {
-            enemyController.ChageState(EnemyStateType.Hit);
+            if(enemyController != null)
+            {
+                Debug.Log("아직 체력이 남았다");
+                enemyController.ResetAttackCooldown();
+                enemyController.ChageState(EnemyStateType.Hit);
+            }
+            else
+            {
+                Debug.Log("컨트롤러가 널임");
+            }
         }
 
     }
@@ -65,6 +77,6 @@ public class Enemy : MonoBehaviour
     public void FixedUpdate()
     {
         float currentHP = Stat.GetStatValue(EnemyStatType.HP);
-        Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
+        //Debug.Log($"{gameObject.name} 현재 체력: {currentHP}");
     }
 }
