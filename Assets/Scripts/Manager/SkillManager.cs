@@ -69,7 +69,6 @@ public class SkillManager : MonoBehaviour
             Debug.Log($"조이스틱 인덱스:{uiSkill.skillConditions[i].joystick.index}, 착용 스킬 인덱스: {enabledSkills[i].index}, 현재 순환:{i}");
         }
     }
-
     /// <summary>
     /// 바뀐 enabledSkills에 맞게 스킬 UI 변경
     /// </summary>

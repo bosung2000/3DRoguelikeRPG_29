@@ -31,8 +31,8 @@ public class Skill : ScriptableObject
     public int projectileSpeed;
     public SkillType skillType;
     public Sprite icon; // 적 아이콘
-    public GameObject prefab; // instantiate 할 투사체 프리팹
     public bool isOwned; //현재 이 스킬을 갖고 있는지
+    public GameObject projectilePrefabs; // instantiate 할 투사체 프리팹
 
     [Header("Buff variable")]
     public BuffType buffType;
