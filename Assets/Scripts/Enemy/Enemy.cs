@@ -52,6 +52,7 @@ public class Enemy : MonoBehaviour
         {
             enemyController.ChageState(EnemyStateType.Hit);
         }
+
     }
     public void Die()
     {

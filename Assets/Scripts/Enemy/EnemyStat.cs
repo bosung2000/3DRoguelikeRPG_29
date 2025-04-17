@@ -15,6 +15,7 @@ public class EnemyStat : BaseStat<EnemyStatType>
         if(statData != null )
         {
             SetStatValue(EnemyStatType.MaxHP, statData.MaxHP);
+            SetStatValue(EnemyStatType.HP, statData.MaxHP);
             SetStatValue(EnemyStatType.Speed, statData.Speed);
             SetStatValue(EnemyStatType.Attack, statData.Attack);
             SetStatValue(EnemyStatType.Currency, statData.Currency);
