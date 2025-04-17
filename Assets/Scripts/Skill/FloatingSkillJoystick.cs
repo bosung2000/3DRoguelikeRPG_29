@@ -43,14 +43,14 @@ public class FloatingSkillJoystick : Joystick
         {
             inputDir = inputDir.normalized;
             FixedInput = inputDir;
-            if (skillManager.enabledSkills[index].skill ==null)
-            {
-                Debug.Log($"{index + 1}번째의 조이스틱에 스킬이 없습니다.");
-            }
         }
-        Debug.Log($"현재 방향:{inputDir}");
+        if (skillManager.enabledSkills[index].skill == null)
+        {
+            Debug.Log($"{index + 1}번째의 조이스틱에 스킬이 없습니다.");
+        }
+        Debug.Log($"현재 방향:{FixedInput}");
         //해당 방향에 스킬 시전
-        skillManager.OnSkillClick(skillManager.enabledSkills[index].skill, inputDir);
+        skillManager.OnSkillClick(skillManager.enabledSkills[index].skill, FixedInput);
         //이후 해당 스킬에 쿨타임 적용
         //skillManager.enabledSkills[i]
         background.gameObject.SetActive(false);
