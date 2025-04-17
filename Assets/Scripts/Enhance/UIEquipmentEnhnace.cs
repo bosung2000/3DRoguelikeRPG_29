@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIEquipmentEnhance : MonoBehaviour
-{
+public class UIEquipmentEnhance : PopupUI
+
+{ 
     public TextMeshProUGUI itemNameText;
     public TextMeshProUGUI enhancementLevelText;
     public TextMeshProUGUI successRateText;
@@ -51,7 +52,7 @@ public class UIEquipmentEnhance : MonoBehaviour
 
         itemIcon.sprite = currentEquipment.Icon;
 
-        startPreviewText.text = BuildStatPreviewText(currentEquipment); 
+        startPreviewText.text = BuildStatPreviewText(currentEquipment); //능력치미리보기
     }
 
     private void OnEnhanceButtonClicked()
