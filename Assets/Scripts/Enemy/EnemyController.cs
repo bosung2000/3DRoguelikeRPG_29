@@ -15,6 +15,7 @@ public enum EnemyStateType
     Idle,
     Chase,
     Attack,
+    Hit,
     Dead
 }
 public class EnemyController : MonoBehaviour
