@@ -97,7 +97,7 @@ public class EquipMananger : MonoBehaviour
             case ConditionType.Mana:
                 return PlayerStatType.MaxMP;
             case ConditionType.Speed:
-                return PlayerStatType.Speed;
+                return PlayerStatType.MoveSpeed;
             case ConditionType.reduction:
                 return PlayerStatType.DMGReduction;
             case ConditionType.CriticalChance:

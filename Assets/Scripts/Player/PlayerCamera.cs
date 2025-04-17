@@ -13,7 +13,7 @@ public class PlayerCamera : MonoBehaviour
 
         Vector3 desiredPosition = _player.position + offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        followSpeed = _playerStat.GetStatValue(PlayerStatType.Speed);
+        followSpeed = _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
     }
     void LookAt()
 

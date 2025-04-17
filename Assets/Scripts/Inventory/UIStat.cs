@@ -31,7 +31,7 @@ public class UIStat : MonoBehaviour
         Power.text = $"공격력 :{_playerStat.GetStatValue(PlayerStatType.Attack).ToString()}";
         Mana.text = $"최대마나 :{_playerStat.GetStatValue(PlayerStatType.MaxMP).ToString()}";
         Health.text = $"최대체력 :{_playerStat.GetStatValue(PlayerStatType.MaxHP).ToString()}";
-        Speed.text = $"속도 :{_playerStat.GetStatValue(PlayerStatType.Speed).ToString()}";
+        Speed.text = $"속도 :{_playerStat.GetStatValue(PlayerStatType.MoveSpeed).ToString()}";
         Reduction.text = $"피해감소 :{_playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString()}";
         CriticalChance.text = $"크리티컬확률 :{_playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString()}";
         CriticalDamage.text = $"크리티컬대미지 :{_playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString()}";

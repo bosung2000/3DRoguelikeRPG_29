@@ -42,7 +42,8 @@ public class UIShop : PopupUI
 
     protected override void OnCloseButtonClick()
     {
-        base.OnCloseButtonClick();
+        UIManager.Instance.CloseAllPopupUI();
+        //base.OnCloseButtonClick();
     }
 
     public void ShowShopGold()
