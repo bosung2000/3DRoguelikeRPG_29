@@ -21,7 +21,9 @@ public class ShopSellInventory : MonoBehaviour
 
     private void Awake()
     {
+        Initialize();
         inventoryManager = GameManager.Instance.InventoryManager;
+        inventoryManager.OnSlotChanged += InitSlotShow;
     }
 
     private void Initialize()
@@ -38,17 +40,18 @@ public class ShopSellInventory : MonoBehaviour
 
         if (materialTabButton != null)
             materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
+
     }
 
     private void OnEnable()
     {
-        OnTabChanged(InventoryTabType.All);
+        InitSlots();
+
     }
 
     // 초기화 (한 번만 실행)
     public void InitSlots()
     {
-        inventoryManager.OnSlotChanged += InitSlotShow;
         InitSlotShow();
 
     }
@@ -66,6 +69,8 @@ public class ShopSellInventory : MonoBehaviour
 
         // Grid Layout 및 Content 크기 업데이트
         SetupGridLayout();
+
+        OnTabChanged(InventoryTabType.All);
     }
 
     private void RemoveSlots()
@@ -210,4 +215,5 @@ public class ShopSellInventory : MonoBehaviour
             slot.ClearSlot();
         }
     }
+
 }
