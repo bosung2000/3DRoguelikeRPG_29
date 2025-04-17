@@ -14,6 +14,7 @@ public enum PlayerStatType
     DMGReduction,
     CriticalChance,
     CriticalDamage,
+    DashDistance,
     DashCooltime
 }
 
@@ -25,14 +26,8 @@ public enum EnemyStatType
     Attack,
     Currency,
     AttackRange,
-    AttackCooldown
-}
-
-public enum EnemyType
-{
-    Normal,
-    Elite,
-    Boss
+    AttackCooldown,
+    ChaseRange
 }
 
 public interface IBaseStat<T>

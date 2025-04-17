@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIInventory : MonoBehaviour
 {
@@ -62,6 +63,28 @@ public class UIInventory : MonoBehaviour
             slots.Add(slotobj);
             slotobj.OnItemClicked += HandleItemOneClick;
         }
+
+        // Grid Layout 및 Content 크기 업데이트
+        SetupGridLayout();
+    }
+
+    private void SetupGridLayout()
+    {
+        GridLayoutGroup grid = SlotParent.GetComponent<GridLayoutGroup>();
+        if (grid != null)
+        {
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 4;  // 한 줄에 4개의 슬롯
+            grid.spacing = new Vector2(20, 20);
+            
+            // Content 크기 자동 조절
+            int totalSlots = inventoryManager.ReturnTotalSlotCount();
+            int rows = Mathf.CeilToInt(totalSlots / 4f);
+            float totalHeight = (grid.cellSize.y + grid.spacing.y) * rows;
+            
+            RectTransform contentRect = SlotParent.GetComponent<RectTransform>();
+            contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, totalHeight);
+        }
     }
 
     // 데이터 업데이트 (필요할 때마다 실행)
@@ -78,10 +101,7 @@ public class UIInventory : MonoBehaviour
             InitSlots();
         }
     }
-    /// <summary>
-    /// 여기서는 데이터를 가지고 show 보여주기만 하는 곳 >> 데이터를 관리 >inventoryManager
-    /// </summary>
-
+    
 
     /// <summary>
     /// 아이템 클릭시 발생하는 이벤트

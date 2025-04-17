@@ -20,8 +20,10 @@ public interface BaseEntity
 
 public class Player : MonoBehaviour, BaseEntity
 {
-    [SerializeField] private PlayerStatData statData;
+    [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
+    [SerializeField] PlayerController _playerController;
+    [SerializeField] TestWeapon _testWeapon;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -35,7 +37,6 @@ public class Player : MonoBehaviour, BaseEntity
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
-       
     }
     private void Start()
     {
@@ -49,19 +50,26 @@ public class Player : MonoBehaviour, BaseEntity
 
         Vector3 inputDir = InputJoystick + InputKeyboard;
 
-        if (inputDir.sqrMagnitude > 0.01f)
+        if (inputDir.sqrMagnitude > 0.05f)
         {
             inputDir = inputDir.normalized;
+
+            Quaternion targetRotation = Quaternion.LookRotation(inputDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+
             _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.Speed);
+            _playerController.SetBool("Run", true);
         }
         else
         {
             _rb.velocity = Vector3.zero;
+            _playerController.SetBool("Run", false);
         }
     }
     public void FixedUpdate()
     {
         DirectionCheck();
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed))/5;
     }
 
     public void MaxHPUp(float value)
@@ -91,11 +99,36 @@ public class Player : MonoBehaviour, BaseEntity
         //float currentSpeed = _stats.GetStatValue(PlayerStatType.Speed);
         //_stats.SetStatValue(PlayerStatType.Speed, currentSpeed + speed);
         _playerStat.ModifyStat(PlayerStatType.Speed, speed);
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.Speed)) / 5;
     }
     public void TakeDamage(int damage)
     {
+        _playerController.SetTrigger("Attack");
+
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
+        float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
+        damage = damage - (int)(damage * damageReduction / 100);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+
+        if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
+        {
+            _playerController.SetTrigger("Die");
+            _testWeapon.Drop();
+            Time.timeScale = 0f;
+            StartCoroutine(PlayDeathAnimThenPauseGame());
+            Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+        }
+    }
+    private IEnumerator PlayDeathAnimThenPauseGame()
+    {
+        AnimatorStateInfo state = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+
+        _playerController._anim.speed = 1f;
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).IsName("Die"));
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+
     }
     public void Hit()
     {
@@ -141,9 +174,11 @@ public class Player : MonoBehaviour, BaseEntity
 
     public void Dash()
     {
-        float dashDistance = 5f;
+        _playerController.SetTrigger("Dash");
+        float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
 
-        if (_isTumbling || Time.time < _lastTumbleTime + _playerStat.GetStatValue(PlayerStatType.DashCooltime))
+        if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
         {
             Debug.Log("쿨타임입니다");
             return;
@@ -154,40 +189,41 @@ public class Player : MonoBehaviour, BaseEntity
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
         if (dir.sqrMagnitude < 0.01f)
-        {
             dir = transform.forward;
-        }
 
         dir = dir.normalized;
 
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 origin = transform.position + Vector3.up * 0.01f;
         Vector3 target = transform.position + dir * dashDistance;
 
         if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
         {
-            float safeDist = hit.distance - 0.05f; // 끼임방지
+            float safeDist = Mathf.Max(hit.distance - 0.01f, 0f);
             target = transform.position + dir * safeDist;
         }
 
-        StartCoroutine(TumbleRoutine(target));
+        float actualDistance = Vector3.Distance(transform.position, target);
+        float dashDuration = actualDistance / dashDistance * 0.2f;
+
+        StartCoroutine(TumbleRoutine(target, dashDuration));
         _lastTumbleTime = Time.time;
         dashCooldownUI.StartDashCooldown();
     }
-    private IEnumerator TumbleRoutine(Vector3 target)
+
+    private IEnumerator TumbleRoutine(Vector3 target, float duration)
     {
         _isTumbling = true;
 
         Vector3 start = transform.position;
-        float _elapsed = 0f;
-        float duration = 0.2f;
+        float elapsed = 0f;
 
-        while (_elapsed < duration)
+        while (elapsed < duration)
         {
-            float t = _elapsed / duration;
+            float t = elapsed / duration;
             Vector3 newPos = Vector3.Lerp(start, target, t);
             _rb.MovePosition(newPos);
 
-            _elapsed += Time.deltaTime;
+            elapsed += Time.deltaTime;
             yield return null;
         }
 

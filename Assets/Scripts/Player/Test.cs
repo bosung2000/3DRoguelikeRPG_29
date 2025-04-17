@@ -12,8 +12,8 @@ public class Test : MonoBehaviour
     }
     public void Healing()
     {
-        _player.Healing(40);
-        //최대체력비례
+        _player.Healing((int)_playerStat.GetStatValue(PlayerStatType.MaxHP)/5);
+        //최대체력의 20%
     }
 
     public void MaxMPUp()

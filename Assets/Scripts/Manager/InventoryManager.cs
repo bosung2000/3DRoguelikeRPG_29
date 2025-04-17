@@ -7,21 +7,21 @@ public class InventoryManager : MonoBehaviour
 {
     //가방에 대한 데이터 
     public List<SlotItemData> slotItemDatas;
-    private const int baseSlots = 12;// UI에 의존하지 않도록 상수로 정의
+    private const int baseSlots = 30;// UI에 의존하지 않도록 상수로 정의
     private int AddSlotsCount = 0;
     private int Total_SLOTS = 0;
-    private int MaxSlotCount = 15;
-    //private int slotAdd
-
-    [SerializeField] private List<SlotItemData> TestItemData;
-
+    private int MaxSlotCount = 40;
+    public int AddSlotCost { get; private set; } = 100;
+    private PlayerManager playerManager;
+    
     public event Action OnSlotChanged;
 
-    private void Start()
+    private void Awake()
     {
-        //인베토리 관련 초기화 
         InitSlot();
+        playerManager = GameManager.Instance.PlayerManager;
     }
+
 
 
     public void InitSlot()
@@ -34,10 +34,10 @@ public class InventoryManager : MonoBehaviour
             slotItemDatas.Add(new SlotItemData());
         }
 
-
         //데이터 넣어주기(저장된 데이터 읽어와서)
         //text용 
-        AddItemList();
+        List<ItemData> TestItemData= new List<ItemData>();
+        AddItemList(TestItemData);
 
         //ui슬롯도 초기화 해줘야됨 
     }
@@ -45,12 +45,15 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// test로 기본 아이템 넣는 곳 
     /// </summary>
-    public void AddItemList()
+    public void AddItemList(List<ItemData> TestItemData)
     {
+        //itemManger에서 8티어 아이템들을 넣어주자 test용으로 
+        TestItemData = GameManager.Instance.ItemManager.GetItemsByTier(8);
         for (int i = 0; i < TestItemData.Count; i++)
         {
-            AddInventoryItem(TestItemData[i].item);
+            AddInventoryItem(TestItemData[i]);
         }
+
 
     }
     /// <summary>
@@ -71,9 +74,9 @@ public class InventoryManager : MonoBehaviour
         {
             emptySlot.AddItem(itemData);
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
-
         return false;
     }
     /// <summary>
@@ -98,6 +101,7 @@ public class InventoryManager : MonoBehaviour
             //slotItemDatas.Remove(ExistItme);
             //OnInventoryChanged?.Invoke();
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
 
@@ -158,32 +162,41 @@ public class InventoryManager : MonoBehaviour
         return Total_SLOTS;
     }
 
-    public void AddSlots()
+    public bool AddSlots()
     {
         //최대치 검사 
         if (ReturnTotalSlotCount() < MaxSlotCount)
         {
-            if (true)
+            //골드차감 
+            if (playerManager.Currency.AddCurrency(CurrencyType.Gold, -AddSlotCost))
             {
-                //골드 검사를 해야됨 player정보를 받아와
-                //UIPopupInventory +uiitemSlotAdd에서 해결하고 여기에 이벤트로 연결하든지 아니든지 해야할듯 
-
-
                 //슬롯의 총량을 더해주고 + 생성 
                 AddSlotsCount++;
                 slotItemDatas.Add(new SlotItemData());
                 //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
+                AddSlotCostIncrease();
                 OnSlotChanged?.Invoke();
+                return true;
             }
             else
             {
-                Debug.Log($"골드가 부족합니다 / 플레이어 소유 골드: /필요 골드");
+                Debug.Log($"골드가 부족합니다 / 플레이어 소유 골드{playerManager.Currency.currencies[CurrencyType.Gold]}: /필요 골드 :{AddSlotCost}");
+                return false;
             }
         }
         else
         {
-            Debug.Log("슬롯의 최대수량을 넘었습니다 :더이상 추가가 불가능합니다.");
-            return;
+            //popup창을 1개 추가해서 해주는게 맞지 ?
+            UIManager.Instance.ShowPopupUI<UIAddNotSlot>();
+            return false;
+        }
+    }
+
+    public void AddSlotCostIncrease()
+    {
+        if (AddSlotCost != null && AddSlotCost > 0)
+        {
+            AddSlotCost += 100;
         }
     }
 

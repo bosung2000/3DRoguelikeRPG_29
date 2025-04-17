@@ -20,15 +20,19 @@ public enum EnemyStateType
 public class EnemyController : MonoBehaviour
 {
     private Enemy _enemy;
-    private IEnemyState _currentState;
+    public Enemy Enemy => _enemy;
 
+    private IEnemyState _currentState;
     public EnemyStateType CurrentStateType { get; private set; }
-    //public Animator animator {  get; private set; }
+    public NavMeshAgent agent { get; private set; }
+    public Animator animator {  get; private set; }
+
 
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
-        //animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -45,6 +49,7 @@ public class EnemyController : MonoBehaviour
             Debug.LogError("EnemyController: _enemy.Stat이 null!");
             return;
         }
+        agent.speed = GetSpeed();
         ChageState(EnemyStateType.Idle);
     }
 
@@ -99,5 +104,27 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Dead => new EnemyDeadState(),
             _ => null
         };
+    }
+
+    /// <summary>
+    /// 디버깅용 함수들
+    /// </summary>
+    public void OnDrawGizmos()
+    {
+        if (_enemy == null || _enemy.Stat == null) return;
+
+        Gizmos.color = Color.red;
+
+        //추적범위
+        float chaseRange = _enemy.Stat.GetStatValue(EnemyStatType.ChaseRange);
+        Gizmos.DrawWireSphere(transform.position, chaseRange);
+        //추적범위 이탈
+        Gizmos.color = new Color(255f/255f, 0f/255f, 221f/255);
+        Gizmos.DrawWireSphere(transform.position, chaseRange * 1.5f);
+        //공격범위
+        float attackRange = _enemy.Stat.GetStatValue(EnemyStatType.AttackRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
     }
 }

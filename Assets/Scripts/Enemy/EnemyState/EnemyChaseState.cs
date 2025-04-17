@@ -16,14 +16,21 @@ public class EnemyChaseState : IEnemyState
             controller.ChageState(EnemyStateType.Idle);
         }
         stopDistance = controller.GetStat(EnemyStatType.AttackRange);
-        //controller.animator?.SetBool("isMoving", true);
+
+        controller.agent.enabled = true;
+        controller.agent.isStopped = false;
+        controller.agent.angularSpeed = 1000f;
+        controller.agent.acceleration = 999f;
+        controller.agent.updateRotation = true;
+
+        controller.animator?.SetBool("isMoving", true);
         Debug.Log("Chase 상태 진입");
     }
 
     public void ExitState(EnemyController controller)
     {
-        //controller.animator?.SetBool("isMoving",false);
-        Debug.Log("Chase 상태 종료");
+        controller.animator?.SetBool("isMoving",false);
+        controller.agent.isStopped = true;
     }
 
     public void UpdateState(EnemyController controller)
@@ -33,16 +40,28 @@ public class EnemyChaseState : IEnemyState
             return;
         }
 
+        //공격 범위 내면 상태 전환용
         float distance = Vector3.Distance(controller.transform.position, _target.position);
 
+        float chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
+
+        if (distance > chaseRange * 1.5)
+        {
+            Debug.Log("Chase: 플레이어가 추적 범위를 벗어났습니다.");
+            controller.ChageState(EnemyStateType.Idle);
+            return;
+        }
+
+        float attackRange = controller.GetStat(EnemyStatType.AttackRange);
+
         //플레이어와 거리가 가까워지면 공격 상태로 전환
-        if(distance <= stopDistance)
+        if (distance <= attackRange)
         {
             controller.ChageState(EnemyStateType.Attack);
             return;
         }
-        float speed = controller.GetSpeed();
-        Vector3 direction = (_target.position - controller.transform.position).normalized;
-        controller.transform.position += direction * speed * Time.deltaTime;
+        controller.agent.SetDestination(_target.position);
+
+
     }
 }

@@ -19,10 +19,8 @@ public class UISelectedItem : PopupUI
 
     private ItemData currentItem;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-        UIManager.Instance.RegisterUI(this);
         btn_equip.onClick.AddListener(OnEquipButtonClicked);
         btn_Release.onClick.AddListener(OnReleaseButtonClicked);
         Initialize();

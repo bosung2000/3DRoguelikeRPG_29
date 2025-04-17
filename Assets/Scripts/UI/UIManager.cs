@@ -190,7 +190,10 @@ public class UIManager : MonoBehaviour
     {
         string key = ui.GetType().Name;
         if (!uiList.ContainsKey(key)) // 등록되지 않은 경우에만
+        {
             uiList.Add(key, ui);
+
+        }
     }
 
     private void Update()
