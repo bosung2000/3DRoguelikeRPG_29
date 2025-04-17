@@ -18,12 +18,14 @@ public class ShopSellInventory : MonoBehaviour
 
 
     private InventoryManager inventoryManager;
+    private UIShop uIShop;
 
     private void Awake()
     {
         Initialize();
         inventoryManager = GameManager.Instance.InventoryManager;
         inventoryManager.OnSlotChanged += InitSlotShow;
+        uIShop =GetComponentInParent<UIShop>();
     }
 
     private void Initialize()
@@ -103,7 +105,8 @@ public class ShopSellInventory : MonoBehaviour
     private void HandleItemOneClick(SlotItemData slotItemData)
     {
         //판매창 1개만 띄워주면됨 
-
+        var uisellpopup=UIManager.Instance.ShowPopupUI<UISellPopup>();
+        uisellpopup.Initialize(slotItemData,inventoryManager,this,uIShop);
     }
 
     private void SetupGridLayout()
