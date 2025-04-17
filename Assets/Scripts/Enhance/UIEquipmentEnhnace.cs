@@ -14,6 +14,7 @@ public class UIEquipmentEnhance : PopupUI
     public TextMeshProUGUI startPreviewText;
 
 
+
     public Image itemIcon;
     public Button enhanceButton;
 
@@ -27,6 +28,7 @@ public class UIEquipmentEnhance : PopupUI
     private void Start()
     {
         enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
+        closeButton.onClick.AddListener(OnCloseButtonClick);
     }
 
     public void SetEquipment(ItemData equipment)
