@@ -13,15 +13,13 @@ public class InventoryManager : MonoBehaviour
     private int MaxSlotCount = 40;
     public int AddSlotCost { get; private set; } = 100;
     private PlayerManager playerManager;
-    [SerializeField] private List<SlotItemData> TestItemData;
-
+    
     public event Action OnSlotChanged;
 
     private void Awake()
     {
         InitSlot();
         playerManager = GameManager.Instance.PlayerManager;
-        OnSlotChanged += AddSlotCostIncrease;
     }
 
 
@@ -36,10 +34,10 @@ public class InventoryManager : MonoBehaviour
             slotItemDatas.Add(new SlotItemData());
         }
 
-
         //데이터 넣어주기(저장된 데이터 읽어와서)
         //text용 
-        AddItemList();
+        List<ItemData> TestItemData= new List<ItemData>();
+        AddItemList(TestItemData);
 
         //ui슬롯도 초기화 해줘야됨 
     }
@@ -47,12 +45,15 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// test로 기본 아이템 넣는 곳 
     /// </summary>
-    public void AddItemList()
+    public void AddItemList(List<ItemData> TestItemData)
     {
+        //itemManger에서 8티어 아이템들을 넣어주자 test용으로 
+        TestItemData = GameManager.Instance.ItemManager.GetItemsByTier(8);
         for (int i = 0; i < TestItemData.Count; i++)
         {
-            AddInventoryItem(TestItemData[i].item);
+            AddInventoryItem(TestItemData[i]);
         }
+
 
     }
     /// <summary>
@@ -73,9 +74,9 @@ public class InventoryManager : MonoBehaviour
         {
             emptySlot.AddItem(itemData);
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
-
         return false;
     }
     /// <summary>
@@ -100,6 +101,7 @@ public class InventoryManager : MonoBehaviour
             //slotItemDatas.Remove(ExistItme);
             //OnInventoryChanged?.Invoke();
             ArrayInventory();
+            OnSlotChanged?.Invoke();
             return true;
         }
 
@@ -172,6 +174,7 @@ public class InventoryManager : MonoBehaviour
                 AddSlotsCount++;
                 slotItemDatas.Add(new SlotItemData());
                 //uiinventory에서  불러와줘야하는건데 이벤트로 연결 
+                AddSlotCostIncrease();
                 OnSlotChanged?.Invoke();
                 return true;
             }

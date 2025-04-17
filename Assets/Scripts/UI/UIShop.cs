@@ -11,102 +11,43 @@ public class UIShop : PopupUI
     //판매해야할 아이템 list 가지고있고 
     //buy > inventory읽어와서 show 
     //sell > uishop(판매list)이중에서 색출해서(뭐 등급이 맞게 높은 등급일수록 좋은아이템이 나와야하잔아)
-    // 그럼 아아템의 등급이 있어야하겠는데 > tier            
+    // 그럼 아아템의 등급이 있어야하겠는데 > tier
     [SerializeField] TextMeshProUGUI goldTxt;
-
-
-    [SerializeField] private Transform SlotParent;
-    [SerializeField] private ShopBuySlot slotPrefab;
-    private List<ShopBuySlot> slots;
+    [SerializeField] private ShopBuyInventory shopBuyInventory; //구매창 
+    
     private Shop shop;
-    private Player player;
+    private PlayerManager playerManager;
 
-
-
-    public void Initialize(Shop shop)
+    private void Awake()
     {
-        this.shop = shop;
-        ShowShopItems();
-    }
-    public void ShowShopItems()
-    {
-        RemoveSlots();
-        slots = new List<ShopBuySlot>();
-        var availableItems = shop.GetAvailableItems();
-
-        foreach (var item in availableItems)
-        {
-            var slot = Instantiate(slotPrefab, SlotParent);
-            slot.SetSlotData(item);
-            slot.OnitemClicked += OnShopItemSelected;
-            slots.Add(slot);
-        }
-
-        //Grid 설정 
-        //SetupGridLayout();
+        shopBuyInventory =GetComponentInChildren<ShopBuyInventory>();
     }
 
-    private void SetupGridLayout()
+    public void Initialize(Shop _shop,PlayerManager _playerManager)
     {
-        GridLayoutGroup grid = SlotParent.GetComponent<GridLayoutGroup>();
-        if (grid != null)
+        shop = _shop;
+        playerManager = _playerManager;        
+        shop.ShopitemChange += ShowShopGold;
+        ShowShopGold();
+
+        if (shopBuyInventory !=null)
         {
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 4;  // 한 줄에 4개의 슬롯
-            grid.spacing = new Vector2(20, 20);
-
-            //Content 크기 자동 조절
-            int totalSlots = shop.ReTurnTotalSlotCount();
-            int rows = Mathf.CeilToInt(totalSlots / 4f);
-            float totalHeight = (grid.cellSize.y + grid.spacing.y) * rows;
-
-            RectTransform contentRect = SlotParent.GetComponent<RectTransform>();
-            contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, totalHeight);
-        }
-    }
-
-    //UI 다시 보여주는 로직 만들어야됨 
-
-    private void RemoveSlots()
-    {
-        if (slots ==null)
-        {
-            return;
-        }
-        // 모든 슬롯의 이벤트 구독 해제
-        foreach (var slot in slots)
-        {
-            if (slot != null)
-            {
-                slot.OnitemClicked -= OnShopItemSelected;
-            }
+            shopBuyInventory.Initialize(shop);
         }
 
-        // 모든 슬롯 오브젝트 파괴
-        foreach (var slot in slots)
-        {
-            if (slot != null)
-            {
-                Destroy(slot.gameObject);
-            }
-        }
+        closeButton.onClick.AddListener(OnCloseButtonClick);
 
     }
+    //UI 다시 보여주는 로직 만들어야됨 >변경되는곳에 이벤트를 달아주자 slotdata가 
 
-    private void OnShopItemSelected(SlotItemData item)
+    protected override void OnCloseButtonClick()
     {
-        //아이템 정보를 보여주는 창 1개 띄운다. > 구매 창 
-
-        var purchasePopup = UIManager.Instance.ShowPopupUI<UIPurchasePopup>();
-        purchasePopup.Initialize(shop);
-        purchasePopup.Show(item);
-
+        base.OnCloseButtonClick();
     }
-    private void ResetSlots()
+
+    public void ShowShopGold()
     {
-        foreach (var slot in slots)
-        {
-            slot.ClearSlot();
-        }
+        goldTxt.text = playerManager.Currency.currencies[CurrencyType.Gold].ToString();
     }
+
 }

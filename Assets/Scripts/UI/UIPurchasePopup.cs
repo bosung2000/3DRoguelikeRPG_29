@@ -24,14 +24,18 @@ public class UIPurchasePopup : PopupUI
         btn_Buy.onClick.AddListener(OnBuyItem);
         closeButton.onClick.AddListener(ClosePopup);
     }
-    public void Initialize(Shop _shop)
+    public void Initialize(Shop _shop, SlotItemData item)
     {
         shop = _shop;
+        currentSlotItem = item;
+        base.Show();
+        UpdateUI();
     }
 
     private void OnBuyItem()
     {
-        if (currentSlotItem != null)
+        //현재 아이템이 존재하는지  and shoplist에 존재하는지 
+        if (currentSlotItem != null && shop.GetAvailableItems().Contains(currentSlotItem))
         {
             //아이템 구매시 골드 차감 +ui update
             if (shop.TryPurchaseItem(currentSlotItem.item))
@@ -44,19 +48,17 @@ public class UIPurchasePopup : PopupUI
 
             UIManager.Instance.ClosePopupUI(this);
         }
-
+        else
+        {
+            Debug.Log("구매과정에서 무언가 잘못됬습니다.");
+        }
     }
     private void ClosePopup()
     {
         UIManager.Instance.ClosePopupUI(this);
     }
 
-    public void Show(SlotItemData item)
-    {
-        currentSlotItem = item;
-        base.Show();
-        UpdateUI();
-    }
+
 
     private void UpdateUI()
     {

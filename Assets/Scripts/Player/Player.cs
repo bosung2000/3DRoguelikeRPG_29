@@ -23,6 +23,7 @@ public class Player : MonoBehaviour, BaseEntity
     [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
+    [SerializeField] TestWeapon _testWeapon;
 
     [SerializeField] TestPlayerUI dashCooldownUI;
     [SerializeField] FloatingJoystick _floatingJoystick;
@@ -49,7 +50,7 @@ public class Player : MonoBehaviour, BaseEntity
 
         Vector3 inputDir = InputJoystick + InputKeyboard;
 
-        if (inputDir.sqrMagnitude > 0.01f)
+        if (inputDir.sqrMagnitude > 0.05f)
         {
             inputDir = inputDir.normalized;
 
@@ -106,13 +107,13 @@ public class Player : MonoBehaviour, BaseEntity
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-        //damage에서 damageReduction%만큼 감소
         damage = damage - (int)(damage * damageReduction / 100);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
 
         if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
         {
             _playerController.SetTrigger("Die");
+            _testWeapon.Drop();
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
