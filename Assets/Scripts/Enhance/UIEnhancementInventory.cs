@@ -13,6 +13,9 @@ public class UIEnhancementInventory : MonoBehaviour
     private UIPopupInventory uiPopupInventory;
     private bool isInitialized = false;
 
+
+    public UIEquipmentEnhance enhanceUI;
+
     private void Start()
     {
         UpdateInventory();
@@ -59,10 +62,11 @@ public class UIEnhancementInventory : MonoBehaviour
             }
         }
     }
-    public void InitSlotShow()
+    private void InitSlotShow()
     {
         RemoveSlots();
         slots = new List<UISlot>();
+        
         for (int i = 0; i < inventoryManager.ReturnTotalSlotCount(); i++)
         {
             UISlot slotobj = Instantiate(uiSlotPrefab, SlotParent);
@@ -91,10 +95,11 @@ public class UIEnhancementInventory : MonoBehaviour
     /// <param name="slotItemData"></param>
     private void HandleItemOneClick(SlotItemData slotItemData)
     {
+        
         //장착 무기 
         if (slotItemData.item.itemType == ItemType.Equipment)
         {
-            //정보가져오기
+            enhanceUI.SetEquipment(slotItemData.item);
         } 
         else
         {

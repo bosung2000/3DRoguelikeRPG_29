@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPurchasePopup : PopupUI
+public class UISellPopup : PopupUI
 {
     [SerializeField] private Image itemimage;
     [SerializeField] private TextMeshProUGUI power;
@@ -15,36 +15,47 @@ public class UIPurchasePopup : PopupUI
     [SerializeField] private TextMeshProUGUI CriticalChance;
     [SerializeField] private TextMeshProUGUI CriticalDamage;
     [SerializeField] private TextMeshProUGUI Price;
-    [SerializeField] private Button btn_Buy;
+    [SerializeField] private Button btn_Sell;
+
 
     SlotItemData currentSlotItem;
-    Shop shop;
+    InventoryManager inventoryManager;
+    PlayerManager playerManager;
+    ShopSellInventory shopSellInventory;
+    UIShop uIShop;
 
     private void Awake()
     {
-        btn_Buy.onClick.AddListener(OnBuyItem);
+        btn_Sell.onClick.AddListener(OnSellItem);
         closeButton.onClick.AddListener(ClosePopup);
+        
     }
-    public void Initialize(Shop _shop, SlotItemData item)
+    private void Start()
     {
-        shop = _shop;
+        playerManager = GameManager.Instance.PlayerManager;
+    }
+    public void Initialize(SlotItemData item, InventoryManager _inventoryManager, ShopSellInventory _shopSellInventory, UIShop _uIShop)
+    {
         currentSlotItem = item;
+        inventoryManager = _inventoryManager;
+        shopSellInventory = _shopSellInventory;
+        uIShop = _uIShop;
         base.Show();
         UpdateUI();
     }
 
-    private void OnBuyItem()
+    private void OnSellItem()
     {
-        //현재 아이템이 존재하는지  and shoplist에 존재하는지 
-        if (currentSlotItem != null && shop.GetAvailableItems().Contains(currentSlotItem))
+        //현재 아이템이 존재하는지  and 인벤토리에 존재하는지 
+        if (currentSlotItem != null && inventoryManager.slotItemDatas.Contains(currentSlotItem))
         {
-            //아이템 구매시 골드 차감 +ui update
-            if (shop.TryPurchaseItem(currentSlotItem.item))
+            //골드 차감해주고 
+            if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
             {
-                //인벤토리 넣기
-                GameManager.Instance.InventoryManager.AddInventoryItem(currentSlotItem.item);
-                //shoplist에서 삭제
-                shop.RemoveShopItemlist(currentSlotItem);
+                //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
+                inventoryManager.RemoveInventoryitme(currentSlotItem.item);
+                //골드 UI 변경 
+                uIShop.ShowShopGold();
             }
 
             UIManager.Instance.ClosePopupUI(this);
@@ -58,8 +69,6 @@ public class UIPurchasePopup : PopupUI
     {
         UIManager.Instance.ClosePopupUI(this);
     }
-
-
 
     private void UpdateUI()
     {

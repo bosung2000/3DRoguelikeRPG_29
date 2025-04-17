@@ -67,6 +67,10 @@ public class UIPopupInventory : PopupUI
         {
             AddSlotBtn.onClick.AddListener(() => OnAddSlot());
         }
+        if (closeButton !=null)
+        {
+            closeButton.onClick.AddListener(() =>OnCloseButtonClick());
+        }
 
         GameManager.Instance.EquipMananger.OnEquipedChanged += HandleSingleItemChanged;
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
@@ -178,8 +182,9 @@ public class UIPopupInventory : PopupUI
         // 특별한 처리가 필요한 경우 여기에 추가
         Debug.Log("인벤토리 닫힘");
 
+        UIManager.Instance.CloseAllPopupUI();
         // 부모 클래스의 메서드 호출
-        base.OnCloseButtonClick();
+        //base.OnCloseButtonClick();
     }
 
     protected override void Clear()
