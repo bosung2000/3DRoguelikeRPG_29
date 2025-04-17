@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UIPopupInventory;
 
 public class UISelectedItem : PopupUI
 {
@@ -16,6 +17,7 @@ public class UISelectedItem : PopupUI
     [SerializeField] private TextMeshProUGUI CriticalDamage;
     [SerializeField] private Button btn_equip;
     [SerializeField] private Button btn_Release;
+    private UIPopupInventory uiPopupInventory;
 
     private ItemData currentItem;
 
@@ -37,10 +39,11 @@ public class UISelectedItem : PopupUI
         btn_equip.interactable= true;
     }
 
-    public void Show(ItemData item)
+    public void Show(ItemData item, UIPopupInventory _uIPopupInventory)
     {
         if (item == null) return;
 
+        uiPopupInventory = _uIPopupInventory;
         currentItem = item;
         base.Show();
         UpdateUI();
@@ -79,8 +82,13 @@ public class UISelectedItem : PopupUI
             //2.장착 버튼을 비활성화 해주는것 
 
             //false 반환은 같은 아이템을 선택했다는것  >데이터를 안넣기 
-            GameManager.Instance.EquipMananger.Equipitem(currentItem);
+            if(GameManager.Instance.EquipMananger.Equipitem(currentItem))
+            {
+                //UI초기화
+                uiPopupInventory.OnTabChanged(InventoryTabType.All);
+            }
             
+
             // 팝업 닫기
             Debug.Log($"{currentItem.itemName} 장착");
             UIManager.Instance.ClosePopupUI(this);
