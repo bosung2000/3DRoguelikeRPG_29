@@ -14,7 +14,7 @@ public class UIEnhancementInventory : MonoBehaviour
     private bool isInitialized = false;
 
 
-    public EquipmentEnhanceUI enhanceUI;
+    public UIEquipmentEnhance enhanceUI;
 
     private void Start()
     {
