@@ -65,6 +65,6 @@ public class Enemy : MonoBehaviour
     public void FixedUpdate()
     {
         float currentHP = Stat.GetStatValue(EnemyStatType.HP);
-        Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
+        //Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
     }
 }

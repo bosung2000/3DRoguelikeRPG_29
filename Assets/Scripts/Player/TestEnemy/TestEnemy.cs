@@ -19,7 +19,6 @@ public class TestEnemy : MonoBehaviour
 
     private void Awake()
     {
-        _currentHP = _maxHP;
         UpdateHPText();
     }
 
@@ -58,9 +57,13 @@ public class TestEnemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        _currentHP -= Mathf.Max(_currentHP - damage, 0);
+        if (Time.time - lastHitTime < hitCooldown) return;
+        
+
+        _currentHP = Mathf.Max(_currentHP - damage, 0);
         OnStatChanged();
 
+        lastHitTime = Time.time;
         if (_currentHP <= 0)
         {
             Debug.Log("Enemy is dead");
