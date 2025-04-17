@@ -10,6 +10,8 @@ public class UIEquipmentEnhance : MonoBehaviour
     public TextMeshProUGUI costText;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI resultText;
+    public TextMeshProUGUI startPreviewText;
+
 
     public Image itemIcon;
     public Button enhanceButton;
@@ -18,6 +20,8 @@ public class UIEquipmentEnhance : MonoBehaviour
     public PlayerManager playerManager;
 
     private ItemData currentEquipment;
+
+   
 
     private void Start()
     {
@@ -46,6 +50,8 @@ public class UIEquipmentEnhance : MonoBehaviour
         goldText.text = $"보유 골드: {gold}";
 
         itemIcon.sprite = currentEquipment.Icon;
+
+        startPreviewText.text = BuildStatPreviewText(currentEquipment); 
     }
 
     private void OnEnhanceButtonClicked()
@@ -57,4 +63,23 @@ public class UIEquipmentEnhance : MonoBehaviour
         resultText.text = success ? "강화 성공!" : "강화 실패";
         UpdateUI();
     }
+
+    private string BuildStatPreviewText(ItemData item)
+    {
+        if (item == null || item.options == null) return "";
+
+        string result = "";
+        int level = item.enhancementLevel;
+
+        foreach (var option in item.options)
+        {
+            float current = option.GetValueWithLevel(level);
+            float next = option.GetValueWithLevel(level + 1);
+            result += $"{option.type}: {current:F1} → {next:F1}\n";
+        }
+
+        return result;
+    }
+
+
 }
