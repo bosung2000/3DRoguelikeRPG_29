@@ -18,7 +18,8 @@ public class EnemyStat : BaseStat<EnemyStatType>
             SetStatValue(EnemyStatType.HP, statData.MaxHP);
             SetStatValue(EnemyStatType.Speed, statData.Speed);
             SetStatValue(EnemyStatType.Attack, statData.Attack);
-            SetStatValue(EnemyStatType.Currency, statData.Currency);
+            SetStatValue(EnemyStatType.Gold, statData.Gold);
+            SetStatValue(EnemyStatType.Soul, statData.Soul);
             SetStatValue(EnemyStatType.AttackRange, statData.AttackRange);
             SetStatValue(EnemyStatType.AttackCooldown, statData.AttackCooldown);
             SetStatValue(EnemyStatType.ChaseRange, statData.ChaseRange);

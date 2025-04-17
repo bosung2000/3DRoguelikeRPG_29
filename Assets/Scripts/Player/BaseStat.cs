@@ -24,7 +24,8 @@ public enum EnemyStatType
     HP,
     Speed,
     Attack,
-    Currency,
+    Gold,
+    Soul,//일반 1, 엘리트 5, 보스 10
     AttackRange,
     AttackCooldown,
     ChaseRange

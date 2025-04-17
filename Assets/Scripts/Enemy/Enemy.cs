@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
     }
     public void Die()
     {
-        int drop = (int)Stat.GetStatValue(EnemyStatType.Currency);
+        int drop = (int)Stat.GetStatValue(EnemyStatType.Gold);
         
         //임시코드
         Debug.Log($"사망, 골드 {drop} 드랍");
