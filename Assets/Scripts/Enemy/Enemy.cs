@@ -44,14 +44,14 @@ public class Enemy : MonoBehaviour
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
         
         
-        if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            enemyController.ChageState(EnemyStateType.Hit);
-        }
+        //if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
+        //{
+        //    Die();
+        //}
+        //else
+        //{
+        //    enemyController.ChageState(EnemyStateType.Hit);
+        //}
 
     }
     public void Die()

@@ -13,11 +13,12 @@ public class TestWeapon : MonoBehaviour
     {
         if (Time.time - lastHitTime < hitCooldown) return;
 
-            TestEnemy testEnemy = other.GetComponent<TestEnemy>();
+            //TestEnemy testEnemy = other.GetComponent<TestEnemy>();
+            Enemy enemy = other.GetComponent<Enemy>();
 
         if (other.CompareTag("Enemy"))
         {
-            testEnemy.TakeDamage(damage);
+            enemy.TakeDamage(damage);
             lastHitTime = Time.time;
         }
     }
