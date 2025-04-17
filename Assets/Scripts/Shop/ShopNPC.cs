@@ -17,8 +17,7 @@ public class ShopNPC : MonoBehaviour
     {
         //if (other.CompareTag("Player"))
         //{
-        //    // 상호작용 가능 UI 표시
-        //    UIManager.Instance.ShowInteractionUI("상점 열기 (E)");
+        //    OpenShop();
         //}
     }
 
@@ -29,7 +28,7 @@ public class ShopNPC : MonoBehaviour
             OpenShop();
         }
     }
-
+    
     private void OpenShop()
     {
         var shopUI = UIManager.Instance.ShowPopupUI<UIShop>();
