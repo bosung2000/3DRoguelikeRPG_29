@@ -9,7 +9,7 @@ public class UISlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Button SlotButton;
-    [SerializeField] private TextMeshProUGUI text_equip;
+    [SerializeField] private TextMeshProUGUI txt_equip;
     [SerializeField] private TextMeshProUGUI amount;
 
     //슬롯별로 데이터를 가지고 있어야한다.
@@ -22,7 +22,7 @@ public class UISlot : MonoBehaviour
 
     private void Start()
     {
-        text_equip.gameObject.SetActive(false);
+        txt_equip.gameObject.SetActive(false);
         amount.gameObject.SetActive(false);
         Init();
     }
@@ -53,6 +53,12 @@ public class UISlot : MonoBehaviour
         // 존재한다면
         if (!slotData.IsEmpty)
         {
+            //equipManager에서 체크하고 존재하면 E표시
+            if(GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType,out ItemData item))
+            {
+                txt_equip.gameObject.SetActive(true);
+            }
+
             iconImage.sprite = slotData.item.Icon;
             iconImage.enabled= true;
             
@@ -60,9 +66,9 @@ public class UISlot : MonoBehaviour
         else
         {
             iconImage.sprite = null;
-            //iconImage.enabled = false;
-            //text_equip.gameObject.SetActive(false);
-            //amount.gameObject.SetActive(false);
+            iconImage.enabled = false;
+            txt_equip.gameObject.SetActive(false);
+            amount.gameObject.SetActive(false);
         }
     }
 

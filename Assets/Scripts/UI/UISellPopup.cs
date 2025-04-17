@@ -21,6 +21,7 @@ public class UISellPopup : PopupUI
     SlotItemData currentSlotItem;
     InventoryManager inventoryManager;
     PlayerManager playerManager;
+    EquipMananger equipMananger;
     ShopSellInventory shopSellInventory;
     UIShop uIShop;
 
@@ -28,11 +29,12 @@ public class UISellPopup : PopupUI
     {
         btn_Sell.onClick.AddListener(OnSellItem);
         closeButton.onClick.AddListener(ClosePopup);
-        
+
     }
     private void Start()
     {
         playerManager = GameManager.Instance.PlayerManager;
+        equipMananger = GameManager.Instance.EquipMananger;
     }
     public void Initialize(SlotItemData item, InventoryManager _inventoryManager, ShopSellInventory _shopSellInventory, UIShop _uIShop)
     {
@@ -49,6 +51,18 @@ public class UISellPopup : PopupUI
         //현재 아이템이 존재하는지  and 인벤토리에 존재하는지 
         if (currentSlotItem != null && inventoryManager.slotItemDatas.Contains(currentSlotItem))
         {
+
+            //장착아이템인가 ?
+            if (equipMananger.EquipDicionary.TryGetValue(currentSlotItem.item.equipType, out ItemData value))
+            {
+                if (value.id == currentSlotItem.item.id)
+                {
+                    //판매 불가능 창 띄위기 
+                    UIManager.Instance.ShowPopupUI<UIDontSellPopup>();
+                    return;
+                }
+            }
+
             //골드 차감해주고 
             if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
             {
@@ -56,9 +70,14 @@ public class UISellPopup : PopupUI
                 inventoryManager.RemoveInventoryitme(currentSlotItem.item);
                 //골드 UI 변경 
                 uIShop.ShowShopGold();
+                UIManager.Instance.ClosePopupUI(this);
+            }
+            else
+            {
+                Debug.Log("골드부족 ");
+                return;
             }
 
-            UIManager.Instance.ClosePopupUI(this);
         }
         else
         {
