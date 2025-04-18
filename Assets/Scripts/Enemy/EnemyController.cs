@@ -17,7 +17,7 @@ public enum EnemyStateType
     Attack,
     Hit,
     Dead
-    
+
 }
 public class EnemyController : MonoBehaviour
 {
@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
     private IEnemyState _currentState;
     public EnemyStateType CurrentStateType { get; private set; }
     public NavMeshAgent agent { get; private set; }
-    public Animator animator {  get; private set; }
+    public Animator animator { get; private set; }
 
 
     private void Awake()
@@ -86,7 +86,7 @@ public class EnemyController : MonoBehaviour
         Debug.Log("[ChageState] 상태 전이 완료");
 
     }
-    
+
     public float GetSpeed() => _enemy.Stat.GetStatValue(EnemyStatType.Speed);//속도를 가져옴
     public float GetAttack() => _enemy.Stat.GetStatValue(EnemyStatType.Attack);//공격력을 가져옴
     public float GetHP() => _enemy.Stat.GetStatValue(EnemyStatType.MaxHP);//최대 체력을 가져옴
@@ -104,10 +104,19 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Chase => new EnemyChaseState(),
             EnemyStateType.Attack => new EnemyAttackState(),
             EnemyStateType.Dead => new EnemyDeadState(),
-            EnemyStateType.Hit => new EnemyDeadState(),
+            EnemyStateType.Hit => new EnemyHitState(),
             _ => null
         };
     }
+
+    public void ResetAttackCooldown()
+    {
+        if (_currentState is EnemyAttackState attackState)
+        {
+            attackState.ResetAttackCooldown();
+        }
+    }
+
 
     /// <summary>
     /// 디버깅용 함수들
@@ -122,7 +131,7 @@ public class EnemyController : MonoBehaviour
         float chaseRange = _enemy.Stat.GetStatValue(EnemyStatType.ChaseRange);
         Gizmos.DrawWireSphere(transform.position, chaseRange);
         //추적범위 이탈
-        Gizmos.color = new Color(255f/255f, 0f/255f, 221f/255);
+        Gizmos.color = new Color(255f / 255f, 0f / 255f, 221f / 255);
         Gizmos.DrawWireSphere(transform.position, chaseRange * 1.5f);
         //공격범위
         float attackRange = _enemy.Stat.GetStatValue(EnemyStatType.AttackRange);

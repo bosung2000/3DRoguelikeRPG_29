@@ -16,7 +16,6 @@ public class EnemyDeadState : IEnemyState
         controller.animator.SetTrigger("DIe");
     }
 
-
     public void ExitState(EnemyController controller)
     {
 
@@ -38,7 +37,6 @@ public class EnemyDeadState : IEnemyState
         if (_timer >= _deadDuration)
         {
             GameObject.Destroy(controller.gameObject);
-
         }
     }
 }

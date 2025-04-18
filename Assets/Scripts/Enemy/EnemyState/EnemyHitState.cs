@@ -16,6 +16,7 @@ public class EnemyHitState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         controller.agent.isStopped = false;
+
     }
 
     public void UpdateState(EnemyController controller)
@@ -23,7 +24,7 @@ public class EnemyHitState : IEnemyState
         _timer += Time.deltaTime;
         if (_timer > _hitDuration)
         {
-            if(controller.GetHP() <= 0)
+            if (controller.GetHP() <= 0)
             {
                 controller.ChageState(EnemyStateType.Dead);
             }
