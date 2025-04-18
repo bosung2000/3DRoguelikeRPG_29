@@ -71,9 +71,4 @@ public class EnemyAttackState : IEnemyState
         _target.GetComponent<Player>()?.TakeDamage((int)damage);
         Debug.Log($"Attack {damage}");
     }
-
-    public void ResetAttackCooldown()
-    {
-        lastAttackTime = Time.time;
-    }
 }

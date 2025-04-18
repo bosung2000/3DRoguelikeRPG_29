@@ -7,19 +7,18 @@ public class TestWeapon : MonoBehaviour
 {
     private float lastHitTime = -100f;
     public float hitCooldown = 1f;
-    [SerializeField] PlayerStat _playerStat;
+    public int damage = 10;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
         if (Time.time - lastHitTime < hitCooldown) return;
 
-            //TestEnemy testEnemy = other.GetComponent<TestEnemy>();
-            Enemy enemy = other.GetComponent<Enemy>();
-
-        if (other.CompareTag("Enemy"))
-        {
-            enemy.TakeDamage((int)_playerStat.GetStatValue(PlayerStatType.Attack));
-            lastHitTime = Time.time;
-        }
+        
+            TestEnemy testEnemy = collision.gameObject.GetComponent<TestEnemy>();
+            if (testEnemy != null)
+            {
+                testEnemy.TakeDamage(10);
+                lastHitTime = Time.time;
+            }
     }
 }
