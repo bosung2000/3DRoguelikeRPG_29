@@ -15,7 +15,6 @@ public interface BaseEntity
     void DMGReductionUp(float damageReduction);
     void CriticalChanceUp(float criticalChance);
     void CriticalDamageUp(float criticalDamage);
-    bool IsDead();
 }
 
 public class Player : MonoBehaviour, BaseEntity
@@ -32,7 +31,8 @@ public class Player : MonoBehaviour, BaseEntity
 
     private bool _isTumbling = false;
     private float _lastTumbleTime = -100f;
-    public float hitCooldown = 1f;
+    private float _lastHitTime = -100f;
+    private float _attackSpd = 5f;
 
     private void Awake()
     {
@@ -69,7 +69,7 @@ public class Player : MonoBehaviour, BaseEntity
     public void FixedUpdate()
     {
         DirectionCheck();
-        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed))/5;
+        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
 
     public void MaxHPUp(float value)
@@ -101,17 +101,23 @@ public class Player : MonoBehaviour, BaseEntity
         _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
         _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
-    public void TakeDamage(int damage)
+    public void Attack()
     {
-        if (Time.time - _lastTumbleTime < hitCooldown) return;
+        if (Time.time - _lastHitTime < _attackSpd) return;
 
         _playerController.SetTrigger("Attack");
+
+        _lastHitTime = Time.time;
+    }
+    public void TakeDamage(int damage)
+    {
+        if (Time.time - _lastTumbleTime < _playerStat.GetStatValue(PlayerStatType.HitCooldown)) return;
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
-        
-        damage = damage - (int)(damage * (damageReduction - dmgIncrease ) / 100);
+
+        damage = damage - (int)(damage * (damageReduction - dmgIncrease) / 100);
         _lastTumbleTime = Time.time;
 
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
@@ -237,51 +243,62 @@ public class Player : MonoBehaviour, BaseEntity
         _isTumbling = false;
     }
 
-    //public void Flash()
-    //{
-    //    if (Time.time >= lastFlashTime + 5)
-    //    {
-    //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-    //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-    //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
-
-    //        if (dashDir.sqrMagnitude < 0.01f)
-    //        {
-    //            dashDir = transform.forward; // 입력 없을 시 정면
-    //        }
-
-    //        dashDir = dashDir.normalized;
-
-    //        Vector3 origin = transform.position + Vector3.up * 0.5f;
-    //        Vector3 targetPos = transform.position + dashDir * 5;
-
-    //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
-    //        {
-    //            _rb.MovePosition(targetPos);
-    //            lastFlashTime = Time.time;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("대쉬가 쿨타임입니다.");
-    //    }
-    //}
-
-    public bool IsDead()
+    private void OnCollisionEnter(Collision other)
     {
-        return _playerStat.GetStatValue(PlayerStatType.HP) <= 0f;
+        CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
+
+        if (other.gameObject.CompareTag("Gold"))
+        {
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.CompareTag("Soul"))
+        {
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Soul, currencyData._amount);
+            Destroy(other.gameObject);
+        } 
     }
+        //public void Flash()
+        //{
+        //    if (Time.time >= lastFlashTime + 5)
+        //    {
+        //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+        //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
 
-    //public float GetCurrentHP()
-    //{
-    //    return _stats.GetStatValue(PlayerStatType.HP);
-    //}
+        //        if (dashDir.sqrMagnitude < 0.01f)
+        //        {
+        //            dashDir = transform.forward; // 입력 없을 시 정면
+        //        }
 
-    //public void EquipItem(Item item)
-    //{
-    //    foreach (var statBonus in item.BaseEntity)
-    //    {
-    //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
-    //    }
-    //}
+        //        dashDir = dashDir.normalized;
+
+        //        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        //        Vector3 targetPos = transform.position + dashDir * 5;
+
+        //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
+        //        {
+        //            _rb.MovePosition(targetPos);
+        //            lastFlashTime = Time.time;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("대쉬가 쿨타임입니다.");
+        //    }
+        //}
+
+        //public float GetCurrentHP()
+        //{
+        //    return _stats.GetStatValue(PlayerStatType.HP);
+        //}
+
+        //public void EquipItem(Item item)
+        //{
+        //    foreach (var statBonus in item.BaseEntity)
+        //    {
+        //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
+        //    }
+        //}
+    
 }
