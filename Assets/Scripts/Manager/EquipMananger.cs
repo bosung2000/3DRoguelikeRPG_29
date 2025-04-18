@@ -111,12 +111,6 @@ public class EquipMananger : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// add = true /remove =false
-    /// </summary>
-    /// <param name="equipType"></param>
-    /// <param name="itemData"></param>
-    /// <param name="AddorRemove"></param>
     private void OnEquipedChange(EquipType equipType,ItemData itemData,bool AddorRemove)
     {
         OnEquipedChanged?.Invoke(equipType,itemData,AddorRemove);
