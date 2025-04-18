@@ -5,7 +5,8 @@ using UnityEngine;
 
 public enum CurrencyType
 {
-    Gold
+    Gold,
+    Soul
 
 }
 
@@ -13,6 +14,7 @@ public class CurrencyManager : MonoBehaviour
 {
     public Dictionary<CurrencyType, int> currencies;
     public event Action<int> OnGoldChange;
+    public event Action<int> OnSoulChange;
 
     private void Awake()
     {
@@ -21,14 +23,15 @@ public class CurrencyManager : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     public void init()
     {
         currencies = new Dictionary<CurrencyType, int>
         {
-            { CurrencyType.Gold, 0 }
+            { CurrencyType.Gold, 0 },
+            { CurrencyType.Soul,0}
         };
     }
     public bool AddCurrency(CurrencyType currencyType, int amount)
@@ -48,6 +51,10 @@ public class CurrencyManager : MonoBehaviour
                 {
                     OnGoldChange?.Invoke(currencies[currencyType]);
                 }
+                else if (currencyType == CurrencyType.Soul)
+                {
+                    OnSoulChange?.Invoke(currencies[currencyType]);
+                }
                 return true;
             }
 
@@ -59,14 +66,14 @@ public class CurrencyManager : MonoBehaviour
         }
     }
 
-    internal bool CanAfford(CurrencyType _currencyType,int _gold)
+    internal bool CanAfford(CurrencyType _currencyType, int _gold)
     {
-        if (currencies[_currencyType] >_gold)
+        if (currencies[_currencyType] > _gold)
         {
             return true;
         }
-        Debug.Log("골드가 부족합니다");
+        Debug.Log($"{currencies[_currencyType]}가 부족합니다");
         return false;
-        
+
     }
 }
