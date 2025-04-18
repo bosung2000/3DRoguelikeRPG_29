@@ -20,10 +20,15 @@ public class UIEquipmentEnhance : PopupUI
 
     public EquipmentEnhancer enhancer;
     public PlayerManager playerManager;
+   
 
     private ItemData currentEquipment;
 
-   
+    private void Awake()
+    {
+        playerManager = FindObjectOfType<PlayerManager>();
+        enhancer = FindObjectOfType<EquipmentEnhancer>();
+    }
 
     private void Start()
     {
