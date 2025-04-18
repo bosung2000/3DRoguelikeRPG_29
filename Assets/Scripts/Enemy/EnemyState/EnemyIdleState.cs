@@ -12,9 +12,13 @@ public class EnemyIdleState : IEnemyState
         Debug.Log("Enemy : Idle 상태 진입");
 
         _scanRadius = controller.GetStat(EnemyStatType.ChaseRange);
-
         _targetLayer = LayerMask.GetMask("Player");
-        controller.animator?.SetBool("isMoving", false);
+    
+        if(controller.animator != null)
+        {
+            controller.animator.SetBool("isMoving", false);
+            controller.animator.ResetTrigger("Hit");
+        }
     }
     public void ExitState(EnemyController controller)
     {
