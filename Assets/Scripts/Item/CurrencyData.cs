@@ -10,7 +10,7 @@ public class CurrencyData : MonoBehaviour
     [Header("재화 설정")]
     [SerializeField] CurrencyType currencType;
 
-    private int _amount;
+    public int _amount;
     /// <summary>
     /// 재화값 설정
     /// </summary>
