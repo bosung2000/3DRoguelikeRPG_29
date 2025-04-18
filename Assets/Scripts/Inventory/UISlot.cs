@@ -54,12 +54,18 @@ public class UISlot : MonoBehaviour
         if (!slotData.IsEmpty)
         {
             //equipManager에서 체크하고 존재하면 E표시
+<<<<<<< HEAD
             if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType, out ItemData item))
             {
                 if (item.id == currentItemData.item.id)
                 {
                     txt_equip.gameObject.SetActive(true);
                 }
+=======
+            if(GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType,out ItemData item))
+            {
+                txt_equip.gameObject.SetActive(true);
+>>>>>>> parent of d9f3b97 (Merge branch 'Dev' into Feat_HB)
             }
 
             iconImage.sprite = slotData.item.Icon;

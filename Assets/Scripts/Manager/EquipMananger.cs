@@ -119,7 +119,11 @@ public class EquipMananger : MonoBehaviour
     /// <param name="equipType"></param>
     /// <param name="itemData"></param>
     /// <param name="AddorRemove"></param>
+<<<<<<< HEAD
     private void OnEquipedChange(EquipType equipType, ItemData itemData, bool AddorRemove)
+=======
+    private void OnEquipedChange(EquipType equipType,ItemData itemData,bool AddorRemove)
+>>>>>>> parent of d9f3b97 (Merge branch 'Dev' into Feat_HB)
     {
         OnEquipedChanged?.Invoke(equipType, itemData, AddorRemove);
     }

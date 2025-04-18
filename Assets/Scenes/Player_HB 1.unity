@@ -695,6 +695,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4428216604528113134, guid: 9b3e1e2552b3d63459d6af5cfbaa9e56, type: 3}
   m_PrefabInstance: {fileID: 7765804083892841321}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1235714802 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9164615833234773666, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+  m_PrefabInstance: {fileID: 7032874227182641064}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2a4869b261d9349932fe8da58383f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1291663568 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4380486408784502699, guid: 9cd231e91282da344a9736f12729cd45, type: 3}
@@ -898,7 +909,11 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4661205358422543490, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
       insertIndex: -1
+<<<<<<< HEAD
       addedObject: {fileID: 496013365}
+=======
+      addedObject: {fileID: 2065869424}
+>>>>>>> parent of d9f3b97 (Merge branch 'Dev' into Feat_HB)
   m_SourcePrefab: {fileID: 100100000, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
 --- !u!1 &1629043421
 GameObject:
@@ -1038,6 +1053,38 @@ Transform:
   - {fileID: 594044809}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2065869413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4661205358422543490, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
+  m_PrefabInstance: {fileID: 1336050900}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2065869416 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6989626496270678351, guid: 496995a8607efdf489a3da335bb67c3e, type: 3}
+  m_PrefabInstance: {fileID: 1336050900}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065869413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9133b9cb5389fe64bb59720d0f6ffe36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2065869424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065869413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e27768212d5184b88f2e1a7e7f46a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hpText: {fileID: 1300139032}
+  _enemyStat: {fileID: 2065869416}
+  hitCooldown: 1
+  damage: 10
 --- !u!1 &2086376222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1525,6 +1572,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3900608234025988607, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_TagString
+      value: Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 7190216306476448888, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: _testWeapon
+      value: 
+      objectReference: {fileID: 1235714802}
     - target: {fileID: 7190216306476448888, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: dashCooldownUI
       value: 
@@ -1537,6 +1592,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9164615833234773666, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: _playerStat
+      value: 
+      objectReference: {fileID: 7736338525454489190}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

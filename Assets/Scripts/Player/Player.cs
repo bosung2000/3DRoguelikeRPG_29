@@ -104,14 +104,14 @@ public class Player : MonoBehaviour, BaseEntity
     public void TakeDamage(int damage)
     {
         if (Time.time - _lastTumbleTime < hitCooldown) return;
+
         _playerController.SetTrigger("Attack");
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
-
-        damage = damage + (int)(damage * dmgIncrease / 100);
-        damage = damage - (int)(damage * damageReduction / 100);
+        
+        damage = damage - (int)(damage * (damageReduction - dmgIncrease ) / 100);
         _lastTumbleTime = Time.time;
 
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));

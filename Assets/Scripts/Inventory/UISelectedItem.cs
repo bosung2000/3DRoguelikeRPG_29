@@ -88,6 +88,7 @@ public class UISelectedItem : PopupUI
             //2.장착 버튼을 비활성화 해주는것 
 
             //false 반환은 같은 아이템을 선택했다는것  >데이터를 안넣기 
+<<<<<<< HEAD
             if (GameManager.Instance.EquipMananger.Equipitem(currentItem))
             {
                 //UI초기화
@@ -101,6 +102,19 @@ public class UISelectedItem : PopupUI
             {
                 Debug.Log("장착list에 아이템이 존재하지 않습니다");
             }
+=======
+            if(GameManager.Instance.EquipMananger.Equipitem(currentItem))
+            {
+                //UI초기화
+                uiPopupInventory.OnTabChanged(InventoryTabType.All);
+            }
+            
+
+            // 팝업 닫기
+            Debug.Log($"{currentItem.itemName} 장착");
+            UIManager.Instance.ClosePopupUI(this);
+            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+>>>>>>> parent of d9f3b97 (Merge branch 'Dev' into Feat_HB)
         }
         else
         {
