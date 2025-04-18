@@ -76,6 +76,7 @@ public class UIPopupInventory : PopupUI
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
         inventoryMananger.OnSlotChanged += HandleSlotChanged;
         inventoryMananger.OnSlotChanged += RefreshInventory;
+        
     }
 
     protected override void OnEnable()
@@ -240,7 +241,7 @@ public class UIPopupInventory : PopupUI
             }
         }
 
-        
+        //OnTabChanged(InventoryTabType.All);
     }
     /// <summary>
     /// 전체 아이템 슬롯 업데이트 /처음에 아이템 초기화를 할때 해야겠지 ?

@@ -20,12 +20,18 @@ public class ShopSellInventory : MonoBehaviour
     private InventoryManager inventoryManager;
     private UIShop uIShop;
 
+    private bool isInitialized = false;
+
     private void Awake()
     {
+        uIShop = GetComponentInParent<UIShop>();
         Initialize();
         inventoryManager = GameManager.Instance.InventoryManager;
         inventoryManager.OnSlotChanged += InitSlotShow;
-        uIShop =GetComponentInParent<UIShop>();
+        inventoryManager.OnSlotChanged += HandleSlotChanged;
+
+
+        InitSlots();
     }
 
     private void Initialize()
@@ -42,37 +48,46 @@ public class ShopSellInventory : MonoBehaviour
 
         if (materialTabButton != null)
             materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
-
     }
 
     private void OnEnable()
     {
-        InitSlots();
-
+        OnTabChanged(InventoryTabType.All);
     }
 
     // 초기화 (한 번만 실행)
     public void InitSlots()
     {
-        InitSlotShow();
+        if (!isInitialized)
+        {
+            InitSlotShow();
+            isInitialized = true;
+        }
 
     }
     //인벤토리 아이템이 더해지커나 삭제됬을때 show이벤트를 등록해줘야한다.
     public void InitSlotShow()
     {
+        Debug.Log("InitSlotShow 시작");
         RemoveSlots();
         slots = new List<UISlot>();
         for (int i = 0; i < inventoryManager.ReturnTotalSlotCount(); i++)
         {
             UISlot slotobj = Instantiate(uiSlotPrefab, SlotParent);
+            // 슬롯 생성 후 바로 데이터 설정
+            //if (i < inventoryManager.slotItemDatas.Count)
+            //{
+            //    slotobj.SetSlotData(inventoryManager.slotItemDatas[i]);
+            //}
             slots.Add(slotobj);
             slotobj.OnItemClicked += HandleItemOneClick;
+
         }
+
 
         // Grid Layout 및 Content 크기 업데이트
         SetupGridLayout();
-
-        OnTabChanged(InventoryTabType.Equipment);
+        Debug.Log("InitSlotShow 완료");
     }
 
     private void RemoveSlots()
@@ -105,8 +120,8 @@ public class ShopSellInventory : MonoBehaviour
     private void HandleItemOneClick(SlotItemData slotItemData)
     {
         //판매창 1개만 띄워주면됨 
-        var uisellpopup=UIManager.Instance.ShowPopupUI<UISellPopup>();
-        uisellpopup.Initialize(slotItemData,inventoryManager,this,uIShop);
+        var uisellpopup = UIManager.Instance.ShowPopupUI<UISellPopup>();
+        uisellpopup.Initialize(slotItemData, inventoryManager, this, uIShop);
     }
 
     private void SetupGridLayout()
@@ -218,5 +233,14 @@ public class ShopSellInventory : MonoBehaviour
             slot.ClearSlot();
         }
     }
+    private void HandleSlotChanged()
+    {
+        Debug.Log("HandleSlotChanged 시작");
+        //FilterByTabType(InventoryTabType.All);
+        OnTabChanged(InventoryTabType.All);
+        Debug.Log("HandleSlotChanged 완료");
+    }
+
+
 
 }

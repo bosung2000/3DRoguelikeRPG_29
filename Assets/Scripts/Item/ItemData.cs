@@ -73,6 +73,7 @@ public class ItemData : ScriptableObject
     public string description;
     [Range(1,10)]
     public int Tier;
+    public bool Equiped =false;
 
     [Header("장비 옵션")]
     public int enhancementLevel = 0;
