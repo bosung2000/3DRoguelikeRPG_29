@@ -88,21 +88,31 @@ public class Enemy : MonoBehaviour
 
     private void DropCurrency()
     {
-
-        Debug.Log("adf");
         int dropGold = (int)Stat.GetStatValue(EnemyStatType.Gold);
-        int dropSoul = (int)Stat.GetStatValue(EnemyStatType.Soul);
+        int dropSoul =  (int)Stat.GetStatValue(EnemyStatType.Soul);
 
-        for (int i = 0; i < dropGold; i++)
+        if(dropGold > 0 && _goldPrefab != null)
         {
-            Vector3 dropGPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            Instantiate(_goldPrefab, dropGPos, Quaternion.identity);
+            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
+            Instantiate(_goldPrefab, dropPos, Quaternion.identity);
+
+            CurrencyData currencyData = _goldPrefab.GetComponent<CurrencyData>();
+            if(currencyData != null)
+            {
+                currencyData.SetAmount(dropGold);
+            }
         }
 
-        for (int i = 0; i < dropSoul; i++)
+        if (dropSoul > 0 && _soulPrefab != null)
         {
-            Vector3 dropSPos = transform.position + new Vector3(0f, 0.5f, 0f);
-            Instantiate(_soulPrefab, dropSPos, Quaternion.identity);
+            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
+            Instantiate(_soulPrefab, dropPos, Quaternion.identity);
+
+            CurrencyData currencyData = _soulPrefab.GetComponent<CurrencyData>();
+            if (currencyData != null)
+            {
+                currencyData.SetAmount(dropSoul);
+            }
         }
     }
 
