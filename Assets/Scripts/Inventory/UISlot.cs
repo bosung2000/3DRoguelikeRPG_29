@@ -36,7 +36,7 @@ public class UISlot : MonoBehaviour
 
     private void onSlotClick()
     {
-        if (currentItemData ==null ||currentItemData.IsEmpty)
+        if (currentItemData == null || currentItemData.IsEmpty)
         {
             Debug.Log("빈 슬롯 클릭");
             return;
@@ -54,14 +54,17 @@ public class UISlot : MonoBehaviour
         if (!slotData.IsEmpty)
         {
             //equipManager에서 체크하고 존재하면 E표시
-            if(GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType,out ItemData item))
+            if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType, out ItemData item))
             {
-                txt_equip.gameObject.SetActive(true);
+                if (item.id == currentItemData.item.id)
+                {
+                    txt_equip.gameObject.SetActive(true);
+                }
             }
 
             iconImage.sprite = slotData.item.Icon;
-            iconImage.enabled= true;
-            
+            iconImage.enabled = true;
+
         }
         else
         {
