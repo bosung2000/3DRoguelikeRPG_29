@@ -32,7 +32,8 @@ public class Player : MonoBehaviour, BaseEntity
 
     private bool _isTumbling = false;
     private float _lastTumbleTime = -100f;
-    public float hitCooldown = 1f;
+    private float _lastHitTime = -100f;
+    private float _attackSpd = 5f;
 
     private void Awake()
     {
@@ -101,11 +102,17 @@ public class Player : MonoBehaviour, BaseEntity
         _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
         _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
-    public void TakeDamage(int damage)
+    public void Attack()
     {
-        if (Time.time - _lastTumbleTime < hitCooldown) return;
+        if (Time.time - _lastHitTime < _attackSpd) return;
 
         _playerController.SetTrigger("Attack");
+
+        _lastHitTime = Time.time;
+    }
+    public void TakeDamage(int damage)
+    {
+        if (Time.time - _lastTumbleTime < _playerStat.GetStatValue(PlayerStatType.HitCooldown)) return;
 
         float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);

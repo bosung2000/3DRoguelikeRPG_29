@@ -16,17 +16,20 @@ public class TestEnemy : MonoBehaviour
 
     public event Action<TestEnemy> OnEnermyStatsChanged;
 
-    private void Awake()
-    {
-        _enemyStat = GetComponent<EnemyStat>();
-        UpdateHPText();
-    }
 
     private void Start()
     {
+        _enemyStat = GetComponent<EnemyStat>();
+        UpdateHPText();
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
-
+    void Update()
+    {
+        if (_enemyStat != null)
+        {
+            UpdateHPText();
+        }
+    }
     private void UpdateHPText()
     {
         if (_hpText != null)

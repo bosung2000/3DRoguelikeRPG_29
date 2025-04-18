@@ -16,6 +16,7 @@ public enum PlayerStatType
     CriticalDamage,
     DashDistance,
     DashCooltime,
+    HitCooldown,
 
     absorp,
     DMGIncrease,
