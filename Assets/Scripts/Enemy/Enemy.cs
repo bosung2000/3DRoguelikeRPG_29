@@ -5,10 +5,16 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
-    public EnemyController enemyController {  get; private set; }
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget {  get; private set; }
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
+
+    [Header("드랍템 설정")]
+    [SerializeField] private GameObject _goldPrefab; //골드 프리펩
+    [SerializeField] private GameObject _soulPrefab; //영혼 프리펩
+
+    private EnemyController enemyController;
+    private bool _isDeadAnimationEnd = false;
 
     private void Awake()
     {
@@ -56,15 +62,43 @@ public class Enemy : MonoBehaviour
     }
     public void Die()
     {
-        int drop = (int)Stat.GetStatValue(EnemyStatType.Gold);
-        
-        //임시코드
-        Debug.Log($"사망, 골드 {drop} 드랍");
+        Debug.Log($"처치");
+
+        if (enemyController != null)
+        {
+            enemyController.animator.SetTrigger("Die");
+            enemyController.ChageState(EnemyStateType.Dead);
+        }
+        DropCurrency();
     }
 
-    public void FixedUpdate()
+    private void DropCurrency()
     {
-        float currentHP = Stat.GetStatValue(EnemyStatType.HP);
-        //Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
+        int dropGold = (int)Stat.GetStatValue(EnemyStatType.Gold);
+        int dropSoul = (int)Stat.GetStatValue(EnemyStatType.Soul);
+
+        for (int i = 0; i < dropGold; i++)
+        {
+            Vector3 dropGPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
+            Instantiate(_goldPrefab, dropGPos, Quaternion.identity);
+        }
+
+        for (int i = 0; i < dropSoul; i++)
+        {
+            Vector3 dropSPos = transform.position + new Vector3(0f, 0.5f, 0f);
+            Instantiate(_soulPrefab, dropSPos, Quaternion.identity);
+        }
     }
+
+    public void OnDeadAnimationEnd()
+    {
+        //죽는 애니메이션이 끝남을 표시
+        _isDeadAnimationEnd = true;
+    }
+
+    public bool IsDeadAnimationEnded()
+    {
+        return _isDeadAnimationEnd;
+    }
+
 }
