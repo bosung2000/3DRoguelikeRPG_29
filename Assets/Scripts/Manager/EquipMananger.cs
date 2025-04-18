@@ -34,7 +34,7 @@ public class EquipMananger : MonoBehaviour
             //장착된 아이템을 제거 
             UnEquipitem(Equipeditemed);
         }
-        //장착 
+        
         EquipDicionary.Add(itemData.equipType, itemData);
         // 능력치 더해주고 
         AddStats();
@@ -47,6 +47,7 @@ public class EquipMananger : MonoBehaviour
     {
         if (EquipDicionary.TryGetValue(itemData.equipType, out ItemData eqipeditemed))
         {
+            
             EquipDicionary.Remove(eqipeditemed.equipType);
             AddStats();
             OnEquipedChange(itemData.equipType, itemData, false);

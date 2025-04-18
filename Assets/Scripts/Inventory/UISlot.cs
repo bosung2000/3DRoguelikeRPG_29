@@ -22,6 +22,7 @@ public class UISlot : MonoBehaviour
 
     private void Start()
     {
+
         txt_equip.gameObject.SetActive(false);
         amount.gameObject.SetActive(false);
         Init();
@@ -36,7 +37,7 @@ public class UISlot : MonoBehaviour
 
     private void onSlotClick()
     {
-        if (currentItemData ==null ||currentItemData.IsEmpty)
+        if (currentItemData == null || currentItemData.IsEmpty)
         {
             Debug.Log("빈 슬롯 클릭");
             return;
@@ -53,15 +54,24 @@ public class UISlot : MonoBehaviour
         // 존재한다면
         if (!slotData.IsEmpty)
         {
+            // 장착 표시 초기화
+            txt_equip.gameObject.SetActive(false);
+
             //equipManager에서 체크하고 존재하면 E표시
-            if(GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType,out ItemData item))
+            if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType, out ItemData item))
             {
-                txt_equip.gameObject.SetActive(true);
+                //Debug.Log($"장착된 아이템 ID: {item.id}");
+                if (item.id == currentItemData.item.id)
+                {
+                    txt_equip.gameObject.SetActive(true);
+                    //LayoutRebuilder.ForceRebuildLayoutImmediate(txt_equip.transform.parent as RectTransform);
+                    //Debug.Log($"txt_equip 초기 상태: {txt_equip.gameObject.activeSelf}");
+                }
             }
 
             iconImage.sprite = slotData.item.Icon;
-            iconImage.enabled= true;
-            
+            iconImage.enabled = true;
+
         }
         else
         {
@@ -82,4 +92,6 @@ public class UISlot : MonoBehaviour
         //iconImage.enabled = false;
         //amount.text = "";
     }
+
+
 }

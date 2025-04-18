@@ -35,6 +35,8 @@ public class ItemCreator : EditorWindow
     private float newEffectValue = 50f;
     private float newEffectDuration = 0f;
 
+    private bool equiped = false; // 장착 상태 변수 추가
+
     [MenuItem("Tools/Item Creator")]
     public static void ShowWindow()
     {
@@ -79,6 +81,7 @@ public class ItemCreator : EditorWindow
         {
             equipType = (EquipType)EditorGUILayout.EnumPopup("장비 타입", equipType);
             tier = Mathf.Clamp(EditorGUILayout.IntField("티어", tier), 1, 10);
+            equiped = EditorGUILayout.Toggle("장착 상태", equiped); // 장착 상태 필드 추가
         }
         else if (itemType == ItemType.Consumable)
         {
@@ -255,6 +258,7 @@ public class ItemCreator : EditorWindow
         itemData.Icon = icon;
         itemData.itemObj = itemObj;
         itemData.Tier = tier;
+        itemData.Equiped = equiped; // 장착 상태 설정
 
         if (itemType == ItemType.Equipment)
         {
