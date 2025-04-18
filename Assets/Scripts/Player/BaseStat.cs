@@ -9,13 +9,21 @@ public enum PlayerStatType
     HP,
     MaxMP,
     MP,
-    Speed,
+    MoveSpeed,
     Attack,
     DMGReduction,
     CriticalChance,
     CriticalDamage,
     DashDistance,
-    DashCooltime
+    DashCooltime,
+
+    absorp,
+    DMGIncrease,
+    HPRecovery,
+    MPRecovery,
+    GoldAcquisition,
+    SkillColltime,
+    AttackSpeed
 }
 
 public enum EnemyStatType

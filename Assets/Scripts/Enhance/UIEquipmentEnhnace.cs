@@ -2,26 +2,38 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIEquipmentEnhance : MonoBehaviour
-{
+public class UIEquipmentEnhance : PopupUI
+
+{ 
     public TextMeshProUGUI itemNameText;
     public TextMeshProUGUI enhancementLevelText;
     public TextMeshProUGUI successRateText;
     public TextMeshProUGUI costText;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI resultText;
+    public TextMeshProUGUI startPreviewText;
+
+
 
     public Image itemIcon;
     public Button enhanceButton;
 
     public EquipmentEnhancer enhancer;
     public PlayerManager playerManager;
+   
 
     private ItemData currentEquipment;
+
+    private void Awake()
+    {
+        playerManager = FindObjectOfType<PlayerManager>();
+        enhancer = FindObjectOfType<EquipmentEnhancer>();
+    }
 
     private void Start()
     {
         enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
+        closeButton.onClick.AddListener(OnCloseButtonClick);
     }
 
     public void SetEquipment(ItemData equipment)
@@ -46,6 +58,8 @@ public class UIEquipmentEnhance : MonoBehaviour
         goldText.text = $"보유 골드: {gold}";
 
         itemIcon.sprite = currentEquipment.Icon;
+
+        startPreviewText.text = BuildStatPreviewText(currentEquipment); //능력치미리보기
     }
 
     private void OnEnhanceButtonClicked()
@@ -57,4 +71,23 @@ public class UIEquipmentEnhance : MonoBehaviour
         resultText.text = success ? "강화 성공!" : "강화 실패";
         UpdateUI();
     }
+
+    private string BuildStatPreviewText(ItemData item)
+    {
+        if (item == null || item.options == null) return "";
+
+        string result = "";
+        int level = item.enhancementLevel;
+
+        foreach (var option in item.options)
+        {
+            float current = option.GetValueWithLevel(level);
+            float next = option.GetValueWithLevel(level + 1);
+            result += $"{option.type}: {current:F1} → {next:F1}\n";
+        }
+
+        return result;
+    }
+
+
 }

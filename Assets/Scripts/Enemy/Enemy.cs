@@ -44,14 +44,14 @@ public class Enemy : MonoBehaviour
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
         
         
-        if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            enemyController.ChageState(EnemyStateType.Hit);
-        }
+        //if(Stat.GetStatValue(EnemyStatType.HP) <= 0)
+        //{
+        //    Die();
+        //}
+        //else
+        //{
+        //    enemyController.ChageState(EnemyStateType.Hit);
+        //}
 
     }
     public void Die()
@@ -65,6 +65,6 @@ public class Enemy : MonoBehaviour
     public void FixedUpdate()
     {
         float currentHP = Stat.GetStatValue(EnemyStatType.HP);
-        Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
+        //Debug.Log($"🩸 {gameObject.name} 현재 체력: {currentHP}");
     }
 }

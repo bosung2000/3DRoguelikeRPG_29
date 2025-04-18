@@ -97,7 +97,7 @@ public class EquipMananger : MonoBehaviour
             case ConditionType.Mana:
                 return PlayerStatType.MaxMP;
             case ConditionType.Speed:
-                return PlayerStatType.Speed;
+                return PlayerStatType.MoveSpeed;
             case ConditionType.reduction:
                 return PlayerStatType.DMGReduction;
             case ConditionType.CriticalChance:
@@ -111,6 +111,12 @@ public class EquipMananger : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// add = true /remove =false
+    /// </summary>
+    /// <param name="equipType"></param>
+    /// <param name="itemData"></param>
+    /// <param name="AddorRemove"></param>
     private void OnEquipedChange(EquipType equipType,ItemData itemData,bool AddorRemove)
     {
         OnEquipedChanged?.Invoke(equipType,itemData,AddorRemove);
