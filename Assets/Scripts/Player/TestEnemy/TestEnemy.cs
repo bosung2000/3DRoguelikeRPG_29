@@ -7,9 +7,8 @@ using UnityEngine;
 
 public class TestEnemy : MonoBehaviour
 {
-    [SerializeField] int _maxHP = 100;
-    [SerializeField] int _currentHP = 100;
     [SerializeField] TextMeshProUGUI _hpText;
+    [SerializeField] EnemyStat _enemyStat;
 
     private float lastHitTime = -100f;
     public float hitCooldown = 1f;
@@ -19,24 +18,25 @@ public class TestEnemy : MonoBehaviour
 
     private void Awake()
     {
-        _currentHP = _maxHP;
         UpdateHPText();
+        _enemyStat = GetComponent<EnemyStat>();
     }
 
     private void Start()
     {
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
-
     private void UpdateHPText()
     {
         if (_hpText != null)
         {
+            int _currentHP = (int)_enemyStat.GetStatValue(EnemyStatType.HP);
+            int _maxHP = (int)_enemyStat.GetStatValue(EnemyStatType.MaxHP);
             _hpText.text = $"{_currentHP}/{_maxHP}";
         }
     }
 
-    private void OnStatChanged()
+    public void OnStatChanged()
     {
         OnEnermyStatsChanged?.Invoke(this);
     }
@@ -50,20 +50,24 @@ public class TestEnemy : MonoBehaviour
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage(damage);
+                player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
                 lastHitTime = Time.time;
             }
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        _currentHP -= Mathf.Max(_currentHP - damage, 0);
-        OnStatChanged();
+    //public void TakeDamage(int damage)
+    //{
+    //    if (Time.time - lastHitTime < hitCooldown) return;
+        
 
-        if (_currentHP <= 0)
-        {
-            Debug.Log("Enemy is dead");
-        }
-    }
+    //    _currentHP = Mathf.Max(_currentHP - damage, 0);
+    //    OnStatChanged();
+
+    //    lastHitTime = Time.time;
+    //    if (_currentHP <= 0)
+    //    {
+    //        Debug.Log("Enemy is dead");
+    //    }
+    //}
 }
