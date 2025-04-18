@@ -18,8 +18,8 @@ public class TestEnemy : MonoBehaviour
 
     private void Awake()
     {
-        UpdateHPText();
         _enemyStat = GetComponent<EnemyStat>();
+        UpdateHPText();
     }
 
     private void Start()
