@@ -12,8 +12,7 @@ public class UISkill : MonoBehaviour
         skillConditions = new SkillCondition[this.transform.childCount];
         for (int i = 0; i < skillConditions.Length; i++)
         {
-            skillConditions[i] = this.transform.GetChild(i).GetComponent<SkillCondition>(); //객체 안에서 SkillCondition 클래스를 찾아 지정하고 
-            skillConditions[i].index = i; //고유 식별값을 지정하기
+            skillConditions[i] = this.transform.GetChild(i).GetComponent<SkillCondition>(); //객체 안에서 SkillCondition 클래스를 찾아 지정하고
         }
     }
 
