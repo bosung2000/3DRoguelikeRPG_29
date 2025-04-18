@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6567279655146720295}
   - component: {fileID: 1203407868590992495}
   - component: {fileID: 6481539991859919845}
+  - component: {fileID: -492377241080834649}
   m_Layer: 0
   m_Name: Soul
   m_TagString: Soul
@@ -105,3 +106,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-492377241080834649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2218287214163529481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 224bc633ab63cf74186b403dbe631682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currencType: 1
