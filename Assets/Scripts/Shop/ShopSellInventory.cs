@@ -48,6 +48,7 @@ public class ShopSellInventory : MonoBehaviour
     private void OnEnable()
     {
         InitSlots();
+
     }
 
     // 초기화 (한 번만 실행)
@@ -71,8 +72,7 @@ public class ShopSellInventory : MonoBehaviour
         // Grid Layout 및 Content 크기 업데이트
         SetupGridLayout();
 
-        OnTabChanged(InventoryTabType.Equipment);
-
+        OnTabChanged(InventoryTabType.All);
     }
 
     private void RemoveSlots()
