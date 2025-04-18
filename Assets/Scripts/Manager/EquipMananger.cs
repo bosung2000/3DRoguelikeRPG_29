@@ -7,7 +7,7 @@ public class EquipMananger : MonoBehaviour
 {
     public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
 
-    public event Action<EquipType, ItemData, bool> OnEquipedChanged;
+    public event Action<EquipType,ItemData,bool> OnEquipedChanged;
 
     private void Start()
     {
@@ -39,20 +39,18 @@ public class EquipMananger : MonoBehaviour
         // 능력치 더해주고 
         AddStats();
         // 장착 관련 이벤트를 발생
-        OnEquipedChange(itemData.equipType, itemData, true);
+        OnEquipedChange(itemData.equipType,itemData,true);
         return true;
 
     }
-    public bool UnEquipitem(ItemData itemData)
+    public void UnEquipitem(ItemData itemData)
     {
         if (EquipDicionary.TryGetValue(itemData.equipType, out ItemData eqipeditemed))
         {
             EquipDicionary.Remove(eqipeditemed.equipType);
-            AddStats();
-            OnEquipedChange(itemData.equipType, itemData, false);
-            return true;
         }
-        return false;
+        AddStats();
+        OnEquipedChange(itemData.equipType,itemData,false);
     }
     private void AddStats()
     {
@@ -113,14 +111,8 @@ public class EquipMananger : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// add = true /remove =false
-    /// </summary>
-    /// <param name="equipType"></param>
-    /// <param name="itemData"></param>
-    /// <param name="AddorRemove"></param>
-    private void OnEquipedChange(EquipType equipType, ItemData itemData, bool AddorRemove)
+    private void OnEquipedChange(EquipType equipType,ItemData itemData,bool AddorRemove)
     {
-        OnEquipedChanged?.Invoke(equipType, itemData, AddorRemove);
+        OnEquipedChanged?.Invoke(equipType,itemData,AddorRemove);
     }
 }

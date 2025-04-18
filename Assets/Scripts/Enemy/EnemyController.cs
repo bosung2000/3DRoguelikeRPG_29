@@ -104,10 +104,19 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Chase => new EnemyChaseState(),
             EnemyStateType.Attack => new EnemyAttackState(),
             EnemyStateType.Dead => new EnemyDeadState(),
-            EnemyStateType.Hit => new EnemyDeadState(),
+            EnemyStateType.Hit => new EnemyHitState(),
             _ => null
         };
     }
+
+    public void ResetAttackCooldown()
+    {
+        if (_currentState is EnemyAttackState attackState)
+        {
+            attackState.ResetAttackCooldown();
+        }
+    }
+
 
     /// <summary>
     /// 디버깅용 함수들

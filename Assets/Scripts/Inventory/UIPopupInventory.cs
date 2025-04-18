@@ -117,7 +117,7 @@ public class UIPopupInventory : PopupUI
             }
             if (selectedItemPopup != null)
             {
-                selectedItemPopup.Show(item,this);
+                selectedItemPopup.Show(item);
             }
             var equipitempopup = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
             if (equipitempopup != null)
@@ -133,13 +133,13 @@ public class UIPopupInventory : PopupUI
             //내가 장착한 아이템이 없을때 
             if (selectedItemPopup != null)
             {
-                selectedItemPopup.Show(item,this);
+                selectedItemPopup.Show(item);
             }
         }
     }
 
     // 탭 변경 처리
-    public void OnTabChanged(InventoryTabType tabType)
+    private void OnTabChanged(InventoryTabType tabType)
     {
         // 선택된 탭에 따라 아이템 필터링 및 UI 업데이트
         Debug.Log($"탭 변경: {tabType}");
@@ -239,8 +239,6 @@ public class UIPopupInventory : PopupUI
                     break;
             }
         }
-
-        
     }
     /// <summary>
     /// 전체 아이템 슬롯 업데이트 /처음에 아이템 초기화를 할때 해야겠지 ?
