@@ -8,7 +8,7 @@ using UnityEngine;
 public class CurrencyData : MonoBehaviour
 {
     [Header("재화 설정")]
-    [SerializeField] CurrencyType currencType;
+    [SerializeField] CurrencyType currencyType;
 
     public int _amount;
     /// <summary>

@@ -258,47 +258,56 @@ public class Player : MonoBehaviour, BaseEntity
             Destroy(other.gameObject);
         } 
     }
-        //public void Flash()
-        //{
-        //    if (Time.time >= lastFlashTime + 5)
-        //    {
-        //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-        //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
+    public void EnableCollider()
+    {
+        _testWeapon.EnableCollider();
+    }
 
-        //        if (dashDir.sqrMagnitude < 0.01f)
-        //        {
-        //            dashDir = transform.forward; // 입력 없을 시 정면
-        //        }
+    public void DisableCollider()
+    {
+        _testWeapon.DisableCollider();
+    }
+    //public void Flash()
+    //{
+    //    if (Time.time >= lastFlashTime + 5)
+    //    {
+    //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+    //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+    //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
 
-        //        dashDir = dashDir.normalized;
+    //        if (dashDir.sqrMagnitude < 0.01f)
+    //        {
+    //            dashDir = transform.forward; // 입력 없을 시 정면
+    //        }
 
-        //        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        //        Vector3 targetPos = transform.position + dashDir * 5;
+    //        dashDir = dashDir.normalized;
 
-        //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
-        //        {
-        //            _rb.MovePosition(targetPos);
-        //            lastFlashTime = Time.time;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("대쉬가 쿨타임입니다.");
-        //    }
-        //}
+    //        Vector3 origin = transform.position + Vector3.up * 0.5f;
+    //        Vector3 targetPos = transform.position + dashDir * 5;
 
-        //public float GetCurrentHP()
-        //{
-        //    return _stats.GetStatValue(PlayerStatType.HP);
-        //}
+    //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
+    //        {
+    //            _rb.MovePosition(targetPos);
+    //            lastFlashTime = Time.time;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("대쉬가 쿨타임입니다.");
+    //    }
+    //}
 
-        //public void EquipItem(Item item)
-        //{
-        //    foreach (var statBonus in item.BaseEntity)
-        //    {
-        //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
-        //    }
-        //}
-    
+    //public float GetCurrentHP()
+    //{
+    //    return _stats.GetStatValue(PlayerStatType.HP);
+    //}
+
+    //public void EquipItem(Item item)
+    //{
+    //    foreach (var statBonus in item.BaseEntity)
+    //    {
+    //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
+    //    }
+    //}
+
 }

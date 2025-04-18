@@ -8,6 +8,8 @@ using UnityEngine;
 public class TestEnemy : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _hpText;
+    [SerializeField] TextMeshProUGUI _GoldText;
+    [SerializeField] TextMeshProUGUI _soulText;
     [SerializeField] EnemyStat _enemyStat;
 
     private float lastHitTime = -100f;
@@ -36,6 +38,16 @@ public class TestEnemy : MonoBehaviour
             int _currentHP = (int)_enemyStat.GetStatValue(EnemyStatType.HP);
             int _maxHP = (int)_enemyStat.GetStatValue(EnemyStatType.MaxHP);
             _hpText.text = $"{_currentHP}/{_maxHP}";
+        }
+        if (_GoldText != null)
+        {
+            int _gold = (int)GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold];
+            _GoldText.text = $"{_gold}";
+        }
+        if (_soulText != null)
+        {
+            int _soul = (int)GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul];
+            _soulText.text = $"{_soul}";
         }
     }
 
