@@ -6,7 +6,7 @@ using UnityEngine;
 public class CurrencyData : MonoBehaviour
 {
     [Header("재화 설정")]
-    [SerializeField] CurrencyType currencType;
+    [SerializeField] CurrencyType currencyType;
 
-    private int _amount;
+    public int _amount;
 }
