@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6989626496270678351}
   - component: {fileID: 4131601597733009817}
   - component: {fileID: -8423301338365569332}
+  - component: {fileID: 2098933012156548347}
   m_Layer: 0
   m_Name: TrainingMeleeBot
   m_TagString: Enemy
@@ -222,3 +223,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2098933012156548347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4661205358422543490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e27768212d5184b88f2e1a7e7f46a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hpText: {fileID: 0}
+  _enemyStat: {fileID: 6989626496270678351}
+  hitCooldown: 1
+  damage: 10

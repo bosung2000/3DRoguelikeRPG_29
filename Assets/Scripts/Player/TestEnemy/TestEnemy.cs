@@ -7,9 +7,8 @@ using UnityEngine;
 
 public class TestEnemy : MonoBehaviour
 {
-    [SerializeField] int _maxHP = 100;
-    [SerializeField] int _currentHP = 100;
     [SerializeField] TextMeshProUGUI _hpText;
+    [SerializeField] EnemyStat _enemyStat;
 
     private float lastHitTime = -100f;
     public float hitCooldown = 1f;
@@ -19,6 +18,7 @@ public class TestEnemy : MonoBehaviour
 
     private void Awake()
     {
+        _enemyStat = GetComponent<EnemyStat>();
         UpdateHPText();
     }
 
@@ -31,11 +31,13 @@ public class TestEnemy : MonoBehaviour
     {
         if (_hpText != null)
         {
+            int _currentHP = (int)_enemyStat.GetStatValue(EnemyStatType.HP);
+            int _maxHP = (int)_enemyStat.GetStatValue(EnemyStatType.MaxHP);
             _hpText.text = $"{_currentHP}/{_maxHP}";
         }
     }
 
-    private void OnStatChanged()
+    public void OnStatChanged()
     {
         OnEnermyStatsChanged?.Invoke(this);
     }
@@ -49,24 +51,24 @@ public class TestEnemy : MonoBehaviour
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage(damage);
+                player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
                 lastHitTime = Time.time;
             }
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (Time.time - lastHitTime < hitCooldown) return;
+    //public void TakeDamage(int damage)
+    //{
+    //    if (Time.time - lastHitTime < hitCooldown) return;
         
 
-        _currentHP = Mathf.Max(_currentHP - damage, 0);
-        OnStatChanged();
+    //    _currentHP = Mathf.Max(_currentHP - damage, 0);
+    //    OnStatChanged();
 
-        lastHitTime = Time.time;
-        if (_currentHP <= 0)
-        {
-            Debug.Log("Enemy is dead");
-        }
-    }
+    //    lastHitTime = Time.time;
+    //    if (_currentHP <= 0)
+    //    {
+    //        Debug.Log("Enemy is dead");
+    //    }
+    //}
 }
