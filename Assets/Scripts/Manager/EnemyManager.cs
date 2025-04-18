@@ -4,32 +4,10 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    private Enemy _enemy;
-
-    private int testDamage = 10;
-    private KeyCode damageKey = KeyCode.Q;
-
-    private void Awake()
-    {
-        _enemy = GetComponent<Enemy>();
-    }
-
+    [SerializeField] GameObject enemyPrefab;
     private void Start()
     {
-
-    }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(damageKey))
-        {
-            ReceiveDamage(testDamage);
-        }
-    }
-
-    public void ReceiveDamage(int damage)
-    {
-        if(_enemy == null) return;
-        _enemy.TakeDamage(damage);
+        Instantiate(enemyPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        enemyPrefab.SetActive(true);
     }
 }
