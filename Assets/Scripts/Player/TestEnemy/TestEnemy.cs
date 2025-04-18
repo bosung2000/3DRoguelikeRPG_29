@@ -20,7 +20,6 @@ public class TestEnemy : MonoBehaviour
     private void Start()
     {
         _enemyStat = GetComponent<EnemyStat>();
-        UpdateHPText();
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
     void Update()
