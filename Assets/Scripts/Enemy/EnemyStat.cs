@@ -12,7 +12,7 @@ public class EnemyStat : BaseStat<EnemyStatType>
     {
         InitializeStats();
 
-        if(statData != null )
+        if (statData != null)
         {
             SetStatValue(EnemyStatType.MaxHP, statData.MaxHP);
             SetStatValue(EnemyStatType.HP, statData.MaxHP);

@@ -34,7 +34,7 @@ public class EnemyAttackState : IEnemyState
 
     public void UpdateState(EnemyController controller)
     {
-        if (_target == null)return;
+        if (_target == null) return;
 
         float distance = Vector3.Distance(controller.transform.position, _target.position);
 
@@ -44,7 +44,7 @@ public class EnemyAttackState : IEnemyState
             return;
         }
 
-        if(Time.time >= lastAttackTime + attackCooldown)
+        if (Time.time >= lastAttackTime + attackCooldown)
         {
             lastAttackTime = Time.time;
 
@@ -57,7 +57,7 @@ public class EnemyAttackState : IEnemyState
     {
         float damage = controller.GetAttack();
 
-        switch(controller.Enemy.Role)
+        switch (controller.Enemy.Role)
         {
             case EnemyRoleType.Melee:
 
@@ -70,5 +70,10 @@ public class EnemyAttackState : IEnemyState
 
         _target.GetComponent<Player>()?.TakeDamage((int)damage);
         Debug.Log($"Attack {damage}");
+    }
+
+    public void ResetAttackCooldown()
+    {
+        lastAttackTime = Time.time;
     }
 }

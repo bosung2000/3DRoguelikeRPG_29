@@ -15,6 +15,7 @@ public class SkillCondition : MonoBehaviour
     public Image uiBar; // 쿨타임 표시할 이미지
     public Image skillIcon; // 스킬 아이콘
     public Skill skill;
+    public FloatingSkillJoystick joystick;
 
     private void Awake()
     {

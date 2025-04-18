@@ -25,7 +25,14 @@ public class UISelectedItem : PopupUI
     {
         btn_equip.onClick.AddListener(OnEquipButtonClicked);
         btn_Release.onClick.AddListener(OnReleaseButtonClicked);
+        closeButton.onClick.AddListener(OncloseBtn);
         Initialize();
+    }
+
+    private void OncloseBtn()
+    {
+        UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+        OnCloseButtonClick();
     }
 
     public void Initialize()
@@ -82,17 +89,19 @@ public class UISelectedItem : PopupUI
             //2.장착 버튼을 비활성화 해주는것 
 
             //false 반환은 같은 아이템을 선택했다는것  >데이터를 안넣기 
-            if(GameManager.Instance.EquipMananger.Equipitem(currentItem))
+            if (GameManager.Instance.EquipMananger.Equipitem(currentItem))
             {
                 //UI초기화
                 uiPopupInventory.OnTabChanged(InventoryTabType.All);
+                // 팝업 닫기
+                Debug.Log($"{currentItem.itemName} 장착");
+                UIManager.Instance.ClosePopupUI(this);
+                UIManager.Instance.ClosePopupUI<UIEquipedItem>();
             }
-            
-
-            // 팝업 닫기
-            Debug.Log($"{currentItem.itemName} 장착");
-            UIManager.Instance.ClosePopupUI(this);
-            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+            else
+            {
+                Debug.Log("장착list에 아이템이 존재하지 않습니다");
+            }
         }
         else
         {
@@ -105,11 +114,19 @@ public class UISelectedItem : PopupUI
         if (currentItem != null)
         {
             // 장착 list에서 제거 
-            GameManager.Instance.EquipMananger.UnEquipitem(currentItem);
-            Debug.Log($"{currentItem.itemName} 해제");
-            // 팝업 닫기
-            UIManager.Instance.ClosePopupUI(this);
-            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+            if (GameManager.Instance.EquipMananger.UnEquipitem(currentItem))
+            {
+                //UI초기화
+                uiPopupInventory.OnTabChanged(InventoryTabType.All);
+                Debug.Log($"{currentItem.itemName} 해제");
+                // 팝업 닫기
+                UIManager.Instance.ClosePopupUI(this);
+                UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+            }
+            else
+            {
+                Debug.Log("장착 list에 아이템이 존재하지 않습니다.");
+            }
         }
     }
 
