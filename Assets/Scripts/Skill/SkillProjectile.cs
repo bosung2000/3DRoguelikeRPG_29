@@ -48,6 +48,23 @@ public class SkillProjectile : MonoBehaviour
         }
     }
 
+    public void Init(Vector3 startPosition, Vector3 direction)
+    {
+        this.direction = direction;
+        currentDuration = 0;
+
+        //오른쪽 축을 이 스크립트의 방향으로 설정하기
+        transform.right = this.direction;
+    }
+
+    public void ShootBullet(Vector3 startPosition, Vector3 direction)
+    {
+        GameObject obj = Instantiate(this.gameObject, startPosition, Quaternion.identity);
+
+        //그리고 투사체 안에 있는 투사체 제어자를 변수로 지정한 뒤 사격 지시
+        //Projectile projectile = obj.GetComponent<ProjectileController>();
+        //projectile.Init();
+    }
 
 
 

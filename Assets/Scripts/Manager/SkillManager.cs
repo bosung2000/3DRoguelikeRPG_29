@@ -11,6 +11,57 @@ public class SkillInstance
 {
     public Skill skill;
     public int index;
+    //private void FireProjectile(Vector2 _lookDirection, float angle)
+    //{
+    //    //투사체 관리자에서 사격 메서드 호출
+    //    ShootBullet(
+    //        this, //이 스크립트에서
+    //              //투사체가 발사되는 지점을 기점으로
+    //        RotateVector2(_lookDirection, angle) //lookdirection에서 angle만큼 회전시킨 값으로 발사하겠다
+    //        );
+    //}
+
+    //public void ShootBullet(RangeWeaponHandler rangeWeaponHandler, Vector2 startPosition, Vector2 direction)
+    //{
+    //    //rangeWeaponHandler에 저장되어있는 BulletIndex의 투사체를 변수로 가져온 뒤 복제
+    //    GameObject origin = projectilePrefabs[rangeWeaponHandler.BulletIndex];
+    //    GameObject obj = Instantiate(origin, startPosition, Quaternion.identity);
+
+    //    //그리고 투사체 안에 있는 투사체 제어자를 변수로 지정한 뒤 사격 지시
+    //    ProjectileController projectileController = obj.GetComponent<ProjectileController>();
+    //    projectileController.Init(direction, rangeWeaponHandler, this);
+    //}
+
+    //public void Init(Vector2 direction, RangeWeaponHandler weaponHandler, ProjectileManager projectileManager)
+    //{
+    //    //입력받은 매개변수를 저장하고 그 값에 맞춰서 조정하기
+    //    this.projectileManager = projectileManager;
+    //    rangeWeaponHandler = weaponHandler;
+    //    this.direction = direction;
+    //    currentDuration = 0;
+    //    transform.localScale = Vector3.one * weaponHandler.BulletSize;
+    //    spriteRenderer.color = weaponHandler.ProjectileColor;
+
+    //    //오른쪽 축을 이 스크립트의 방향으로 설정하기
+    //    transform.right = this.direction;
+
+    //    if (direction.x < 0)
+    //    {
+    //        pivot.localRotation = Quaternion.Euler(180, 0, 0);
+    //    }
+    //    else
+    //    {
+    //        pivot.localRotation = Quaternion.Euler(0, 0, 0);
+    //    }
+    //    isReady = true;
+    //}
+
+    //private static Vector2 RotateVector2(Vector2 v, float degree)
+    //{
+    //    //쿼터니언의 각도만큼 벡터 회전시키기
+    //    return Quaternion.Euler(0, 0, degree) * v;
+    //}
+
 }
 
 public class SkillManager : MonoBehaviour
@@ -29,6 +80,7 @@ public class SkillManager : MonoBehaviour
 
     private void Awake()
     {
+        player= GetComponent<Player>();
         if (instance != null)
         {
             instance = this;
@@ -135,7 +187,7 @@ public class SkillManager : MonoBehaviour
     public void OnSkillClick(Skill skill, Vector3 direction)
     {
         //스킬이 공격중이지 않고 플레이어의 마나가 스킬의 마나보다 많다면
-        //if (!skill.isAttacking && player.mana>skill.requiredMana())
+        //if (!skill.isAttacking && player.mana > skill.requiredMana())
         //{
         //    //공격 활성화시키고
         //    skill.isAttacking = true;
