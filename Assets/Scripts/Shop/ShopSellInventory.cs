@@ -145,7 +145,7 @@ public class ShopSellInventory : MonoBehaviour
 
 
     // 탭 변경 처리
-    private void OnTabChanged(InventoryTabType tabType)
+    public void OnTabChanged(InventoryTabType tabType)
     {
         // 선택된 탭에 따라 아이템 필터링 및 UI 업데이트
         Debug.Log($"탭 변경: {tabType}");
