@@ -43,7 +43,12 @@ public class Shop : MonoBehaviour
         else if (shoptype ==ShopType.Relic)
         {
             //유물 
-            //List<ItemData> items =ItemManager.Instance.GetRelicsByEquipType
+            List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(3);
+            foreach (var item in items)
+            {
+                SlotItemData slotItemData = new SlotItemData(item, 1);
+                availableItems.Add(slotItemData);
+            }
         }
     }
 
@@ -88,4 +93,8 @@ public class Shop : MonoBehaviour
         return availableItems.Count;
     }
 
+    public ShopType GetShopType()
+    {
+        return shoptype;
+    }
 }

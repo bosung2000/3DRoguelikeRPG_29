@@ -14,7 +14,7 @@ public class ShopSellInventory : MonoBehaviour
     [SerializeField] private Button TotalTabButton;
     [SerializeField] private Button equipmentTabButton;
     [SerializeField] private Button consumableTabButton;
-    [SerializeField] private Button materialTabButton;
+    [SerializeField] private Button RelicsTabButton;
 
 
     private InventoryManager inventoryManager;
@@ -46,8 +46,8 @@ public class ShopSellInventory : MonoBehaviour
         if (consumableTabButton != null)
             consumableTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Consumable));
 
-        if (materialTabButton != null)
-            materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
+        if (RelicsTabButton != null)
+            RelicsTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Relics));
     }
 
     private void OnEnable()
@@ -154,7 +154,7 @@ public class ShopSellInventory : MonoBehaviour
         TotalTabButton.interactable = (tabType != InventoryTabType.All);
         equipmentTabButton.interactable = (tabType != InventoryTabType.Equipment);
         consumableTabButton.interactable = (tabType != InventoryTabType.Consumable);
-        materialTabButton.interactable = (tabType != InventoryTabType.Material);
+        RelicsTabButton.interactable = (tabType != InventoryTabType.Relics);
 
         // 아이템 필터링 및 표시
         FilterByTabType(tabType);
@@ -190,8 +190,8 @@ public class ShopSellInventory : MonoBehaviour
                     shouldInclude = (slotData.item.itemType == ItemType.Consumable);
                     break;
 
-                case UIPopupInventory.InventoryTabType.Material:
-                    shouldInclude = (slotData.item.itemType == ItemType.Material);
+                case UIPopupInventory.InventoryTabType.Relics:
+                    shouldInclude = (slotData.item.itemType == ItemType.Relics);
                     break;
             }
 
