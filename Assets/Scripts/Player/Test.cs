@@ -12,8 +12,8 @@ public class Test : MonoBehaviour
     }
     public void Healing()
     {
-        _player.Healing((int)_playerStat.GetStatValue(PlayerStatType.MaxHP)/5);
-        //최대체력의 20%
+        _player.Healing(Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP) * 0.2f));
+        //최대체력의 20%  
     }
 
     public void MaxMPUp()
@@ -27,11 +27,11 @@ public class Test : MonoBehaviour
     }
     public void SpeedUp()
     {
-        _player.SpeedUp(10);
+        _player.MoveSpeedUp(10);
     }
     public void TakeDamage()
     {
-        _player.TakeDamage((int)_playerStat.GetStatValue(PlayerStatType.Attack));
+        _player.TakeDamage(Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.Attack)));
     }
     public void Hit()
     {
@@ -55,7 +55,7 @@ public class Test : MonoBehaviour
     {
         _player.CriticalDamageUp(0.25f);
     }
-    
+
     public void Dash()
     {
         _player.Dash();

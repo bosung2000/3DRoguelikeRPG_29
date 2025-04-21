@@ -784,8 +784,8 @@ GameObject:
   - component: {fileID: 8214673508119114842}
   - component: {fileID: 9164615833234773666}
   m_Layer: 6
-  m_Name: Testweapon
-  m_TagString: Untagged
+  m_Name: TestWeapon
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -890,8 +890,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2a4869b261d9349932fe8da58383f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCooldown: 1
-  damage: 10
+  _playerStat: {fileID: 0}
+  _weaponCollider: {fileID: 0}
 --- !u!1 &3964060186941120044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2320,14 +2320,13 @@ MonoBehaviour:
   statData: {fileID: 11400000, guid: 0e73e0b7c364caa4e924062601b3b565, type: 2}
   _playerStat: {fileID: 8596859512789446181}
   _playerController: {fileID: 546993740803164971}
-  _testWeapon: {fileID: 0}
+  _testWeapon: {fileID: 9164615833234773666}
   dashCooldownUI: {fileID: 0}
   _floatingJoystick: {fileID: 0}
   _rb: {fileID: 6527788016433440651}
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 32
-  hitCooldown: 1
 --- !u!54 &6527788016433440651
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -61,6 +61,13 @@ public class ItemCreator : EditorWindow
             {
                 equipType = EquipType.Weapon;
                 useType = UseType.None;
+                tier = 1; // 기본 티어 1로 설정
+            }
+            else if (itemType == ItemType.Relics)
+            {
+                equipType = EquipType.Relics;
+                useType = UseType.None;
+                tier = 0; // 유물은 티어 0으로 설정
             }
             else if (itemType == ItemType.Consumable)
             {
@@ -79,6 +86,14 @@ public class ItemCreator : EditorWindow
         {
             equipType = (EquipType)EditorGUILayout.EnumPopup("장비 타입", equipType);
             tier = Mathf.Clamp(EditorGUILayout.IntField("티어", tier), 1, 10);
+        }
+        else if (itemType == ItemType.Relics)
+        {
+            // Relics는 항상 EquipType.Relics
+            equipType = EquipType.Relics;
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.IntField("티어", 0); // 티어 0으로 고정하고 수정 불가능
+            EditorGUI.EndDisabledGroup();
         }
         else if (itemType == ItemType.Consumable)
         {
@@ -106,11 +121,11 @@ public class ItemCreator : EditorWindow
         EditorGUILayout.Space(10);
 
         // 아이템 타입에 따라 옵션/효과 설정 표시
-        if (itemType == ItemType.Equipment)
+        if (itemType == ItemType.Equipment || itemType == ItemType.Relics)
         {
-            // 장비 옵션 설정
+            // 장비/유물 옵션 설정
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            showOptions = EditorGUILayout.Foldout(showOptions, "장비 옵션");
+            showOptions = EditorGUILayout.Foldout(showOptions, itemType == ItemType.Equipment ? "장비 옵션" : "유물 옵션");
 
             if (showOptions)
             {
@@ -254,13 +269,31 @@ public class ItemCreator : EditorWindow
         itemData.gold = gold;
         itemData.Icon = icon;
         itemData.itemObj = itemObj;
-        itemData.Tier = tier;
+        
+        // 타입에 따라 티어 설정
+        if (itemType == ItemType.Relics)
+        {
+            itemData.Tier = 0; // 유물은 항상 티어 0
+        }
+        else
+        {
+            itemData.Tier = tier;
+        }
 
         if (itemType == ItemType.Equipment)
         {
             itemData.maxEnhancementLevel = maxEnhancementLevel;
             itemData.enhancementCost = enhancementCost;
             itemData.enhancementCostMultiplier = enhancementCostMultiplier;
+            itemData.options = new System.Collections.Generic.List<ItemOption>();
+        }
+        else if (itemType == ItemType.Relics)
+        {
+            // Relics는 강화 불가능
+            itemData.maxEnhancementLevel = 0;
+            itemData.enhancementLevel = 0;
+            itemData.enhancementCost = 0;
+            itemData.enhancementCostMultiplier = 0;
             itemData.options = new System.Collections.Generic.List<ItemOption>();
         }
         else if (itemType == ItemType.Consumable)
@@ -278,19 +311,22 @@ public class ItemCreator : EditorWindow
     {
         if (itemData != null)
         {
-            // Resources/Items 폴더에 저장
-            string folderPath = "Assets/Resources/Items";
-            if (!Directory.Exists(folderPath))
+            string path = EditorUtility.SaveFilePanelInProject(
+                "아이템 저장",                  // 대화 상자 제목
+                itemData.itemName,             // 기본 파일명
+                "asset",                       // 확장자
+                "아이템을 저장할 경로를 선택하세요."  // 안내 메시지
+            );
+
+            if (!string.IsNullOrEmpty(path))
             {
-                Directory.CreateDirectory(folderPath);
+                // 선택한 경로에 저장
+                AssetDatabase.CreateAsset(itemData, path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+
+                Debug.Log($"아이템이 저장되었습니다: {path}");
             }
-
-            string path = $"{folderPath}/{itemData.itemName}.asset";
-            AssetDatabase.CreateAsset(itemData, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            Debug.Log($"아이템이 저장되었습니다: {path}");
         }
     }
 }

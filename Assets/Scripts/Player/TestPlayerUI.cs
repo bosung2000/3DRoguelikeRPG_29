@@ -18,8 +18,9 @@ public class TestPlayerUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI _dmgReductionText;
     [SerializeField] TextMeshProUGUI _criticalChanceText;
     [SerializeField] TextMeshProUGUI _criticalDamageText;
+    [SerializeField] TextMeshProUGUI _DashDistance;
+    [SerializeField] TextMeshProUGUI _DashCooldownText;
 
-    [SerializeField] TextMeshProUGUI _cooldownText;
     private Coroutine _cooldownRoutine;
 
     private void Start()
@@ -28,25 +29,25 @@ public class TestPlayerUI : MonoBehaviour
     }
     private void UpdateStats(PlayerStat playerStat)
     {
-        //_maxHPText.text = playerStat.GetStatValue(PlayerStatType.MaxHP).ToString("F0");
-        _hpText.text = playerStat.GetStatValue(PlayerStatType.HP).ToString("F0");
-        //_maxMPText.text = playerStat.GetStatValue(PlayerStatType.MaxMP).ToString("F0");
-        //_mpText.text = playerStat.GetStatValue(PlayerStatType.MP).ToString("F0");
-        _speedText.text = playerStat.GetStatValue(PlayerStatType.MoveSpeed).ToString("F0");
-        //_attackText.text = playerStat.GetStatValue(PlayerStatType.Attack).ToString("F0");
-        //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");
-        //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");
-        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
-        //UpdateCooldownUI();
+        //_maxHPText.text = playerStat.GetStatValue(PlayerStatType.MaxHP).ToString("F0");  
+        _hpText.text = "Hp : "+playerStat.GetStatValue(PlayerStatType.HP).ToString("F0");
+        //_maxMPText.text = playerStat.GetStatValue(PlayerStatType.MaxMP).ToString("F0");  
+        //_mpText.text = playerStat.GetStatValue(PlayerStatType.MP).ToString("F0");  
+        _speedText.text = "Speed : " + playerStat.GetStatValue(PlayerStatType.MoveSpeed).ToString("F0");
+        //_attackText.text = playerStat.GetStatValue(PlayerStatType.Attack).ToString("F0");  
+        //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
+        //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
+        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");  
+        //UpdateCooldownUI();  
     }
 
     public void StartDashCooldown()
     {
-        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
         if (_cooldownRoutine != null)
-        { 
-            StopCoroutine(_cooldownRoutine); 
+        {
+            StopCoroutine(_cooldownRoutine);
         }
 
         _cooldownRoutine = StartCoroutine(ShowCooldownRoutine(dashCooldown));
@@ -57,12 +58,12 @@ public class TestPlayerUI : MonoBehaviour
 
         while (remaining > 0)
         {
-            _cooldownText.text = $"{remaining:F1}";
+            _DashCooldownText.text = $"{remaining:F1}";
             remaining -= Time.deltaTime;
             yield return null;
         }
 
-        _cooldownText.text = "Dash";
+        _DashCooldownText.text = "Dash";
     }
 }
 

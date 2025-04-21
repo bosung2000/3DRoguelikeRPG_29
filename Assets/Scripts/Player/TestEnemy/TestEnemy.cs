@@ -8,6 +8,8 @@ using UnityEngine;
 public class TestEnemy : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _hpText;
+    [SerializeField] TextMeshProUGUI _GoldText;
+    [SerializeField] TextMeshProUGUI _soulText;
     [SerializeField] EnemyStat _enemyStat;
 
     private float lastHitTime = -100f;
@@ -19,8 +21,6 @@ public class TestEnemy : MonoBehaviour
 
     private void Start()
     {
-        _enemyStat = GetComponent<EnemyStat>();
-        UpdateHPText();
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
     void Update()
@@ -34,9 +34,19 @@ public class TestEnemy : MonoBehaviour
     {
         if (_hpText != null)
         {
-            int _currentHP = (int)_enemyStat.GetStatValue(EnemyStatType.HP);
-            int _maxHP = (int)_enemyStat.GetStatValue(EnemyStatType.MaxHP);
+            int _currentHP = Mathf.RoundToInt(_enemyStat.GetStatValue(EnemyStatType.HP));
+            int _maxHP = Mathf.RoundToInt(_enemyStat.GetStatValue(EnemyStatType.MaxHP));
             _hpText.text = $"{_currentHP}/{_maxHP}";
+        }
+        if (_GoldText != null)
+        {
+            int _gold = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold];
+            _GoldText.text = $"{_gold}";
+        }
+        if (_soulText != null)
+        {
+            int _soul = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul];
+            _soulText.text = $"{_soul}";
         }
     }
 
@@ -45,20 +55,20 @@ public class TestEnemy : MonoBehaviour
         OnEnermyStatsChanged?.Invoke(this);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (Time.time - lastHitTime < hitCooldown) return;
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (Time.time - lastHitTime < hitCooldown) return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Player player = collision.gameObject.GetComponent<Player>();
-            if (player != null)
-            {
-                player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
-                lastHitTime = Time.time;
-            }
-        }
-    }
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        Player player = collision.gameObject.GetComponent<Player>();
+    //        if (player != null)
+    //        {
+    //            player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
+    //            lastHitTime = Time.time;
+    //        }
+    //    }
+    //}
 
     //public void TakeDamage(int damage)
     //{

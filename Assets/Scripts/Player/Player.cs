@@ -8,7 +8,7 @@ public interface BaseEntity
     void Healing(int heal);
     void MaxMPUp(float maxMP);
     void BaseMPUp(float currentMP);
-    void SpeedUp(float speed);
+    void MoveSpeedUp(float speed);
     void TakeDamage(int damage);
     void Hit();
     void AttackUp(float attack);
@@ -79,8 +79,8 @@ public class Player : MonoBehaviour, BaseEntity
     }
     public void Healing(int value)
     {
-        float maxHP = _playerStat.GetStatValue(PlayerStatType.MaxHP);
-        float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
+        int maxHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP));
+        int currentHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.HP));
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
     }
     public void MaxMPUp(float value)
@@ -94,10 +94,8 @@ public class Player : MonoBehaviour, BaseEntity
         float currentMP = _playerStat.GetStatValue(PlayerStatType.MP);
         _playerStat.SetStatValue(PlayerStatType.MP, Mathf.Min(currentMP + value, maxMP));
     }
-    public void SpeedUp(float speed)
+    public void MoveSpeedUp(float speed)
     {
-        //float currentSpeed = _stats.GetStatValue(PlayerStatType.Speed);
-        //_stats.SetStatValue(PlayerStatType.Speed, currentSpeed + speed);
         _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
         _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
@@ -117,7 +115,7 @@ public class Player : MonoBehaviour, BaseEntity
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
 
-        damage = damage - (int)(damage * (damageReduction - dmgIncrease) / 100);
+        damage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
         _lastTumbleTime = Time.time;
 
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
@@ -157,7 +155,7 @@ public class Player : MonoBehaviour, BaseEntity
 
             if (enemy != null && !ReferenceEquals(enemy, this))
             {
-                enemy.TakeDamage((int)finalDamage);
+                enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
                 Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
             }
         }
@@ -187,7 +185,7 @@ public class Player : MonoBehaviour, BaseEntity
     {
         _playerController.SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
-        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
         if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
         {
@@ -258,47 +256,56 @@ public class Player : MonoBehaviour, BaseEntity
             Destroy(other.gameObject);
         } 
     }
-        //public void Flash()
-        //{
-        //    if (Time.time >= lastFlashTime + 5)
-        //    {
-        //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-        //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
+    public void EnableCollider()
+    {
+        _testWeapon.EnableCollider();
+    }
 
-        //        if (dashDir.sqrMagnitude < 0.01f)
-        //        {
-        //            dashDir = transform.forward; // 입력 없을 시 정면
-        //        }
+    public void DisableCollider()
+    {
+        _testWeapon.DisableCollider();
+    }
+    //public void Flash()
+    //{
+    //    if (Time.time >= lastFlashTime + 5)
+    //    {
+    //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
+    //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+    //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
 
-        //        dashDir = dashDir.normalized;
+    //        if (dashDir.sqrMagnitude < 0.01f)
+    //        {
+    //            dashDir = transform.forward; // 입력 없을 시 정면
+    //        }
 
-        //        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        //        Vector3 targetPos = transform.position + dashDir * 5;
+    //        dashDir = dashDir.normalized;
 
-        //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
-        //        {
-        //            _rb.MovePosition(targetPos);
-        //            lastFlashTime = Time.time;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("대쉬가 쿨타임입니다.");
-        //    }
-        //}
+    //        Vector3 origin = transform.position + Vector3.up * 0.5f;
+    //        Vector3 targetPos = transform.position + dashDir * 5;
 
-        //public float GetCurrentHP()
-        //{
-        //    return _stats.GetStatValue(PlayerStatType.HP);
-        //}
+    //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
+    //        {
+    //            _rb.MovePosition(targetPos);
+    //            lastFlashTime = Time.time;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("대쉬가 쿨타임입니다.");
+    //    }
+    //}
 
-        //public void EquipItem(Item item)
-        //{
-        //    foreach (var statBonus in item.BaseEntity)
-        //    {
-        //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
-        //    }
-        //}
-    
+    //public float GetCurrentHP()
+    //{
+    //    return _stats.GetStatValue(PlayerStatType.HP);
+    //}
+
+    //public void EquipItem(Item item)
+    //{
+    //    foreach (var statBonus in item.BaseEntity)
+    //    {
+    //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
+    //    }
+    //}
+
 }

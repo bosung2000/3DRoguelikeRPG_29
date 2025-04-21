@@ -5,26 +5,25 @@ using UnityEngine;
 
 public enum PlayerStatType
 {
-    MaxHP,
-    HP,
-    MaxMP,
-    MP,
-    MoveSpeed,
-    Attack,
-    DMGReduction,
-    CriticalChance,
-    CriticalDamage,
-    DashDistance,
-    DashCooltime,
-    HitCooldown,
-
-    absorp,
-    DMGIncrease,
-    HPRecovery,
-    MPRecovery,
-    GoldAcquisition,
-    SkillColltime,
-    AttackSpeed
+    MaxHP,//최대HP
+    HP,//현재HP
+    MaxMP,//최대MP
+    MP,//현재MP
+    MoveSpeed,//이동속도
+    Attack,//공격력
+    DMGReduction,//받는데미지감소
+    CriticalChance,//크리확률
+    CriticalDamage,//크리데미지
+    DashDistance,//대시거리
+    DashCooldown,//대시쿨타임
+    HitCooldown,//피격시무적시간
+    absorp, //피해흡혈
+    DMGIncrease, //받는데미지증가
+    HPRecovery, //HP자동회복
+    MPRecovery,//MP자동회복
+    GoldAcquisition,//골드획득량
+    SkillColltime,//스킬쿨타임
+    AttackSpeed//공격속도
 }
 
 public enum EnemyStatType

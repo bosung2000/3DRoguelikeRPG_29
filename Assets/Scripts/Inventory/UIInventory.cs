@@ -217,4 +217,5 @@ public class UIInventory : MonoBehaviour
             slot.ClearSlot();
         }
     }
+
 }
