@@ -3,9 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
-public class PlayerStat : BaseStat<PlayerStatType>
+public interface BaseEntity
 {
+    void MaxHPUp(float maxHP);
+    void Healing(int heal);
+    void MaxMPUp(float maxMP);
+    void BaseMPUp(float currentMP);
+    void MoveSpeedUp(float speed);
+    void TakeDamage(int damage);
+    void AttackUp(float attack);
+    void DMGReductionUp(float damageReduction);
+    void CriticalChanceUp(float criticalChance);
+    void CriticalDamageUp(float criticalDamage);
+}
+public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
+{
+    [SerializeField] PlayerStatData statData;
+    public PlayerStat _playerStat;
+    [SerializeField] PlayerController _playerController;
+    [SerializeField] TestWeapon _testWeapon;
+
+    [SerializeField] TestPlayerUI _dashCooldownUI;
+    [SerializeField] Rigidbody _rb;
+    [SerializeField] LayerMask _obstacleLayer;
+
+    private float _lastHitTime = -100f;
+    private float _attackSpd = 1f;
+
     public event Action<PlayerStat> OnStatsChanged;
 
     private Dictionary<PlayerStatType, float> _equipmentBonuses = new Dictionary<PlayerStatType, float>();
@@ -14,7 +38,16 @@ public class PlayerStat : BaseStat<PlayerStatType>
     //private Dictionary<PlayerStatType, float> _totalStats = new Dictionary<PlayerStatType, float>();
     private void Awake()
     {
+        _playerStat = GetComponent<PlayerStat>();
+        _playerController = GetComponent<PlayerController>();
+        _testWeapon = GetComponentInChildren<TestWeapon>();
+        _rb = GetComponent<Rigidbody>();
+        _dashCooldownUI = FindObjectOfType<TestPlayerUI>();
         InitializeStats();
+    }
+    private void Start()
+    {
+        InitBaseStat(statData);
     }
     /// <summary>
     /// 스탯 0으로 초기화
@@ -142,5 +175,131 @@ public class PlayerStat : BaseStat<PlayerStatType>
             _buffBonuses[type] = 0f;
         }
         OnStatsChanged?.Invoke(this);
+    }
+    public void MaxHPUp(float value)
+    {
+        ModifyStat(PlayerStatType.MaxHP, value);
+        ModifyStat(PlayerStatType.HP, value);
+    }
+    public void Healing(int value)
+    {
+        int maxHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.MaxHP));
+        int currentHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.HP));
+        SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
+    }
+    public void MaxMPUp(float value)
+    {
+        ModifyStat(PlayerStatType.MaxMP, value);
+        ModifyStat(PlayerStatType.MP, value);
+    }
+    public void BaseMPUp(float value)
+    {
+        float maxMP = GetStatValue(PlayerStatType.MaxMP);
+        float currentMP = GetStatValue(PlayerStatType.MP);
+        SetStatValue(PlayerStatType.MP, Mathf.Min(currentMP + value, maxMP));
+    }
+    public void MoveSpeedUp(float speed)
+    {
+        ModifyStat(PlayerStatType.MoveSpeed, speed);
+        _playerController._anim.speed = (GetStatValue(PlayerStatType.MoveSpeed)) / 5;
+    }
+    public void Attack()
+    {
+        if (Time.time - _lastHitTime < _attackSpd) return;
+        _playerController.SetTrigger("Attack");
+        _lastHitTime = Time.time;
+
+        float baseAttack = GetStatValue(PlayerStatType.Attack);
+        float critChance = GetStatValue(PlayerStatType.CriticalChance);
+        float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
+
+        bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
+        float finalDamage = isCrit ? baseAttack * critDamage*0.01f : baseAttack;
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f); // 2.5f 범위 안의 적
+        foreach (Collider col in hits)
+        {
+            BaseEntity enemy = col.GetComponent<BaseEntity>();
+
+            if (enemy != null && !ReferenceEquals(enemy, this))
+            {
+                enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+                Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
+            }
+        }
+    }
+    public void TakeDamage(int damage)
+    {
+        if (Time.time - _lastHitTime < GetStatValue(PlayerStatType.HitCooldown)) return;
+
+        float currentHP = GetStatValue(PlayerStatType.HP);
+        float damageReduction = GetStatValue(PlayerStatType.DMGReduction);
+        float dmgIncrease = GetStatValue(PlayerStatType.DMGIncrease);
+
+        damage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
+        _lastHitTime = Time.time;
+
+        SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+
+        if (GetStatValue(PlayerStatType.HP) == 0)
+        {
+            _playerController.SetTrigger("Die");
+            Time.timeScale = 0f;
+            StartCoroutine(PlayDeathAnimThenPauseGame());
+            Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+        }
+    }
+    private IEnumerator PlayDeathAnimThenPauseGame()
+    {
+        AnimatorStateInfo state = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+
+        _playerController._anim.speed = 1f;
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).IsName("Die"));
+
+        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+
+    }
+
+    public void AttackUp(float attack)
+    {
+        ModifyStat(PlayerStatType.Attack, attack);
+    }
+
+    public void DMGReductionUp(float damageReduction)
+    {
+        ModifyStat(PlayerStatType.DMGReduction, damageReduction);
+    }
+    public void CriticalChanceUp(float criticalChance)
+    {
+        ModifyStat(PlayerStatType.CriticalChance, criticalChance);
+    }
+    public void CriticalDamageUp(float criticalDamage)
+    {
+        ModifyStat(PlayerStatType.CriticalDamage, criticalDamage);
+    }
+    private void OnCollisionEnter(Collision other)
+    {
+        CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
+
+        if (other.gameObject.CompareTag("Gold"))
+        {
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.CompareTag("Soul"))
+        {
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Soul, currencyData._amount);
+            Destroy(other.gameObject);
+        }
+    }
+    public void EnableCollider()
+    {
+        _testWeapon.EnableCollider();
+    }
+
+    public void DisableCollider()
+    {
+        _testWeapon.DisableCollider();
     }
 }

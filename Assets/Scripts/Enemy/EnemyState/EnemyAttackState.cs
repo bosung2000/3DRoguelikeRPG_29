@@ -68,7 +68,7 @@ public class EnemyAttackState : IEnemyState
                 break;
         }
 
-        _target.GetComponent<Player>()?.TakeDamage((int)damage);
+        _target.GetComponent<PlayerStat>()?.TakeDamage((int)damage);
         Debug.Log($"Attack {damage}");
     }
 

@@ -12,15 +12,15 @@ public class TestEnemy : MonoBehaviour
     [SerializeField] TextMeshProUGUI _soulText;
     [SerializeField] EnemyStat _enemyStat;
 
-    private float lastHitTime = -100f;
-    public float hitCooldown = 1f;
-    public int damage = 10;
-
     public event Action<TestEnemy> OnEnermyStatsChanged;
 
 
     private void Start()
     {
+        if (_enemyStat == null)
+        {
+            _enemyStat = GetComponent<EnemyStat>();
+        }
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
     void Update()
