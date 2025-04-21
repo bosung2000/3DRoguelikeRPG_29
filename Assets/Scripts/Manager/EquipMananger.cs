@@ -6,32 +6,40 @@ using UnityEngine;
 public class EquipMananger : MonoBehaviour
 {
     public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
+    public Dictionary<int, ItemData> RelicsDictionary { get; private set; } // 유물 전용 딕셔너리(id를 키로 사용)
 
     public event Action<EquipType, ItemData, bool> OnEquipedChanged;
+    public event Action<ItemData, bool> OnRelicsChanged; // 유물 장착/해제 이벤트
 
     private void Start()
     {
         init();
-
     }
-
 
     public void init()
     {
         EquipDicionary = new Dictionary<EquipType, ItemData>();
+        RelicsDictionary = new Dictionary<int, ItemData>();
     }
 
+    // 일반 장비 아이템 장착
     public bool Equipitem(ItemData itemData)
     {
-        // 장작된 아이템이 있는가 ?
+        // 유물 아이템이면 유물 장착 메서드 호출
+        if (itemData.itemType == ItemType.Relics)
+        {
+            return EquipRelic(itemData);
+        }
+
+        // 장착된 아이템이 있는가?
         if (EquipDicionary.TryGetValue(itemData.equipType, out ItemData Equipeditemed))
         {
-            //같은 아이템을 장착할려고 하는것 막아야한다.
+            // 같은 아이템을 장착할려고 하는것 막아야한다.
             if (itemData.id == Equipeditemed.id)
             {
                 return false;
             }
-            //장착된 아이템을 제거 
+            // 장착된 아이템을 제거 
             UnEquipitem(Equipeditemed);
         }
         
@@ -41,13 +49,48 @@ public class EquipMananger : MonoBehaviour
         // 장착 관련 이벤트를 발생
         OnEquipedChange(itemData.equipType, itemData, true);
         return true;
-
     }
+
+    // 유물 아이템 장착
+    public bool EquipRelic(ItemData relicItem)
+    {
+        // 유물 타입이 아니면 처리하지 않음
+        if (relicItem.itemType != ItemType.Relics)
+        {
+            Debug.LogWarning("유물 타입이 아닌 아이템입니다.");
+            return false;
+        }
+
+        // 이미 장착된 유물인지 확인
+        if (RelicsDictionary.ContainsKey(relicItem.id))
+        {
+            Debug.Log("이미 장착된 유물입니다.");
+            return false;
+        }
+
+        // 유물 장착
+        RelicsDictionary.Add(relicItem.id, relicItem);
+        
+        // 유물 효과 적용
+        AddRelicStats();
+        
+        // 유물 장착 이벤트 발생
+        OnRelicsChanged?.Invoke(relicItem, true);
+        
+        return true;
+    }
+
+    // 일반 장비 아이템 해제
     public bool UnEquipitem(ItemData itemData)
     {
+        // 유물 아이템이면 유물 해제 메서드 호출
+        if (itemData.itemType == ItemType.Relics)
+        {
+            return UnEquipRelic(itemData);
+        }
+
         if (EquipDicionary.TryGetValue(itemData.equipType, out ItemData eqipeditemed))
         {
-            
             EquipDicionary.Remove(eqipeditemed.equipType);
             AddStats();
             OnEquipedChange(itemData.equipType, itemData, false);
@@ -56,6 +99,35 @@ public class EquipMananger : MonoBehaviour
         }
         return false;
     }
+
+    // 유물 아이템 해제
+    public bool UnEquipRelic(ItemData relicItem)
+    {
+        // 유물 타입이 아니면 처리하지 않음
+        if (relicItem.itemType != ItemType.Relics)
+        {
+            Debug.LogWarning("유물 타입이 아닌 아이템입니다.");
+            return false;
+        }
+
+        // 해당 ID의 유물이 장착되어 있는지 확인
+        if (RelicsDictionary.TryGetValue(relicItem.id, out _))
+        {
+            RelicsDictionary.Remove(relicItem.id);
+            
+            // 유물 효과 재계산
+            AddRelicStats();
+            
+            // 유물 해제 이벤트 발생
+            OnRelicsChanged?.Invoke(relicItem, false);
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    // 장착된 장비의 스탯 효과 적용
     private void AddStats()
     {
         // 종합 stats값 
@@ -86,7 +158,54 @@ public class EquipMananger : MonoBehaviour
             }
         }
         playerStat.AddEquipmentBonus(totalconditionTypes);
+    }
 
+    // 장착된 유물의 스탯 효과 적용
+    private void AddRelicStats()
+    {
+        Dictionary<PlayerStatType, float> totalRelicBonuses = new Dictionary<PlayerStatType, float>();
+        
+        // 플레이어 스탯 참조
+        PlayerStat playerStat = GameManager.Instance.PlayerManager.Player._playerStat;
+        playerStat.ClearRelicBonuses(); // 이 메서드는 PlayerStat에 추가해야 함
+        
+        // 모든 장착된 유물에서 스탯 보너스 계산
+        foreach (var relic in RelicsDictionary.Values)
+        {
+            foreach (var option in relic.options)
+            {
+                PlayerStatType statType = ConvertToPlayerStatType(option.type);
+                // 유물은 강화가 없으므로 enhancementLevel은 0
+                float value = option.GetValueWithLevel(0);
+                
+                if (!totalRelicBonuses.ContainsKey(statType))
+                {
+                    totalRelicBonuses[statType] = 0f;
+                }
+                totalRelicBonuses[statType] += value;
+            }
+        }
+        
+        playerStat.AddRelicBonus(totalRelicBonuses);
+    }
+
+    // 장착된 모든 아이템(장비+유물)의 스탯 효과 재계산
+    public void RecalculateAllStats()
+    {
+        AddStats();
+        AddRelicStats();
+    }
+
+    // 장착된 모든 유물 가져오기
+    public List<ItemData> GetAllEquippedRelics()
+    {
+        return new List<ItemData>(RelicsDictionary.Values);
+    }
+
+    // 특정 유물이 장착되어 있는지 확인
+    public bool IsRelicEquipped(int relicId)
+    {
+        return RelicsDictionary.ContainsKey(relicId);
     }
 
     // ConditionType을 PlayerStatType으로 변환하는 유틸리티 메서드
@@ -108,6 +227,20 @@ public class EquipMananger : MonoBehaviour
                 return PlayerStatType.CriticalChance;
             case ConditionType.CriticalDamage:
                 return PlayerStatType.CriticalDamage;
+            case ConditionType.absorp:
+                return PlayerStatType.absorp;
+            case ConditionType.DMGIncrease:
+                return PlayerStatType.DMGIncrease;
+            case ConditionType.HPRecovery:
+                return PlayerStatType.HPRecovery;
+            case ConditionType.MPRecovery:
+                return PlayerStatType.MPRecovery;
+            case ConditionType.GoldAcquisition:
+                return PlayerStatType.GoldAcquisition;
+            case ConditionType.SkillColltime:
+                return PlayerStatType.SkillColltime;
+            case ConditionType.AttackSpeed:
+                return PlayerStatType.AttackSpeed;
             // 기타 조건 추가
             default:
                 Debug.LogWarning($"Unsupported ConditionType: {conditionType}");
