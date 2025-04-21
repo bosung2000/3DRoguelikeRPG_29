@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UIPopupInventory;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class InventoryManager : MonoBehaviour
     private int MaxSlotCount = 40;
     public int AddSlotCost { get; private set; } = 100;
     private PlayerManager playerManager;
-    
+
     public event Action OnSlotChanged;
+    private UIPopupInventory uiPopupInventory;
+    private ShopSellInventory ShopSellInventory;
 
     private void Awake()
     {
@@ -36,7 +39,7 @@ public class InventoryManager : MonoBehaviour
 
         //데이터 넣어주기(저장된 데이터 읽어와서)
         //text용 
-        List<ItemData> TestItemData= new List<ItemData>();
+        List<ItemData> TestItemData = new List<ItemData>();
         AddItemList(TestItemData);
 
         //ui슬롯도 초기화 해줘야됨 
@@ -75,6 +78,26 @@ public class InventoryManager : MonoBehaviour
             emptySlot.AddItem(itemData);
             ArrayInventory();
             OnSlotChanged?.Invoke();
+            //OnSlotChanged를 할떄 문제점 
+            // 이벤트발생시 > UI 변경을 이벤트로 할당했지만 발생하지 못하는 현상 > 해결못함 > 일단 패스하자 너무 많은시간 소비 
+            //if (uiPopupInventory == null)
+            //{
+            //    uiPopupInventory = FindObjectOfType<UIPopupInventory>();
+            //}
+            //if (uiPopupInventory != null)
+            //{
+            //    uiPopupInventory.OnTabChanged(InventoryTabType.All);
+            //}
+
+            //if (ShopSellInventory == null)
+            //{
+            //    ShopSellInventory = FindObjectOfType<ShopSellInventory>();
+            //}
+            //if (ShopSellInventory != null)
+            //{
+            //    ShopSellInventory.OnTabChanged(InventoryTabType.All);
+            //}
+
             return true;
         }
         return false;

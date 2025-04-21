@@ -7,6 +7,7 @@ using UnityEngine;
 public enum ItemType
 {
     Equipment,    // 장비
+    Relics,       // 유물 
     Consumable,   // 소모품
     Quest,        // 퀘스트 아이템
     Material      // 재료
@@ -18,7 +19,8 @@ public enum EquipType
     Weapon,
     Coat,
     Shoes,
-    Glove
+    Glove,
+    Relics
 }
 
 public enum UseType
@@ -32,13 +34,24 @@ public enum UseType
 
 public enum ConditionType
 {
-    Power,
-    Mana,
-    Health,
-    Speed,
-    reduction,
-    CriticalChance,
-    CriticalDamage
+    Power,//int 공격력
+    MaxMana,//int 최대마나
+    Mana,//int 마나
+    MaxHealth,//int 최대체력
+    Health,//int 체력
+    Speed,//int moveSpeed
+    reduction,//float 받는피해 감소
+    CriticalChance,//float 크리티컬 확률
+    CriticalDamage,//float 크리티컬 데미지
+
+    // 유물 능력치 
+    absorp,//Float 흡혈량 
+    DMGIncrease,//Float 데미지 증가량 
+    HPRecovery,//int HP 회복
+    MPRecovery, //int MP 회복 
+    GoldAcquisition,//Float Glod회득량 증가,
+    SkillColltime,//Float 스킬 쿨타임,
+    AttackSpeed,//Float 공격속도
 }
 
 [Serializable]
@@ -46,7 +59,7 @@ public class ItemOption
 {
     public ConditionType type;
     public float baseValue;
-    public float increasePerLevel;
+    public float increasePerLevel; //유뮬은 increasPerLevel 을 0으로 설정 
 
     public float GetValueWithLevel(int level)
     {
@@ -71,9 +84,8 @@ public class ItemData : ScriptableObject
     public UseType useType;
     public string itemName;
     public string description;
-    [Range(1,10)]
+    [Range(1, 10)]
     public int Tier;
-    public bool Equiped =false;
 
     [Header("장비 옵션")]
     public int enhancementLevel = 0;
@@ -110,7 +122,7 @@ public class ItemData : ScriptableObject
         return 0f;
     }
 
-   
+
     // 아이템 사용 (소모품용)
     public List<ConsumableEffect> Use()
     {
@@ -129,6 +141,19 @@ public class ItemData : ScriptableObject
         {
             if (useType != UseType.None)
                 useType = UseType.None;
+        }
+        else if (itemType == ItemType.Relics)
+        {
+            if (useType != UseType.None)
+                useType = UseType.None;
+            
+            if (equipType != EquipType.Relics)
+                equipType = EquipType.Relics;
+                
+            // 유물은 티어 0, 강화 불가능
+            Tier = 0;
+            maxEnhancementLevel = 0;
+            enhancementLevel = 0;
         }
         else if (itemType == ItemType.Consumable)
         {
