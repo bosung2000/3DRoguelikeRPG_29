@@ -20,7 +20,7 @@ public class UIPopupInventory : PopupUI
     [SerializeField] private Button TotalTabButton;
     [SerializeField] private Button equipmentTabButton;
     [SerializeField] private Button consumableTabButton;
-    [SerializeField] private Button materialTabButton;
+    [SerializeField] private Button RelicsTabButton;
 
     //각 class 요소들 
     private UIInventory uIInventory;
@@ -32,7 +32,7 @@ public class UIPopupInventory : PopupUI
         All,        // 전체
         Equipment,  // 장비
         Consumable, // 소비
-        Material    // 재료
+        Relics    // 재료
     }
 
     protected  void Awake()
@@ -60,8 +60,8 @@ public class UIPopupInventory : PopupUI
         if (consumableTabButton != null)
             consumableTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Consumable));
 
-        if (materialTabButton != null)
-            materialTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Material));
+        if (RelicsTabButton != null)
+            RelicsTabButton.onClick.AddListener(() => OnTabChanged(InventoryTabType.Relics));
 
         if (AddSlotBtn != null)
         {
@@ -149,7 +149,7 @@ public class UIPopupInventory : PopupUI
         TotalTabButton.interactable = (tabType != InventoryTabType.All);
         equipmentTabButton.interactable = (tabType != InventoryTabType.Equipment);
         consumableTabButton.interactable = (tabType != InventoryTabType.Consumable);
-        materialTabButton.interactable = (tabType != InventoryTabType.Material);
+        RelicsTabButton.interactable = (tabType != InventoryTabType.Relics);
 
         // 아이템 필터링 및 표시
         FilterItems(tabType);

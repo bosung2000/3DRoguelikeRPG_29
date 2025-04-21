@@ -141,7 +141,7 @@ public class UIEnhancementInventory : MonoBehaviour
                     shouldInclude = (slotData.item.itemType == ItemType.Consumable);
                     break;
 
-                case UIPopupInventory.InventoryTabType.Material:
+                case UIPopupInventory.InventoryTabType.Relics:
                     shouldInclude = (slotData.item.itemType == ItemType.Material);
                     break;
             }
