@@ -8,6 +8,8 @@ public class TestPlayerUI : MonoBehaviour
 {
     [SerializeField] Player _player;
     [SerializeField] PlayerStat _playerStat;
+    [SerializeField] TextMeshProUGUI _GoldText;
+    [SerializeField] TextMeshProUGUI _soulText;
 
     [SerializeField] TextMeshProUGUI _maxHPText;
     [SerializeField] TextMeshProUGUI _hpText;
@@ -37,8 +39,9 @@ public class TestPlayerUI : MonoBehaviour
         //_attackText.text = playerStat.GetStatValue(PlayerStatType.Attack).ToString("F0");  
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
-        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");  
-        //UpdateCooldownUI();  
+        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
+       _GoldText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold].ToString("F0");
+       _soulText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul].ToString("F0");
     }
 
     public void StartDashCooldown()

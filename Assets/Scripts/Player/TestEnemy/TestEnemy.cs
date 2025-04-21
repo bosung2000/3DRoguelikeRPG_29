@@ -8,8 +8,6 @@ using UnityEngine;
 public class TestEnemy : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _hpText;
-    [SerializeField] TextMeshProUGUI _GoldText;
-    [SerializeField] TextMeshProUGUI _soulText;
     [SerializeField] EnemyStat _enemyStat;
 
     public event Action<TestEnemy> OnEnermyStatsChanged;
@@ -38,16 +36,7 @@ public class TestEnemy : MonoBehaviour
             int _maxHP = Mathf.RoundToInt(_enemyStat.GetStatValue(EnemyStatType.MaxHP));
             _hpText.text = $"{_currentHP}/{_maxHP}";
         }
-        if (_GoldText != null)
-        {
-            int _gold = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold];
-            _GoldText.text = $"{_gold}";
-        }
-        if (_soulText != null)
-        {
-            int _soul = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul];
-            _soulText.text = $"{_soul}";
-        }
+        
     }
 
     public void OnStatChanged()

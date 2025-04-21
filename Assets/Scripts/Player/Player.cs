@@ -11,9 +11,6 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
 
-    private float _lastHitTime = -100f;
-    private float _attackSpd = 1f;
-
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
