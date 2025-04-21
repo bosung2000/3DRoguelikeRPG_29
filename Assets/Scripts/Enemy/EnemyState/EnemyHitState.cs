@@ -24,7 +24,7 @@ public class EnemyHitState : IEnemyState
         _timer += Time.deltaTime;
         if (_timer > _hitDuration)
         {
-            if (controller.GetHP() <= 0)
+            if (controller.GetCurrentHP() <= 0)
             {
                 controller.ChageState(EnemyStateType.Dead);
             }

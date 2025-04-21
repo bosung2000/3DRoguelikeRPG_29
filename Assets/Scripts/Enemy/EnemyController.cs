@@ -90,6 +90,7 @@ public class EnemyController : MonoBehaviour
     public float GetSpeed() => _enemy.Stat.GetStatValue(EnemyStatType.Speed);//속도를 가져옴
     public float GetAttack() => _enemy.Stat.GetStatValue(EnemyStatType.Attack);//공격력을 가져옴
     public float GetHP() => _enemy.Stat.GetStatValue(EnemyStatType.MaxHP);//최대 체력을 가져옴
+    public float GetCurrentHP() => _enemy.Stat.GetStatValue(EnemyStatType.HP);//현재 체력을 가져옴
     public float GetStat(EnemyStatType type) => _enemy.Stat.GetStatValue(type);//그외의 스탯을 가져옴
     public Transform GetTarget()//타겟위치 정보를 가져옴
     {
