@@ -79,8 +79,8 @@ public class Player : MonoBehaviour, BaseEntity
     }
     public void Healing(int value)
     {
-        int maxHP = (int)_playerStat.GetStatValue(PlayerStatType.MaxHP);
-        int currentHP = (int)_playerStat.GetStatValue(PlayerStatType.HP);
+        int maxHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP));
+        int currentHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.HP));
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
     }
     public void MaxMPUp(float value)
@@ -115,7 +115,7 @@ public class Player : MonoBehaviour, BaseEntity
         float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
 
-        damage = damage - (int)(damage * (damageReduction - dmgIncrease) / 100);
+        damage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
         _lastTumbleTime = Time.time;
 
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
@@ -155,7 +155,7 @@ public class Player : MonoBehaviour, BaseEntity
 
             if (enemy != null && !ReferenceEquals(enemy, this))
             {
-                enemy.TakeDamage((int)finalDamage);
+                enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
                 Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
             }
         }

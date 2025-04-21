@@ -34,18 +34,18 @@ public class TestEnemy : MonoBehaviour
     {
         if (_hpText != null)
         {
-            int _currentHP = (int)_enemyStat.GetStatValue(EnemyStatType.HP);
-            int _maxHP = (int)_enemyStat.GetStatValue(EnemyStatType.MaxHP);
+            int _currentHP = Mathf.RoundToInt(_enemyStat.GetStatValue(EnemyStatType.HP));
+            int _maxHP = Mathf.RoundToInt(_enemyStat.GetStatValue(EnemyStatType.MaxHP));
             _hpText.text = $"{_currentHP}/{_maxHP}";
         }
         if (_GoldText != null)
         {
-            int _gold = (int)GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold];
+            int _gold = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold];
             _GoldText.text = $"{_gold}";
         }
         if (_soulText != null)
         {
-            int _soul = (int)GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul];
+            int _soul = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul];
             _soulText.text = $"{_soul}";
         }
     }
