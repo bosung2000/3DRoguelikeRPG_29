@@ -3,10 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ShopType
+{
+    Eqyip,//장비
+    Relic,//유물
+}
+
 public class Shop : MonoBehaviour
 {
+    [SerializeField] private ShopType shoptype;
+    [SerializeField] private int shopTier = 0;
     private List<SlotItemData> availableItems = new List<SlotItemData>();
-    [SerializeField] private int shopTier = 10;
     private PlayerManager playerManager;
 
     public event Action ShopitemChange;
@@ -19,14 +26,24 @@ public class Shop : MonoBehaviour
     {
         playerManager = GameManager.Instance.PlayerManager;
         availableItems.Clear();
-        
-        // List로 받아오고 이걸 slotitemdata형태로 변경해야됨 
-        List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, 10);
+        shopTier = UnityEngine.Random.Range(0, 10);
 
-        foreach (var item in items)
+        if (shoptype == ShopType.Eqyip)
         {
-            SlotItemData slotItemData = new SlotItemData(item, 1);
-            availableItems.Add(slotItemData);
+            //장비
+            // List로 받아오고 이걸 slotitemdata형태로 변경해야됨 
+            List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, 10);
+
+            foreach (var item in items)
+            {
+                SlotItemData slotItemData = new SlotItemData(item, 1);
+                availableItems.Add(slotItemData);
+            }
+        }
+        else if (shoptype ==ShopType.Relic)
+        {
+            //유물 
+            //List<ItemData> items =ItemManager.Instance.GetRelicsByEquipType
         }
     }
 
