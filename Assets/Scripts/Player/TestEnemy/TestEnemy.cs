@@ -21,7 +21,6 @@ public class TestEnemy : MonoBehaviour
 
     private void Start()
     {
-        _enemyStat = GetComponent<EnemyStat>();
         OnEnermyStatsChanged += (enemy) => UpdateHPText();
     }
     void Update()
@@ -56,20 +55,20 @@ public class TestEnemy : MonoBehaviour
         OnEnermyStatsChanged?.Invoke(this);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (Time.time - lastHitTime < hitCooldown) return;
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (Time.time - lastHitTime < hitCooldown) return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Player player = collision.gameObject.GetComponent<Player>();
-            if (player != null)
-            {
-                player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
-                lastHitTime = Time.time;
-            }
-        }
-    }
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        Player player = collision.gameObject.GetComponent<Player>();
+    //        if (player != null)
+    //        {
+    //            player.TakeDamage((int)_enemyStat.GetStatValue(EnemyStatType.Attack));
+    //            lastHitTime = Time.time;
+    //        }
+    //    }
+    //}
 
     //public void TakeDamage(int damage)
     //{

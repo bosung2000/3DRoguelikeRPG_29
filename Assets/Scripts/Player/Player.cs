@@ -8,7 +8,7 @@ public interface BaseEntity
     void Healing(int heal);
     void MaxMPUp(float maxMP);
     void BaseMPUp(float currentMP);
-    void SpeedUp(float speed);
+    void MoveSpeedUp(float speed);
     void TakeDamage(int damage);
     void Hit();
     void AttackUp(float attack);
@@ -79,8 +79,8 @@ public class Player : MonoBehaviour, BaseEntity
     }
     public void Healing(int value)
     {
-        float maxHP = _playerStat.GetStatValue(PlayerStatType.MaxHP);
-        float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
+        int maxHP = (int)_playerStat.GetStatValue(PlayerStatType.MaxHP);
+        int currentHP = (int)_playerStat.GetStatValue(PlayerStatType.HP);
         _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
     }
     public void MaxMPUp(float value)
@@ -94,10 +94,8 @@ public class Player : MonoBehaviour, BaseEntity
         float currentMP = _playerStat.GetStatValue(PlayerStatType.MP);
         _playerStat.SetStatValue(PlayerStatType.MP, Mathf.Min(currentMP + value, maxMP));
     }
-    public void SpeedUp(float speed)
+    public void MoveSpeedUp(float speed)
     {
-        //float currentSpeed = _stats.GetStatValue(PlayerStatType.Speed);
-        //_stats.SetStatValue(PlayerStatType.Speed, currentSpeed + speed);
         _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
         _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
@@ -187,7 +185,7 @@ public class Player : MonoBehaviour, BaseEntity
     {
         _playerController.SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
-        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooltime);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
         if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
         {
