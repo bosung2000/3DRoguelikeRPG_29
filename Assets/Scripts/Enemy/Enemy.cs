@@ -9,6 +9,9 @@ public class Enemy : MonoBehaviour
     public Transform PlayerTarget { get; private set; }
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
 
+    private bool _isDead = false;
+
+
     [Header("드랍템 설정")]
     [SerializeField] private GameObject _goldPrefab; //골드 프리펩
     [SerializeField] private GameObject _soulPrefab; //영혼 프리펩
@@ -49,6 +52,8 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
+        if (_isDead) return;
+
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
 
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
@@ -75,7 +80,8 @@ public class Enemy : MonoBehaviour
     }
     public void Die()
     {
-        Debug.Log($"처치");
+        if (_isDead) return;
+        _isDead = true;
 
         if (enemyController != null)
         {

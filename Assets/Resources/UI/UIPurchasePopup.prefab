@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 5603133996851119386}
   - component: {fileID: 8338158659547443932}
   m_Layer: 5
-  m_Name: Txt_CriticalChance
+  m_Name: Txt_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 5628057676535567340}
   - component: {fileID: 3177759609231598064}
   m_Layer: 5
-  m_Name: Txt_CriticalDamage
+  m_Name: Txt_07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -878,7 +878,7 @@ GameObject:
   - component: {fileID: 4486155844904785341}
   - component: {fileID: 8746078877476245391}
   m_Layer: 5
-  m_Name: Txt_Mana
+  m_Name: Txt_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 3726876467849796970}
   - component: {fileID: 2821409687241492429}
   m_Layer: 5
-  m_Name: Txt_Speed
+  m_Name: Txt_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 4718454014365476104}
   - component: {fileID: 5034787262050110023}
   m_Layer: 5
-  m_Name: Txt_Power
+  m_Name: Txt_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1280,7 +1280,7 @@ GameObject:
   - component: {fileID: 2870487201421809452}
   - component: {fileID: 5406696886510721370}
   m_Layer: 5
-  m_Name: Txt_Health
+  m_Name: Txt_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1503,13 +1503,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeButton: {fileID: 667516992556136782}
   itemimage: {fileID: 6386464236261701975}
-  power: {fileID: 5034787262050110023}
-  mana: {fileID: 8746078877476245391}
-  health: {fileID: 5406696886510721370}
-  speed: {fileID: 2821409687241492429}
-  Reduction: {fileID: 5388287518964634856}
-  CriticalChance: {fileID: 8338158659547443932}
-  CriticalDamage: {fileID: 3177759609231598064}
+  txt_01: {fileID: 5034787262050110023}
+  txt_02: {fileID: 8746078877476245391}
+  txt_03: {fileID: 5406696886510721370}
+  txt_04: {fileID: 2821409687241492429}
+  txt_05: {fileID: 5388287518964634856}
+  txt_06: {fileID: 8338158659547443932}
+  txt_07: {fileID: 3177759609231598064}
   Price: {fileID: 4939520586782457149}
   btn_Buy: {fileID: 2089388757354099685}
 --- !u!1 &7093908196780688805
@@ -1645,7 +1645,7 @@ GameObject:
   - component: {fileID: 9122942273176138148}
   - component: {fileID: 5388287518964634856}
   m_Layer: 5
-  m_Name: Txt_Reduction
+  m_Name: Txt_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

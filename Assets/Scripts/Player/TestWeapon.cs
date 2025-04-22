@@ -32,7 +32,7 @@ public class TestWeapon : MonoBehaviour
 
         if (other.CompareTag("Enemy")&& !_hitEnemies.Contains(enemy))
         {
-            enemy.TakeDamage((int)_playerStat.GetStatValue(PlayerStatType.Attack));
+            enemy.TakeDamage(Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.Attack)));
             _hitEnemies.Add(enemy);
         }
     }
