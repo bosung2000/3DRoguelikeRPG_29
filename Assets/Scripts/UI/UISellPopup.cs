@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,12 +18,15 @@ public class UISellPopup : PopupUI
     [SerializeField] private TextMeshProUGUI Price;
     [SerializeField] private Button btn_Sell;
 
+    public event Action<ItemData> OnSellEvent;
+    
 
     SlotItemData currentSlotItem;
     InventoryManager inventoryManager;
     PlayerManager playerManager;
     EquipMananger equipMananger;
     ShopSellInventory shopSellInventory;
+    ItemManager itemManager;
     UIShop uIShop;
 
     private void Awake()
@@ -35,6 +39,7 @@ public class UISellPopup : PopupUI
     {
         playerManager = GameManager.Instance.PlayerManager;
         equipMananger = GameManager.Instance.EquipMananger;
+        itemManager = GameManager.Instance.ItemManager;
     }
     public void Initialize(SlotItemData item, InventoryManager _inventoryManager, ShopSellInventory _shopSellInventory, UIShop _uIShop)
     {
@@ -69,9 +74,13 @@ public class UISellPopup : PopupUI
                 return;
             }
 
-            //골드 차감해주고 
+            //판매 로직 
             if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
             {
+                //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
+                OnSellEvent?.Invoke(currentSlotItem.item);
+                //아이템 list에 추가 
+                itemManager.AddItemList(currentSlotItem.item);
                 //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
                 inventoryManager.RemoveInventoryitme(currentSlotItem.item);
                 //골드 UI 변경  
