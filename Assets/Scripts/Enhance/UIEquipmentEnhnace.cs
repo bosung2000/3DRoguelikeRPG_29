@@ -20,7 +20,7 @@ public class UIEquipmentEnhance : PopupUI
 
     public EquipmentEnhancer enhancer;
     public PlayerManager playerManager;
-   
+    private UIHUD uIHUD;
 
     private ItemData currentEquipment;
 
@@ -28,18 +28,25 @@ public class UIEquipmentEnhance : PopupUI
     {
         playerManager = FindObjectOfType<PlayerManager>();
         enhancer = FindObjectOfType<EquipmentEnhancer>();
+        uIHUD = FindObjectOfType<UIHUD>();
     }
 
     private void Start()
     {
         enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
-        closeButton.onClick.AddListener(OnCloseButtonClick);
+        closeButton.onClick.AddListener(OnClosebtn);
     }
 
     public void SetEquipment(ItemData equipment)
     {
         currentEquipment = equipment;
         UpdateUI();
+    }
+
+    private void OnClosebtn()
+    {
+        uIHUD.OnMenu();
+        OnCloseButtonClick();
     }
 
     private void UpdateUI()
