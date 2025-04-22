@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
+    private float _lastHitTime = -100f;
 
     private void Awake()
     {
@@ -48,7 +49,10 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
-        _playerStat.Attack();
+        if (Time.time - _lastHitTime < 1 / _playerStat.GetStatValue(PlayerStatType.AttackSpeed)) return;
+        _playerController.SetTrigger("Attack");
+        _lastHitTime = Time.time;
+        //_playerStat.Attack();
     }
     public void AttackUp()
     {

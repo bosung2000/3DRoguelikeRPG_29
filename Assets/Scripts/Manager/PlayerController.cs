@@ -118,4 +118,8 @@ public class PlayerController : MonoBehaviour
             _anim.SetTrigger(name);
         }
     }
+    public void SetFloat(string name, float value)
+    {
+        _anim.SetFloat(name, value);
+    }
 }

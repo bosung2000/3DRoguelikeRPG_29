@@ -23,10 +23,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
 
-    [SerializeField] LayerMask _obstacleLayer;
-
     private float _lastHitTime = -100f;
-    private float _attackSpd = 1f;
 
     public event Action<PlayerStat> OnStatsChanged;
 
@@ -197,14 +194,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void MoveSpeedUp(float speed)
     {
         ModifyStat(PlayerStatType.MoveSpeed, speed);
-        _playerController._anim.speed = (GetStatValue(PlayerStatType.MoveSpeed)) / 5;
+        //_playerController._anim.speed = (GetStatValue(PlayerStatType.MoveSpeed))*0.2f;
     }
-    public void Attack()
+    public void Attack(Enemy enemy)
     {
-        if (Time.time - _lastHitTime < _attackSpd) return;
-        _playerController.SetTrigger("Attack");
-        _lastHitTime = Time.time;
-
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
@@ -212,17 +205,19 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage*0.01f : baseAttack;
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f); // 2.5f 범위 안의 적
-        foreach (Collider col in hits)
-        {
-            BaseEntity enemy = col.GetComponent<BaseEntity>();
+        enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+        Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
+        //Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f);
+        //foreach (Collider col in hits)
+        //{
+        //    BaseEntity enemy = col.GetComponent<BaseEntity>();
 
-            if (enemy != null && !ReferenceEquals(enemy, this))
-            {
-                enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
-                Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
-            }
-        }
+        //    if (enemy != null && !ReferenceEquals(enemy, this))
+        //    {
+        //        enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+        //        Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
+        //    }
+        //}
     }
     public void TakeDamage(int damage)
     {
@@ -274,6 +269,48 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         ModifyStat(PlayerStatType.CriticalDamage, criticalDamage);
     }
+    public void DashDistanceUp(float dashDistance)
+    {
+        ModifyStat(PlayerStatType.DashDistance, dashDistance);
+    }
+    public void DashCooldownUp(float dashCooldown)
+    {
+        ModifyStat(PlayerStatType.DashCooldown, dashCooldown);
+    }
+    public void HitCooldownUp(float hitCooldown)
+    {
+        ModifyStat(PlayerStatType.HitCooldown, hitCooldown);
+    }
+    public void absorpUp(float absorp)
+    {
+        ModifyStat(PlayerStatType.absorp, absorp);
+    }
+    public void DMGIncreaseUp(float damageIncrease)
+    {
+        ModifyStat(PlayerStatType.DMGIncrease, damageIncrease);
+    }
+    public void HPRecoveryUp(float hpRecovery)
+    {
+        ModifyStat(PlayerStatType.HPRecovery, hpRecovery);
+    }
+    public void MPRecoveryUp(float mpRecovery)
+    {
+        ModifyStat(PlayerStatType.MPRecovery, mpRecovery);
+    }
+    public void GoldAcquisitionUp(float goldAcquisition)
+    {
+        ModifyStat(PlayerStatType.GoldAcquisition, goldAcquisition);
+    }
+    public void SkillColltimeUp(float skillColltime)
+    {
+        ModifyStat(PlayerStatType.SkillColltime, skillColltime);
+    }
+    public void AttackSpeedUp(float attackSpeed)
+    {
+        ModifyStat(PlayerStatType.AttackSpeed, attackSpeed);
+        _playerController._anim.speed = (GetStatValue(PlayerStatType.AttackSpeed)) / 5;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
