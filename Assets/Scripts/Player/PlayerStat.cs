@@ -301,7 +301,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         ModifyStat(PlayerStatType.GoldAcquisition, goldAcquisition);
     }
-    public void SkillColltimeUp(float skillColltime)
+    public void SkillCooldownUp(float skillColltime)
     {
         ModifyStat(PlayerStatType.SkillColltime, skillColltime);
     }

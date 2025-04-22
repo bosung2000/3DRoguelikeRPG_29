@@ -62,8 +62,8 @@ public class EnemyController : MonoBehaviour
 
     public void ChageState(EnemyStateType newStateType)
     {
-        Debug.Log($"[ChageState] 현재 상태 : {CurrentStateType}");
-        Debug.Log($"[ChageState] 상태 전이 요청: {newStateType}");
+        //Debug.Log($"[ChageState] 현재 상태 : {CurrentStateType}");
+        //Debug.Log($"[ChageState] 상태 전이 요청: {newStateType}");
 
         if (CurrentStateType == newStateType)
         {
@@ -79,11 +79,11 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Debug.Log("[ChageState] 상태 객체 생성 성공. EnterState 호출 시도");
+        //Debug.Log("[ChageState] 상태 객체 생성 성공. EnterState 호출 시도");
         _currentState?.EnterState(this);
 
         CurrentStateType = newStateType;
-        Debug.Log("[ChageState] 상태 전이 완료");
+        //Debug.Log("[ChageState] 상태 전이 완료");
 
     }
 

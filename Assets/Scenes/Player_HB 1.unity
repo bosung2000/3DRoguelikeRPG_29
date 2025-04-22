@@ -1758,7 +1758,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 778341557718503348}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4088777903689236387, guid: 9b3e1e2552b3d63459d6af5cfbaa9e56, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b3e1e2552b3d63459d6af5cfbaa9e56, type: 3}
@@ -1821,6 +1822,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7190216306476448888, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: dashCooldownUI
       value: 
@@ -1829,12 +1834,17 @@ PrefabInstance:
       propertyPath: _floatingJoystick
       value: 
       objectReference: {fileID: 610024461}
+    - target: {fileID: 8596859512789446181, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+      propertyPath: statData
+      value: 
+      objectReference: {fileID: 11400000, guid: 0e73e0b7c364caa4e924062601b3b565, type: 2}
     - target: {fileID: 8976010896831269288, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7627799693920154231, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
+    - {fileID: 3878703539088788190, guid: aa66caa538355964eb3fef54f92d0e4c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

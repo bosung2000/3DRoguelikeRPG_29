@@ -31,7 +31,6 @@ public class TestPlayerUI : MonoBehaviour
         _playerStat.OnStatsChanged += UpdateStats;
         _currencyManager.OnGoldChange += UpdateGold;
         _currencyManager.OnSoulChange += UpdateSoul;
-
     }
     private void UpdateStats(PlayerStat playerStat)
     {
@@ -44,8 +43,8 @@ public class TestPlayerUI : MonoBehaviour
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
         //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
-        UpdateGold(0);
-        UpdateSoul(0);
+        //UpdateGold(0);
+        //UpdateSoul(0);
     }
 
     private void UpdateGold(int gold)

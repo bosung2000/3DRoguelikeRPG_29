@@ -67,7 +67,7 @@ public class Enemy : MonoBehaviour
         {
             if (enemyController != null)
             {
-                Debug.Log("아직 체력이 남았다");
+                //Debug.Log("아직 체력이 남았다");
                 enemyController.ResetAttackCooldown();
                 enemyController.ChageState(EnemyStateType.Hit);
             }
