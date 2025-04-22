@@ -22,6 +22,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
+    private bool _isAttacking = false;
+    public bool IsAttacking => _isAttacking;
 
     private float _lastHitTime = -100f;
 
@@ -198,6 +200,9 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     }
     public void Attack(Enemy enemy)
     {
+        if (_isAttacking) return;
+        _isAttacking = true;
+
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
@@ -207,17 +212,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
-        //Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f);
-        //foreach (Collider col in hits)
-        //{
-        //    BaseEntity enemy = col.GetComponent<BaseEntity>();
-
-        //    if (enemy != null && !ReferenceEquals(enemy, this))
-        //    {
-        //        enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
-        //        Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
-        //    }
-        //}
+        //_isAttacking = false;이거 찾아야함
     }
     public void TakeDamage(int damage)
     {

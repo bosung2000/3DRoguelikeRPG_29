@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
         if (Time.time - _lastHitTime < 1 / _playerStat.GetStatValue(PlayerStatType.AttackSpeed)) return;
         _playerController.SetTrigger("Attack");
         _lastHitTime = Time.time;
-        //_playerStat.Attack();
     }
     public void AttackUp()
     {

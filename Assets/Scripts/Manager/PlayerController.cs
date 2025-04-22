@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     }
     public void DirectionCheck()
     {
+        if (_playerStat.IsAttacking) return;
+
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
         Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
