@@ -158,6 +158,38 @@ public class ItemManager : MonoBehaviour
         // 유물은 항상 EquipType.Relics이지만 혹시 다른 유형이 추가될 경우를 대비
         return relicsItems.FindAll(item => item.equipType == equipType);
     }
+    
+    // 유물 중에서 3개를 랜덤으로 뽑아 반환
+    public List<ItemData> GetRelicsByRandom(int count = 3)
+    {
+        if (relicsItems == null || relicsItems.Count == 0)
+            return new List<ItemData>();
+            
+        // 결과를 저장할 리스트
+        List<ItemData> randomRelics = new List<ItemData>();
+        
+        // 유물이 3개 미만인 경우, 모든 유물 반환
+        if (relicsItems.Count <= count)
+            return new List<ItemData>(relicsItems);
+            
+        // 랜덤으로 유물 선택을 위해 원본 리스트를 복사
+        List<ItemData> tempList = new List<ItemData>(relicsItems);
+        
+        // Fisher-Yates 셔플 알고리즘으로 랜덤하게 섞기
+        for (int i = 0; i < count; i++)
+        {
+            // 남은 항목 중에서 랜덤으로 하나 선택
+            int randomIndex = UnityEngine.Random.Range(0, tempList.Count);
+            
+            // 결과 리스트에 추가
+            randomRelics.Add(tempList[randomIndex]);
+            
+            // 선택된 항목 제거 (중복 방지)
+            tempList.RemoveAt(randomIndex);
+        }
+        
+        return randomRelics;
+    }
 
     // 티어 범위로 아이템 리스트 가져오기
     public List<ItemData> GetItemsByTierRange(int minTier, int maxTier)

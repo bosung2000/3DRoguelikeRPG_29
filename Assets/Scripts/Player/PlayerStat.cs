@@ -23,8 +23,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
 
-    [SerializeField] TestPlayerUI _dashCooldownUI;
-    [SerializeField] Rigidbody _rb;
     [SerializeField] LayerMask _obstacleLayer;
 
     private float _lastHitTime = -100f;
@@ -41,8 +39,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _playerStat = GetComponent<PlayerStat>();
         _playerController = GetComponent<PlayerController>();
         _testWeapon = GetComponentInChildren<TestWeapon>();
-        _rb = GetComponent<Rigidbody>();
-        _dashCooldownUI = FindObjectOfType<TestPlayerUI>();
         InitializeStats();
     }
     private void Start()

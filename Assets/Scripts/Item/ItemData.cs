@@ -49,7 +49,7 @@ public enum ConditionType
     DMGIncrease,//Float 데미지 증가량 
     HPRecovery,//int HP 회복
     MPRecovery, //int MP 회복 
-    GoldAcquisition,//Float Glod회득량 증가,
+    GoldAcquisition,//Float Glod획득량 증가,
     SkillColltime,//Float 스킬 쿨타임,
     AttackSpeed,//Float 공격속도
 }
