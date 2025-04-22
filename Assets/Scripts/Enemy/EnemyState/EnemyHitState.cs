@@ -12,6 +12,7 @@ public class EnemyHitState : IEnemyState
         _timer = 0f;
         controller.animator.SetTrigger("Hit");
         controller.agent.isStopped = true;
+        controller.agent.ResetPath();
 
         controller.ResetAttackCooldown();
     }
