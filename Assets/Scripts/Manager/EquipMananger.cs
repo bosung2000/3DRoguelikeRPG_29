@@ -3,10 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class EquipMananger : MonoBehaviour
 {
     public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
     public Dictionary<int, ItemData> RelicsDictionary { get; private set; } // 유물 전용 딕셔너리(id를 키로 사용)
+    
+    // 최대 장착 가능한 유물 개수
+    private const int MAX_RELICS = 3;
 
     public event Action<EquipType, ItemData, bool> OnEquipedChanged;
     public event Action<ItemData, bool> OnRelicsChanged; // 유물 장착/해제 이벤트
@@ -65,6 +70,13 @@ public class EquipMananger : MonoBehaviour
         if (RelicsDictionary.ContainsKey(relicItem.id))
         {
             Debug.Log("이미 장착된 유물입니다.");
+            return false;
+        }
+        
+        // 장착된 유물이 최대 개수에 도달했는지 확인
+        if (RelicsDictionary.Count >= MAX_RELICS)
+        {
+            Debug.Log($"유물은 최대 {MAX_RELICS}개까지만 장착할 수 있습니다.");
             return false;
         }
 
@@ -200,6 +212,18 @@ public class EquipMananger : MonoBehaviour
     public List<ItemData> GetAllEquippedRelics()
     {
         return new List<ItemData>(RelicsDictionary.Values);
+    }
+    
+    // 현재 장착된 유물 개수 확인
+    public int GetEquippedRelicsCount()
+    {
+        return RelicsDictionary.Count;
+    }
+    
+    // 유물 슬롯이 비어있는지 확인
+    public bool HasFreeRelicSlot()
+    {
+        return RelicsDictionary.Count < MAX_RELICS;
     }
 
     // 특정 유물이 장착되어 있는지 확인

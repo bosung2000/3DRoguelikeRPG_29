@@ -52,7 +52,7 @@ public class UISellPopup : PopupUI
         if (currentSlotItem != null && inventoryManager.slotItemDatas.Contains(currentSlotItem))
         {
 
-            //장착아이템인가 ?
+            //장착아이템인가?
             if (equipMananger.EquipDicionary.TryGetValue(currentSlotItem.item.equipType, out ItemData value))
             {
                 if (value.id == currentSlotItem.item.id)
@@ -61,6 +61,12 @@ public class UISellPopup : PopupUI
                     UIManager.Instance.ShowPopupUI<UIDontSellPopup>();
                     return;
                 }
+            }
+            if (equipMananger.RelicsDictionary.TryGetValue(currentSlotItem.item.id, out ItemData relics))
+            {
+                //판매 불가능 창 띄위기 
+                UIManager.Instance.ShowPopupUI<UIDontSellPopup>();
+                return;
             }
 
             //골드 차감해주고 
