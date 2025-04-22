@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,13 +18,21 @@ public class UIPurchasePopup : PopupUI
     [SerializeField] private TextMeshProUGUI Price;
     [SerializeField] private Button btn_Buy;
 
+    public event Action<ItemData> OnBuyEvent;
+
     SlotItemData currentSlotItem;
     Shop shop;
+    ItemManager itemManager;
 
     private void Awake()
     {
         btn_Buy.onClick.AddListener(OnBuyItem);
         closeButton.onClick.AddListener(ClosePopup);
+        
+    }
+    private void Start()
+    {
+        itemManager = GameManager.Instance.ItemManager;
     }
     public void Initialize(Shop _shop, SlotItemData item)
     {
@@ -43,6 +52,10 @@ public class UIPurchasePopup : PopupUI
             {
                 //인벤토리 넣기
                 GameManager.Instance.InventoryManager.AddInventoryItem(currentSlotItem.item);
+                //이벤트 추가 
+                OnBuyEvent?.Invoke(currentSlotItem.item);
+                //itemlist에서 삭제 
+                itemManager.RemoveItemList(currentSlotItem.item);
                 //shoplist에서 삭제
                 shop.RemoveShopItemlist(currentSlotItem);
             }
