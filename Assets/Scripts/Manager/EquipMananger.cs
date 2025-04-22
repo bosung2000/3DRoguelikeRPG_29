@@ -9,7 +9,7 @@ public class EquipMananger : MonoBehaviour
 {
     public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
     public Dictionary<int, ItemData> RelicsDictionary { get; private set; } // 유물 전용 딕셔너리(id를 키로 사용)
-    
+
     // 최대 장착 가능한 유물 개수
     private const int MAX_RELICS = 3;
 
@@ -47,7 +47,7 @@ public class EquipMananger : MonoBehaviour
             // 장착된 아이템을 제거 
             UnEquipitem(Equipeditemed);
         }
-        
+
         EquipDicionary.Add(itemData.equipType, itemData);
         // 능력치 더해주고 
         AddStats();
@@ -72,7 +72,7 @@ public class EquipMananger : MonoBehaviour
             Debug.Log("이미 장착된 유물입니다.");
             return false;
         }
-        
+
         // 장착된 유물이 최대 개수에 도달했는지 확인
         if (RelicsDictionary.Count >= MAX_RELICS)
         {
@@ -82,13 +82,13 @@ public class EquipMananger : MonoBehaviour
 
         // 유물 장착
         RelicsDictionary.Add(relicItem.id, relicItem);
-        
+
         // 유물 효과 적용
         AddRelicStats();
-        
+
         // 유물 장착 이벤트 발생
         OnRelicsChanged?.Invoke(relicItem, true);
-        
+
         return true;
     }
 
@@ -126,16 +126,16 @@ public class EquipMananger : MonoBehaviour
         if (RelicsDictionary.TryGetValue(relicItem.id, out _))
         {
             RelicsDictionary.Remove(relicItem.id);
-            
+
             // 유물 효과 재계산
             AddRelicStats();
-            
+
             // 유물 해제 이벤트 발생
             OnRelicsChanged?.Invoke(relicItem, false);
-            
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -176,11 +176,11 @@ public class EquipMananger : MonoBehaviour
     private void AddRelicStats()
     {
         Dictionary<PlayerStatType, float> totalRelicBonuses = new Dictionary<PlayerStatType, float>();
-        
+
         // 플레이어 스탯 참조
         PlayerStat playerStat = GameManager.Instance.PlayerManager.Player._playerStat;
         playerStat.ClearRelicBonuses(); // 이 메서드는 PlayerStat에 추가해야 함
-        
+
         // 모든 장착된 유물에서 스탯 보너스 계산
         foreach (var relic in RelicsDictionary.Values)
         {
@@ -189,7 +189,7 @@ public class EquipMananger : MonoBehaviour
                 PlayerStatType statType = ConvertToPlayerStatType(option.type);
                 // 유물은 강화가 없으므로 enhancementLevel은 0
                 float value = option.GetValueWithLevel(0);
-                
+
                 if (!totalRelicBonuses.ContainsKey(statType))
                 {
                     totalRelicBonuses[statType] = 0f;
@@ -197,7 +197,7 @@ public class EquipMananger : MonoBehaviour
                 totalRelicBonuses[statType] += value;
             }
         }
-        
+
         playerStat.AddRelicBonus(totalRelicBonuses);
     }
 
@@ -213,13 +213,13 @@ public class EquipMananger : MonoBehaviour
     {
         return new List<ItemData>(RelicsDictionary.Values);
     }
-    
+
     // 현재 장착된 유물 개수 확인
     public int GetEquippedRelicsCount()
     {
         return RelicsDictionary.Count;
     }
-    
+
     // 유물 슬롯이 비어있는지 확인
     public bool HasFreeRelicSlot()
     {
@@ -240,8 +240,12 @@ public class EquipMananger : MonoBehaviour
             case ConditionType.Power:
                 return PlayerStatType.Attack;
             case ConditionType.Health:
+                return PlayerStatType.HP;
+            case ConditionType.MaxHealth:
                 return PlayerStatType.MaxHP;
             case ConditionType.Mana:
+                return PlayerStatType.MP;
+            case ConditionType.MaxMana:
                 return PlayerStatType.MaxMP;
             case ConditionType.Speed:
                 return PlayerStatType.MoveSpeed;
