@@ -11,15 +11,13 @@ public class EnemyHitState : IEnemyState
     {
         _timer = 0f;
         controller.animator.SetTrigger("Hit");
-        controller.agent.enabled = true;
+        controller.agent.isStopped = true;
 
         controller.ResetAttackCooldown();
     }
 
     public void ExitState(EnemyController controller)
     {
-        controller.agent.isStopped = false;
-
     }
 
     public void UpdateState(EnemyController controller)
