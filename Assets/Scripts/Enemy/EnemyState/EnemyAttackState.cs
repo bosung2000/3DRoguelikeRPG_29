@@ -90,7 +90,7 @@ public class EnemyAttackState : IEnemyState
         Transform firePoint = controller.Enemy.FirePoint;
         if(prefab == null || firePoint == null) return;
 
-        Vector3 targetPos = controller.GetTarget().position + Vector3.up * 1.0f;
+        Vector3 targetPos = controller.GetTarget().position;
         Vector3 spawnPos = firePoint.position;//발사 위치
 
         Vector3 dir = (targetPos - spawnPos).normalized;

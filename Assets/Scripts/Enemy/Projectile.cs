@@ -22,17 +22,18 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
             return;
         }
 
         if(other.CompareTag("Player"))
         {
-            PlayerStat player = other.GetComponent<PlayerStat>();
+            PlayerStat player = other.GetComponentInParent<PlayerStat>();
             if(player != null)
             {
                 player.TakeDamage(_damage);
+                Debug.Log(_damage);
             }
         }
         
