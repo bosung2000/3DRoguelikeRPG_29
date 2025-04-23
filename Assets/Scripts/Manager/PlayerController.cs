@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private LayerMask _obstacleLayer;
     private TestPlayerUI dashCooldownUI;
 
+    private bool _isAttacking = false;
     private void Awake()
     {
         _anim = GetComponent<Animator>();
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     }
     public void DirectionCheck()
     {
-        if (_playerStat.IsAttacking) return;
+        if (_isAttacking) return;
 
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
@@ -123,5 +124,13 @@ public class PlayerController : MonoBehaviour
     public void SetFloat(string name, float value)
     {
         _anim.SetFloat(name, value);
+    }
+    public void Attacking()
+    {
+        _isAttacking = true;
+    }
+    public void NotAttacking()
+    {
+        _isAttacking = false;
     }
 }
