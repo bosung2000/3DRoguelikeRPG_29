@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,13 +11,14 @@ public class EnemyHitState : IEnemyState
     {
         _timer = 0f;
         controller.animator.SetTrigger("Hit");
-        controller.agent.enabled = true;
+        controller.agent.isStopped = true;
+        controller.agent.ResetPath();
+
+        controller.ResetAttackCooldown();
     }
 
     public void ExitState(EnemyController controller)
     {
-        controller.agent.isStopped = false;
-
     }
 
     public void UpdateState(EnemyController controller)
