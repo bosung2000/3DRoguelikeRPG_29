@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private TestPlayerUI dashCooldownUI;
 
     private bool _isAttacking = false;
+    private Vector3 _lastMoveDirection;
+
     private void Awake()
     {
         _anim = GetComponent<Animator>();
@@ -23,7 +25,10 @@ public class PlayerController : MonoBehaviour
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
         _obstacleLayer = LayerMask.GetMask("UI");
         dashCooldownUI = FindObjectOfType<TestPlayerUI>();
+        
+        _lastMoveDirection = transform.forward;
     }
+
     public void DirectionCheck()
     {
         if (_isAttacking) return;
@@ -33,23 +38,29 @@ public class PlayerController : MonoBehaviour
         Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
         Vector3 inputDir = InputJoystick + InputKeyboard;
+        
 
         if (inputDir.sqrMagnitude > 0.05f)
         {
             inputDir = inputDir.normalized;
+            _lastMoveDirection = inputDir;
 
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+            transform.rotation = targetRotation;
+             _rb.velocity = new Vector3(inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed), 
+                                      _rb.velocity.y, 
+                                      inputDir.z * _playerStat.GetStatValue(PlayerStatType.MoveSpeed));
+            //_rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
             SetBool("Run", true);
         }
         else
         {
-            _rb.velocity = Vector3.zero;
+            _rb.velocity = new Vector3(0,_rb.velocity.y,0);
+            _rb.angularVelocity = Vector3.zero;
             SetBool("Run", false);
         }
     }
+
     public void Dash()
     {
         SetTrigger("Dash");
@@ -67,7 +78,7 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
         if (dir.sqrMagnitude < 0.01f)
-            dir = transform.forward;
+            dir = _lastMoveDirection;
 
         dir = dir.normalized;
 

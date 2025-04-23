@@ -19,9 +19,13 @@ public class Player : MonoBehaviour
     {
         _playerStat.InitBaseStat(statData);
     }
-    public void FixedUpdate()
+    private void Update()
     {
         _playerController.DirectionCheck();
+        
+    }
+    public void FixedUpdate()
+    {
     }
 
 
