@@ -26,8 +26,7 @@ public class SkillProjectile : MonoBehaviour
             DestroyProjectile(transform.position, false);
         }
 
-        //아니라면 그냥 날아가게 내버려 두기
-        _rigidbody.velocity = direction * ProjectileSpeed;
+        transform.position += direction * ProjectileSpeed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider collision)

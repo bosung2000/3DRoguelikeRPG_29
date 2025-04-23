@@ -37,8 +37,8 @@ public class FloatingSkillJoystick : Joystick
     {
         //마지막 방향 저장
         Vector3 InputJoystick = Vector3.forward * this.Vertical + Vector3.right * this.Horizontal;
-        Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        Vector3 inputDir = InputJoystick + InputKeyboard;
+        //Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector3 inputDir = InputJoystick;
         if (inputDir.sqrMagnitude > 0.01f)
         {
             inputDir = inputDir.normalized;
