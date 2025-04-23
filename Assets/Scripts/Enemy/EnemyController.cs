@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     public EnemyStateType CurrentStateType { get; private set; }
     public NavMeshAgent agent { get; private set; }
     public Animator animator { get; private set; }
-
+    public Vector3 SpawnPosition { get; private set; }
 
     private void Awake()
     {
@@ -51,6 +51,9 @@ public class EnemyController : MonoBehaviour
             Debug.LogError("EnemyController: _enemy.Stat이 null!");
             return;
         }
+
+        SpawnPosition = transform.position;// 스폰 위치 저장
+
         agent.speed = GetSpeed();
         ChageState(EnemyStateType.Idle);
     }
@@ -62,9 +65,6 @@ public class EnemyController : MonoBehaviour
 
     public void ChageState(EnemyStateType newStateType)
     {
-        //Debug.Log($"[ChageState] 현재 상태 : {CurrentStateType}");
-        //Debug.Log($"[ChageState] 상태 전이 요청: {newStateType}");
-
         if (CurrentStateType == newStateType)
         {
             Debug.Log("[ChageState] 같은 상태로 전이 시도 → 무시");
@@ -79,11 +79,10 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        //Debug.Log("[ChageState] 상태 객체 생성 성공. EnterState 호출 시도");
         _currentState?.EnterState(this);
 
         CurrentStateType = newStateType;
-        //Debug.Log("[ChageState] 상태 전이 완료");
+        Debug.Log($"[ChageState] {newStateType} 상태 전이 완료");
 
     }
 
