@@ -5,20 +5,23 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
-    public EnemyStat Stat { get; private set; }
-    public Transform PlayerTarget { get; private set; }
-    public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
-
-    private bool _isDead = false;
-
-
     [Header("드랍템 설정")]
     [SerializeField] private GameObject _goldPrefab; //골드 프리펩
     [SerializeField] private GameObject _soulPrefab; //영혼 프리펩
 
+    [Header("투사체 설정")]
+    [SerializeField] private Transform _firePoint;
+    [SerializeField] private GameObject _projectilePrefab;
+
+    public EnemyStat Stat { get; private set; }
+    public Transform PlayerTarget { get; private set; }
+    public GameObject ProjectilePrefab => _projectilePrefab;
+    public Transform FirePoint => _firePoint;
+    public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
+
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
-
+    private bool _isDead = false;    
 
     private void Awake()
     {
@@ -67,7 +70,7 @@ public class Enemy : MonoBehaviour
         {
             if (enemyController != null)
             {
-                Debug.Log("아직 체력이 남았다");
+                //Debug.Log("아직 체력이 남았다");
                 enemyController.ResetAttackCooldown();
                 enemyController.ChageState(EnemyStateType.Hit);
             }

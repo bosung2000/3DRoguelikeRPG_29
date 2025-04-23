@@ -29,7 +29,7 @@ public class EnemyChaseState : IEnemyState
             controller.animator.ResetTrigger("Hit");
         }
 
-        Debug.Log("Chase 상태 진입");
+        //Debug.Log("Chase 상태 진입");
     }
 
     public void ExitState(EnemyController controller)

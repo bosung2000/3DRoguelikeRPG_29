@@ -61,6 +61,10 @@ public abstract class PopupUI : BaseUI
     {
         // 자신을 닫음
         UIManager.Instance.ClosePopupUI(this);
+        if (Time.timeScale ==0)
+        {
+            Time.timeScale= 1;
+        }
     }
 
 }

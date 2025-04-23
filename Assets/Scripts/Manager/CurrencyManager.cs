@@ -23,7 +23,7 @@ public class CurrencyManager : MonoBehaviour
 
     private void Start()
     {
-
+        
     }
 
     public void init()

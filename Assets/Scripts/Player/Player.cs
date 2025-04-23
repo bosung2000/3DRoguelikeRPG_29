@@ -2,37 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public interface BaseEntity
-{
-    void MaxHPUp(float maxHP);
-    void Healing(int heal);
-    void MaxMPUp(float maxMP);
-    void BaseMPUp(float currentMP);
-    void MoveSpeedUp(float speed);
-    void TakeDamage(int damage);
-    void Hit();
-    void AttackUp(float attack);
-    void DMGReductionUp(float damageReduction);
-    void CriticalChanceUp(float criticalChance);
-    void CriticalDamageUp(float criticalDamage);
-}
+using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class Player : MonoBehaviour, BaseEntity
+public class Player : MonoBehaviour
 {
     [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
-    [SerializeField] TestWeapon _testWeapon;
-
-    [SerializeField] TestPlayerUI dashCooldownUI;
-    [SerializeField] FloatingJoystick _floatingJoystick;
-    [SerializeField] Rigidbody _rb;
-    [SerializeField] LayerMask _obstacleLayer;
-
-    private bool _isTumbling = false;
-    private float _lastTumbleTime = -100f;
     private float _lastHitTime = -100f;
-    private float _attackSpd = 5f;
 
     private void Awake()
     {
@@ -42,228 +19,102 @@ public class Player : MonoBehaviour, BaseEntity
     {
         _playerStat.InitBaseStat(statData);
     }
-    public void DirectionCheck()
+    private void Update()
     {
-        Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-
-        Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-
-        Vector3 inputDir = InputJoystick + InputKeyboard;
-
-        if (inputDir.sqrMagnitude > 0.05f)
-        {
-            inputDir = inputDir.normalized;
-
-            Quaternion targetRotation = Quaternion.LookRotation(inputDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
-            _playerController.SetBool("Run", true);
-        }
-        else
-        {
-            _rb.velocity = Vector3.zero;
-            _playerController.SetBool("Run", false);
-        }
+        _playerController.DirectionCheck();
+        
     }
     public void FixedUpdate()
     {
-        DirectionCheck();
-        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
     }
 
-    public void MaxHPUp(float value)
+
+    public void MaxHPUp()
     {
-        _playerStat.ModifyStat(PlayerStatType.MaxHP, value);
-        _playerStat.ModifyStat(PlayerStatType.HP, value);
+        _playerStat.MaxHPUp(100);
     }
-    public void Healing(int value)
+    public void Healing()
     {
-        int maxHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP));
-        int currentHP = Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.HP));
-        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
+        _playerStat.Healing(Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP) * 0.2f));
+        //최대체력의 20%  
     }
-    public void MaxMPUp(float value)
+    public void MaxMPUp()
     {
-        _playerStat.ModifyStat(PlayerStatType.MaxMP, value);
-        _playerStat.ModifyStat(PlayerStatType.MP, value);
+        _playerStat.MaxMPUp(100);
     }
-    public void BaseMPUp(float value)
+    public void BaseMPUp()
     {
-        float maxMP = _playerStat.GetStatValue(PlayerStatType.MaxMP);
-        float currentMP = _playerStat.GetStatValue(PlayerStatType.MP);
-        _playerStat.SetStatValue(PlayerStatType.MP, Mathf.Min(currentMP + value, maxMP));
+        _playerStat.BaseMPUp(20);
     }
-    public void MoveSpeedUp(float speed)
+    public void SpeedUp()
     {
-        _playerStat.ModifyStat(PlayerStatType.MoveSpeed, speed);
-        _playerController._anim.speed = (_playerStat.GetStatValue(PlayerStatType.MoveSpeed)) / 5;
+        _playerStat.MoveSpeedUp(5);
     }
     public void Attack()
     {
-        if (Time.time - _lastHitTime < _attackSpd) return;
-
+        float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
+        if (Time.time - _lastHitTime < 1 / attackSpeed) return;
         _playerController.SetTrigger("Attack");
-
         _lastHitTime = Time.time;
     }
-    public void TakeDamage(int damage)
+    public void AttackUp()
     {
-        if (Time.time - _lastTumbleTime < _playerStat.GetStatValue(PlayerStatType.HitCooldown)) return;
-
-        float currentHP = _playerStat.GetStatValue(PlayerStatType.HP);
-        float damageReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-        float dmgIncrease = _playerStat.GetStatValue(PlayerStatType.DMGIncrease);
-
-        damage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
-        _lastTumbleTime = Time.time;
-
-        _playerStat.SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
-
-        if (_playerStat.GetStatValue(PlayerStatType.HP) == 0)
-        {
-            _playerController.SetTrigger("Die");
-            Time.timeScale = 0f;
-            StartCoroutine(PlayDeathAnimThenPauseGame());
-            Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
-        }
-    }
-    private IEnumerator PlayDeathAnimThenPauseGame()
-    {
-        AnimatorStateInfo state = _playerController._anim.GetCurrentAnimatorStateInfo(0);
-
-        _playerController._anim.speed = 1f;
-
-        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).IsName("Die"));
-
-        yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
-
-    }
-    public void Hit()
-    {
-        float baseAttack = _playerStat.GetStatValue(PlayerStatType.Attack);
-        float critChance = _playerStat.GetStatValue(PlayerStatType.CriticalChance);
-        float critDamage = _playerStat.GetStatValue(PlayerStatType.CriticalDamage);
-
-        bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
-        float finalDamage = isCrit ? baseAttack * critDamage : baseAttack;
-
-        Collider[] hits = Physics.OverlapSphere(transform.position, 2.5f); // 2.5f 범위 안의 적
-        foreach (Collider col in hits)
-        {
-            BaseEntity enemy = col.GetComponent<BaseEntity>();
-
-            if (enemy != null && !ReferenceEquals(enemy, this))
-            {
-                enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
-                Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
-            }
-        }
-    }
-    public void AttackUp(float attack)
-    {
-        _playerStat.ModifyStat(PlayerStatType.Attack, attack);
+        _playerStat.AttackUp(10);
     }
 
-    public void DMGReductionUp(float damageReduction)
+    public void DMGReductionUp()
     {
-        float currentDMGReduction = _playerStat.GetStatValue(PlayerStatType.DMGReduction);
-        _playerStat.SetStatValue(PlayerStatType.DMGReduction, currentDMGReduction + damageReduction);
-    }
-    public void CriticalChanceUp(float criticalChance)
-    {
-        float currentCriticalChance = _playerStat.GetStatValue(PlayerStatType.CriticalChance);
-        _playerStat.SetStatValue(PlayerStatType.CriticalChance, currentCriticalChance + criticalChance);
-    }
-    public void CriticalDamageUp(float criticalDamage)
-    {
-        float currentCriticalDamage = _playerStat.GetStatValue(PlayerStatType.CriticalDamage);
-        _playerStat.SetStatValue(PlayerStatType.CriticalDamage, currentCriticalDamage + criticalDamage);
+        _playerStat.DMGReductionUp(10);
     }
 
+    public void CriticalChanceUp()
+    {
+        _playerStat.CriticalChanceUp(5);
+        Debug.Log("CriticalChanceUp");
+    }
+    public void CriticalDamageUp()
+    {
+        _playerStat.CriticalDamageUp(0.25f);
+    }
+    public void DashDistanceUp()
+    {
+        _playerStat.DashDistanceUp(5);
+    }
+    public void DashCooldownUp()
+    {
+        _playerStat.DashCooldownUp(1);
+    }
+    public void HitCooldownUp()
+    {
+        _playerStat.HitCooldownUp(1);
+    }
+    public void DMGIncreaseUp()
+    {
+        _playerStat.DMGIncreaseUp(10);
+    }
+    public void HPRecoveryUp()
+    {
+        _playerStat.HPRecoveryUp(5);
+    }
+    public void MPRecoveryUp()
+    {
+        _playerStat.MPRecoveryUp(5);
+    }
+    public void GoldAcquisitionUp()
+    {
+        _playerStat.GoldAcquisitionUp(5);
+    }
+    public void SkillCooldownUp()
+    {
+        _playerStat.SkillCooldownUp(1);
+    }
+    public void AttackSpeedUp()
+    {
+        _playerStat.AttackSpeedUp(0.1f);
+    }
     public void Dash()
     {
-        _playerController.SetTrigger("Dash");
-        float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
-        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
-
-        if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
-        {
-            Debug.Log("쿨타임입니다");
-            return;
-        }
-
-        Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
-        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
-
-        if (dir.sqrMagnitude < 0.01f)
-            dir = transform.forward;
-
-        dir = dir.normalized;
-
-        Vector3 origin = transform.position + Vector3.up * 0.01f;
-        Vector3 target = transform.position + dir * dashDistance;
-
-        if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
-        {
-            float safeDist = Mathf.Max(hit.distance - 0.01f, 0f);
-            target = transform.position + dir * safeDist;
-        }
-
-        float actualDistance = Vector3.Distance(transform.position, target);
-        float dashDuration = actualDistance / dashDistance * 0.2f;
-
-        StartCoroutine(TumbleRoutine(target, dashDuration));
-        _lastTumbleTime = Time.time;
-        dashCooldownUI.StartDashCooldown();
-    }
-
-    private IEnumerator TumbleRoutine(Vector3 target, float duration)
-    {
-        _isTumbling = true;
-
-        Vector3 start = transform.position;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            float t = elapsed / duration;
-            Vector3 newPos = Vector3.Lerp(start, target, t);
-            _rb.MovePosition(newPos);
-
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        _rb.MovePosition(target);
-        _rb.velocity = Vector3.zero;
-        _isTumbling = false;
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
-
-        if (other.gameObject.CompareTag("Gold"))
-        {
-            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
-            Destroy(other.gameObject);
-        }
-        else if (other.gameObject.CompareTag("Soul"))
-        {
-            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Soul, currencyData._amount);
-            Destroy(other.gameObject);
-        } 
-    }
-    public void EnableCollider()
-    {
-        _testWeapon.EnableCollider();
-    }
-
-    public void DisableCollider()
-    {
-        _testWeapon.DisableCollider();
+        _playerController.Dash();
     }
     //public void Flash()
     //{
@@ -294,18 +145,4 @@ public class Player : MonoBehaviour, BaseEntity
     //        Debug.Log("대쉬가 쿨타임입니다.");
     //    }
     //}
-
-    //public float GetCurrentHP()
-    //{
-    //    return _stats.GetStatValue(PlayerStatType.HP);
-    //}
-
-    //public void EquipItem(Item item)
-    //{
-    //    foreach (var statBonus in item.BaseEntity)
-    //    {
-    //        stats.AddEquipmentBonus(statBonus.type, statBonus.value);
-    //    }
-    //}
-
 }

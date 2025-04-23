@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    [SerializeField] private Transform _player;
-    [SerializeField] private Vector3 offset = new Vector3(0, 15, -10);
-    [SerializeField] private float followSpeed = 5f;
-    [SerializeField] private PlayerStat _playerStat;
+    [SerializeField] private Player player;
+    [SerializeField] private Vector3 offset = new Vector3(0, 10, -10);
+    [SerializeField] private Vector3 Rotation = new Vector3(60, 0, 0);
+    [SerializeField] private float followSpeed = 0;
 
     private void LateUpdate()
     {
-        if (_player == null) return;
+        if (player == null) return;
 
-        Vector3 desiredPosition = _player.position + offset;
+        followSpeed = player._playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+        Vector3 desiredPosition = player.transform.position + offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        followSpeed = _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(Rotation), followSpeed * Time.deltaTime);
     }
     void LookAt()
 

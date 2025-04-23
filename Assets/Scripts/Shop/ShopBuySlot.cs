@@ -40,7 +40,7 @@ public class ShopBuySlot : MonoBehaviour
         OnitemClicked?.Invoke(currentItemData);
     }
 
-    public void SetSlotData(SlotItemData slotData)
+    public void SetSlotData_Equip(SlotItemData slotData)
     {
         currentItemData = slotData;
         //초기화
@@ -53,13 +53,31 @@ public class ShopBuySlot : MonoBehaviour
         }
 
         iconImage.sprite = currentItemData.item.Icon;
+        Txt_name.text = currentItemData.item.itemName;
+        Txt_gold.text = currentItemData.item.gold.ToString();
+        Txt_Tier.text = $"Tier: {currentItemData.item.Tier.ToString()} / 수량 : {currentItemData.amount}";
+    }
+    public void SetSlotData_Relice(SlotItemData slotData)
+    {
+        currentItemData = slotData;
+        //초기화
+        if (slotData.IsEmpty)
+        {
+            iconImage.sprite = null;
+            Txt_name = null;
+            Txt_gold = null;
+            Txt_Tier = null;
+        }
+
+        iconImage.sprite = currentItemData.item.Icon;
         Txt_name.text = currentItemData.item.name;
         Txt_gold.text = currentItemData.item.gold.ToString();
         Txt_Tier.text = $"Tier: {currentItemData.item.Tier.ToString()} / 수량 : {currentItemData.amount}";
     }
     public void ClearSlot()
     {
-        SetSlotData(new SlotItemData());
+        SetSlotData_Equip(new SlotItemData());
+        SetSlotData_Relice(new SlotItemData());
     }
 
 

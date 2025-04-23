@@ -8,7 +8,11 @@ public class TestPlayerUI : MonoBehaviour
 {
     [SerializeField] Player _player;
     [SerializeField] PlayerStat _playerStat;
+    [SerializeField] CurrencyManager _currencyManager;
+    [SerializeField] TextMeshProUGUI _GoldText;
+    [SerializeField] TextMeshProUGUI _soulText;
 
+    [SerializeField] Button _DashBtn;
     [SerializeField] TextMeshProUGUI _maxHPText;
     [SerializeField] TextMeshProUGUI _hpText;
     [SerializeField] TextMeshProUGUI _maxMPText;
@@ -26,6 +30,8 @@ public class TestPlayerUI : MonoBehaviour
     private void Start()
     {
         _playerStat.OnStatsChanged += UpdateStats;
+        _currencyManager.OnGoldChange += UpdateGold;
+        _currencyManager.OnSoulChange += UpdateSoul;
     }
     private void UpdateStats(PlayerStat playerStat)
     {
@@ -37,10 +43,17 @@ public class TestPlayerUI : MonoBehaviour
         //_attackText.text = playerStat.GetStatValue(PlayerStatType.Attack).ToString("F0");  
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
-        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");  
-        //UpdateCooldownUI();  
+        //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
     }
 
+    private void UpdateGold(int gold)
+    {
+        _GoldText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold].ToString("F0");
+    }
+    private void UpdateSoul(int soul)
+    {
+        _soulText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul].ToString("F0");
+    }
     public void StartDashCooldown()
     {
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
@@ -58,12 +71,14 @@ public class TestPlayerUI : MonoBehaviour
 
         while (remaining > 0)
         {
+            Image img = _DashBtn.GetComponent<Image>();
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 1 - (remaining / total));
             _DashCooldownText.text = $"{remaining:F1}";
             remaining -= Time.deltaTime;
             yield return null;
         }
 
-        _DashCooldownText.text = "Dash";
+        _DashCooldownText.text = "";
     }
 }
 

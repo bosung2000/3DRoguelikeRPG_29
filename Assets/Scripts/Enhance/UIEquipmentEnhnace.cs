@@ -18,28 +18,36 @@ public class UIEquipmentEnhance : PopupUI
     public Image itemIcon;
     public Button enhanceButton;
 
-    public EquipmentEnhancer enhancer;
+    public EnhanceManager enhancer;
     public PlayerManager playerManager;
-   
+    private UIHUD uIHUD;
 
     private ItemData currentEquipment;
 
     private void Awake()
     {
         playerManager = FindObjectOfType<PlayerManager>();
-        enhancer = FindObjectOfType<EquipmentEnhancer>();
+        enhancer = FindObjectOfType<EnhanceManager>();
+        uIHUD = FindObjectOfType<UIHUD>();
     }
 
     private void Start()
     {
         enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
-        closeButton.onClick.AddListener(OnCloseButtonClick);
+        closeButton.onClick.AddListener(OnClosebtn);
     }
 
     public void SetEquipment(ItemData equipment)
     {
         currentEquipment = equipment;
         UpdateUI();
+    }
+
+    private void OnClosebtn()
+    {
+        uIHUD.OnMenu();
+        base.OnCloseButtonClick();
+        
     }
 
     private void UpdateUI()

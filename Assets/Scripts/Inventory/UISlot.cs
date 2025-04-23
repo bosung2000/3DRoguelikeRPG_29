@@ -57,7 +57,7 @@ public class UISlot : MonoBehaviour
             // 장착 표시 초기화
             txt_equip.gameObject.SetActive(false);
 
-            //equipManager에서 체크하고 존재하면 E표시
+            //장착아이템 일때 검사
             if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(currentItemData.item.equipType, out ItemData item))
             {
                 //Debug.Log($"장착된 아이템 ID: {item.id}");
@@ -67,6 +67,11 @@ public class UISlot : MonoBehaviour
                     //LayoutRebuilder.ForceRebuildLayoutImmediate(txt_equip.transform.parent as RectTransform);
                     //Debug.Log($"txt_equip 초기 상태: {txt_equip.gameObject.activeSelf}");
                 }
+            }
+            // 장착 유물일때
+            else if (GameManager.Instance.EquipMananger.RelicsDictionary.TryGetValue(currentItemData.item.id, out ItemData relics))
+            {
+                txt_equip.gameObject.SetActive(true);
             }
 
             iconImage.sprite = slotData.item.Icon;
