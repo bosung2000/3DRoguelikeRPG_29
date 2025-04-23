@@ -201,7 +201,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void Attack(Enemy enemy)
     {
         if (_isAttacking) return;
-        _isAttacking = true;
 
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
@@ -212,7 +211,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
-        //_isAttacking = false;이거 찾아야함
     }
     public void TakeDamage(int damage)
     {
@@ -329,5 +327,13 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void DisableCollider()
     {
         _testWeapon.DisableCollider();
+    }
+    public void Attacking()
+    {
+        _isAttacking = true;
+    }
+    public void NotAttacking()
+    {
+        _isAttacking = false;
     }
 }
