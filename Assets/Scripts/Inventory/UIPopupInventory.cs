@@ -211,9 +211,9 @@ public class UIPopupInventory : PopupUI
         Debug.Log("인벤토리 닫힘");
         //메뉴창도 닫아주기
         uIHUD.OnMenu();
+        base.OnCloseButtonClick();
         UIManager.Instance.CloseAllPopupUI();
         // 부모 클래스의 메서드 호출
-        //base.OnCloseButtonClick();
     }
 
     protected override void Clear()

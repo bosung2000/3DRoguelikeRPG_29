@@ -46,7 +46,8 @@ public class UIEquipmentEnhance : PopupUI
     private void OnClosebtn()
     {
         uIHUD.OnMenu();
-        OnCloseButtonClick();
+        base.OnCloseButtonClick();
+        
     }
 
     private void UpdateUI()
