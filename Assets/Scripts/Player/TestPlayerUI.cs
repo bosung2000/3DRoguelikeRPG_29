@@ -8,6 +8,7 @@ public class TestPlayerUI : MonoBehaviour
 {
     [SerializeField] Player _player;
     [SerializeField] PlayerStat _playerStat;
+    [SerializeField] CurrencyManager _currencyManager;
     [SerializeField] TextMeshProUGUI _GoldText;
     [SerializeField] TextMeshProUGUI _soulText;
 
@@ -28,6 +29,8 @@ public class TestPlayerUI : MonoBehaviour
     private void Start()
     {
         _playerStat.OnStatsChanged += UpdateStats;
+        _currencyManager.OnGoldChange += UpdateGold;
+        _currencyManager.OnSoulChange += UpdateSoul;
     }
     private void UpdateStats(PlayerStat playerStat)
     {
@@ -40,10 +43,18 @@ public class TestPlayerUI : MonoBehaviour
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
         //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
-       _GoldText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold].ToString("F0");
-       _soulText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul].ToString("F0");
+        //UpdateGold(0);
+        //UpdateSoul(0);
     }
 
+    private void UpdateGold(int gold)
+    {
+        _GoldText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Gold].ToString("F0");
+    }
+    private void UpdateSoul(int soul)
+    {
+        _soulText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul].ToString("F0");
+    }
     public void StartDashCooldown()
     {
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);

@@ -10,10 +10,10 @@ public class EquipmentEnhancer : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.U))
-        {
-            UIManager.Instance.ShowPopupUI<UIEquipmentEnhance>();
-        }
+        //if(Input.GetKeyDown(KeyCode.U))
+        //{
+        //    UIManager.Instance.ShowPopupUI<UIEquipmentEnhance>();
+        //}
     }
     public float GetSuccessRate(int level)
     {

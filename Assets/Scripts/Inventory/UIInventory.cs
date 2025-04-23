@@ -109,8 +109,8 @@ public class UIInventory : MonoBehaviour
     /// <param name="slotItemData"></param>
     private void HandleItemOneClick(SlotItemData slotItemData)
     {
-        //장착 무기 
-        if (slotItemData.item.itemType == ItemType.Equipment)
+        //장착 무기 + 유물 
+        if (slotItemData.item.itemType == ItemType.Equipment || slotItemData.item.itemType ==ItemType.Relics)
         {
             if (slotItemData.item.equipType != EquipType.None && slotItemData.item.useType == UseType.None)
             {

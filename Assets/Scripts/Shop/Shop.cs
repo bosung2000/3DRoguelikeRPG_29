@@ -17,6 +17,7 @@ public class Shop : MonoBehaviour
     private PlayerManager playerManager;
 
     public event Action ShopitemChange;
+    [SerializeField]private int RelicsitemCount =5;
 
     private void Start()
     {
@@ -43,7 +44,7 @@ public class Shop : MonoBehaviour
         else if (shoptype ==ShopType.Relic)
         {
             //유물 
-            List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(3);
+            List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(RelicsitemCount);
             foreach (var item in items)
             {
                 SlotItemData slotItemData = new SlotItemData(item, 1);

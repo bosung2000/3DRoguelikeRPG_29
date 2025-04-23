@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
+    private float _lastHitTime = -100f;
 
     private void Awake()
     {
@@ -48,7 +49,9 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
-        _playerStat.Attack();
+        if (Time.time - _lastHitTime < 1 / _playerStat.GetStatValue(PlayerStatType.AttackSpeed)) return;
+        _playerController.SetTrigger("Attack");
+        _lastHitTime = Time.time;
     }
     public void AttackUp()
     {
@@ -68,6 +71,42 @@ public class Player : MonoBehaviour
     public void CriticalDamageUp()
     {
         _playerStat.CriticalDamageUp(0.25f);
+    }
+    public void DashDistanceUp()
+    {
+        _playerStat.DashDistanceUp(5);
+    }
+    public void DashCooldownUp()
+    {
+        _playerStat.DashCooldownUp(1);
+    }
+    public void HitCooldownUp()
+    {
+        _playerStat.HitCooldownUp(1);
+    }
+    public void DMGIncreaseUp()
+    {
+        _playerStat.DMGIncreaseUp(10);
+    }
+    public void HPRecoveryUp()
+    {
+        _playerStat.HPRecoveryUp(5);
+    }
+    public void MPRecoveryUp()
+    {
+        _playerStat.MPRecoveryUp(5);
+    }
+    public void GoldAcquisitionUp()
+    {
+        _playerStat.GoldAcquisitionUp(5);
+    }
+    public void SkillCooldownUp()
+    {
+        _playerStat.SkillCooldownUp(1);
+    }
+    public void AttackSpeedUp()
+    {
+        _playerStat.AttackSpeedUp(0.1f);
     }
     public void Dash()
     {

@@ -9,7 +9,7 @@ public class EnemyIdleState : IEnemyState
 
     public void EnterState(EnemyController controller)
     {
-        Debug.Log("Enemy : Idle 상태 진입");
+        //Debug.Log("Enemy : Idle 상태 진입");
 
         _scanRadius = controller.GetStat(EnemyStatType.ChaseRange);
         _targetLayer = LayerMask.GetMask("Player");
@@ -22,19 +22,19 @@ public class EnemyIdleState : IEnemyState
     }
     public void ExitState(EnemyController controller)
     {
-        Debug.Log("Enemy : Idle 상태 종료");
+        //Debug.Log("Enemy : Idle 상태 종료");
     }
     public void UpdateState(EnemyController controller)
     {
         Collider[] hit = Physics.OverlapSphere(controller.transform.position, _scanRadius, _targetLayer);
         foreach (var hits in hit)
         {
-            Debug.Log($"[Idle 감지] 감지된 오브젝트: {hits.name}, Layer: {LayerMask.LayerToName(hits.gameObject.layer)}");
+            //Debug.Log($"[Idle 감지] 감지된 오브젝트: {hits.name}, Layer: {LayerMask.LayerToName(hits.gameObject.layer)}");
         }
         //추격하기 최소거리에 도달하면 추격상태 전환
         if (hit.Length > 0)
         {
-            Debug.Log("플레이어 발견");
+            //Debug.Log("플레이어 발견");
             controller.ChageState(EnemyStateType.Chase);
         }
     }
