@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private LayerMask _obstacleLayer;
     private TestPlayerUI dashCooldownUI;
 
+    private bool _isAttacking = false;
     private void Awake()
     {
         _anim = GetComponent<Animator>();
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     }
     public void DirectionCheck()
     {
+        if (_isAttacking) return;
+
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
         Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
@@ -117,5 +120,17 @@ public class PlayerController : MonoBehaviour
         {
             _anim.SetTrigger(name);
         }
+    }
+    public void SetFloat(string name, float value)
+    {
+        _anim.SetFloat(name, value);
+    }
+    public void Attacking()
+    {
+        _isAttacking = true;
+    }
+    public void NotAttacking()
+    {
+        _isAttacking = false;
     }
 }

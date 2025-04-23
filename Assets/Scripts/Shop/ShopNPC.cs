@@ -13,20 +13,13 @@ public class ShopNPC : MonoBehaviour
         playerManager =GameManager.Instance.PlayerManager;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        //if (other.CompareTag("Player"))
-        //{
-        //    // 상호작용 가능 UI 표시
-        //    UIManager.Instance.ShowInteractionUI("상점 열기 (E)");
-        //}
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
+        if (collision.transform.CompareTag("Player"))
         {
+
             OpenShop();
+            Time.timeScale = 0;
         }
     }
 

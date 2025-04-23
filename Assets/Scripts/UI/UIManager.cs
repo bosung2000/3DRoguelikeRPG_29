@@ -203,10 +203,10 @@ public class UIManager : MonoBehaviour
         {
             ClosePopupUI();
         }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ShowPopupUI<UIPopupInventory>();
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    ShowPopupUI<UIPopupInventory>();
+        //}
     }
 
     public int GetActivePopupCount()

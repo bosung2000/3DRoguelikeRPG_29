@@ -25,6 +25,10 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         currency = GetComponent<CurrencyManager>();
+    }
+
+    private void Start()
+    {
         // 골드 기본값 
         if (currency != null)
         {
@@ -32,14 +36,9 @@ public class PlayerManager : MonoBehaviour
             {
                 currency.init();  //딕셔너리 강제 초기화
             }
-
-            currency.AddCurrency(CurrencyType.Gold, 9000);  //골드추가
+            currency.AddCurrency(CurrencyType.Gold, 9000);  //초기골드추가
+            currency.AddCurrency(CurrencyType.Soul, 0);  //초기소울추가
         }
-    }
-
-    private void Start()
-    {
-        init();
     }
 
     public void init()
