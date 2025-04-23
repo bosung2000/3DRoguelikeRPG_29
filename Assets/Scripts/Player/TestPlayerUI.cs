@@ -72,10 +72,11 @@ public class TestPlayerUI : MonoBehaviour
         while (remaining > 0)
         {
             Image img = _DashBtn.GetComponent<Image>();
-            img.color = new Color(img.color.r, img.color.g, img.color.b, 1 - (remaining / total));
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 0.5f);
             _DashCooldownText.text = $"{remaining:F1}";
             remaining -= Time.deltaTime;
             yield return null;
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 1f);
         }
 
         _DashCooldownText.text = "";

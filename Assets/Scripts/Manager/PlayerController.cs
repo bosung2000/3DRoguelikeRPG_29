@@ -40,19 +40,22 @@ public class PlayerController : MonoBehaviour
 
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+            float moveSpeed = _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
 
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+            Vector3 velocity = inputDir * moveSpeed;
+            velocity.y = _rb.velocity.y;
+            _rb.velocity = velocity;
+
             SetBool("Run", true);
         }
         else
         {
-            _rb.velocity = Vector3.zero;
+            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             SetBool("Run", false);
         }
     }
     public void Dash()
     {
-        SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -61,6 +64,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("쿨타임입니다");
             return;
         }
+        SetTrigger("Dash");
 
         Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
         Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
