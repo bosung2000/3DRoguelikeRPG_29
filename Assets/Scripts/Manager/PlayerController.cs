@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
-        _obstacleLayer = LayerMask.GetMask("UI");
+        _obstacleLayer = LayerMask.GetMask("Ground");
         _statUI = FindObjectOfType<StatUI>();
         
         _lastMoveDirection = transform.forward;
