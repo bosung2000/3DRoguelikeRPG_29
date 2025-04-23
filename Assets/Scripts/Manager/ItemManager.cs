@@ -212,6 +212,9 @@ public class ItemManager : MonoBehaviour
     //아이템 판매시 list에서 추가
     public void AddItemList(ItemData itemData)
     {
+        // 강화 수치 초기화
+        ResetEnhancement(itemData);
+        
         if (itemData.itemType == ItemType.Equipment)
         {
             if (!allEquipItems.Contains(itemData))
@@ -230,6 +233,15 @@ public class ItemManager : MonoBehaviour
         {
             Debug.Log("잘못된 아이템 입니다.");
         }
+    }
+    
+    // 아이템 강화 수치 초기화 메서드
+    private void ResetEnhancement(ItemData itemData)
+    {
+        if (itemData == null) return;
+        
+        // ItemData 클래스의 ResetEnhancement 메서드 호출
+        itemData.ResetEnhancement();
     }
 
     //아이템 구매시 list에서 제거 
