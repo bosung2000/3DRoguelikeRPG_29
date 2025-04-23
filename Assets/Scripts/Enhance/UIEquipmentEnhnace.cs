@@ -18,7 +18,7 @@ public class UIEquipmentEnhance : PopupUI
     public Image itemIcon;
     public Button enhanceButton;
 
-    public EquipmentEnhancer enhancer;
+    public EnhanceManager enhancer;
     public PlayerManager playerManager;
     private UIHUD uIHUD;
 
@@ -27,7 +27,7 @@ public class UIEquipmentEnhance : PopupUI
     private void Awake()
     {
         playerManager = FindObjectOfType<PlayerManager>();
-        enhancer = FindObjectOfType<EquipmentEnhancer>();
+        enhancer = FindObjectOfType<EnhanceManager>();
         uIHUD = FindObjectOfType<UIHUD>();
     }
 
@@ -46,7 +46,8 @@ public class UIEquipmentEnhance : PopupUI
     private void OnClosebtn()
     {
         uIHUD.OnMenu();
-        OnCloseButtonClick();
+        base.OnCloseButtonClick();
+        
     }
 
     private void UpdateUI()
