@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
     private LayerMask _obstacleLayer;
-    private TestPlayerUI dashCooldownUI;
+    private StatUI _statUI;
 
     private bool _isAttacking = false;
     private Vector3 _lastMoveDirection;
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
         _obstacleLayer = LayerMask.GetMask("UI");
-        dashCooldownUI = FindObjectOfType<TestPlayerUI>();
+        _statUI = FindObjectOfType<StatUI>();
         
         _lastMoveDirection = transform.forward;
     }
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(TumbleRoutine(target, dashDuration));
         _lastTumbleTime = Time.time;
-        dashCooldownUI.StartDashCooldown();
+        _statUI.StartDashCooldown();
     }
 
     private IEnumerator TumbleRoutine(Vector3 target, float duration)

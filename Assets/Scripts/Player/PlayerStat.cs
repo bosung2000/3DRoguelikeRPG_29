@@ -19,9 +19,9 @@ public interface BaseEntity
 public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 {
     [SerializeField] PlayerStatData statData;
-    public PlayerStat _playerStat;
+    public PlayerStat playerStat;
     [SerializeField] PlayerController _playerController;
-    [SerializeField] TestWeapon _testWeapon;
+    [SerializeField] Weapon _Weapon;
 
     private float _lastHitTime = -100f;
 
@@ -33,9 +33,9 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     //private Dictionary<PlayerStatType, float> _totalStats = new Dictionary<PlayerStatType, float>();
     private void Awake()
     {
-        _playerStat = GetComponent<PlayerStat>();
+        playerStat = GetComponent<PlayerStat>();
         _playerController = GetComponent<PlayerController>();
-        _testWeapon = GetComponentInChildren<TestWeapon>();
+        _Weapon = GetComponentInChildren<Weapon>();
         InitializeStats();
     }
     private void Start()
@@ -320,11 +320,11 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     }
     public void EnableCollider()
     {
-        _testWeapon.EnableCollider();
+        _Weapon.EnableCollider();
     }
 
     public void DisableCollider()
     {
-        _testWeapon.DisableCollider();
+        _Weapon.DisableCollider();
     }
 }

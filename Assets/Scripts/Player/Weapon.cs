@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class TestWeapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     [SerializeField] PlayerStat _playerStat;
     [SerializeField] Collider _weaponCollider;
