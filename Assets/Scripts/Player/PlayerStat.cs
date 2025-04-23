@@ -6,7 +6,7 @@ using UnityEngine;
 public interface BaseEntity
 {
     void MaxHPUp(float maxHP);
-    void Healing(int heal);
+    void Healing(float heal);
     void MaxMPUp(float maxMP);
     void BaseMPUp(float currentMP);
     void MoveSpeedUp(float speed);
@@ -22,8 +22,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] TestWeapon _testWeapon;
-    private bool _isAttacking = false;
-    public bool IsAttacking => _isAttacking;
 
     private float _lastHitTime = -100f;
 
@@ -143,7 +141,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         {
             _equipmentBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
 
     /// <summary>
@@ -155,7 +153,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         {
             _relicBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
 
     /// <summary>
@@ -169,17 +167,17 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             _relicBonuses[type] = 0f;
             _buffBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
     public void MaxHPUp(float value)
     {
         ModifyStat(PlayerStatType.MaxHP, value);
         ModifyStat(PlayerStatType.HP, value);
     }
-    public void Healing(int value)
+    public void Healing(float value)
     {
-        int maxHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.MaxHP));
-        int currentHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.HP));
+        float maxHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.MaxHP));
+        float currentHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.HP));
         SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
     }
     public void MaxMPUp(float value)
@@ -200,16 +198,17 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     }
     public void Attack(Enemy enemy)
     {
-        if (_isAttacking) return;
-
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
+        float absorp = GetStatValue(PlayerStatType.absorp);
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage*0.01f : baseAttack;
-
         enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+        absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
+        Healing(absorp);
+
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }
     public void TakeDamage(int damage)
@@ -327,13 +326,5 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void DisableCollider()
     {
         _testWeapon.DisableCollider();
-    }
-    public void Attacking()
-    {
-        _isAttacking = true;
-    }
-    public void NotAttacking()
-    {
-        _isAttacking = false;
     }
 }

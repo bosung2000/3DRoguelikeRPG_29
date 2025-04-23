@@ -8,7 +8,7 @@ public class UIStat : MonoBehaviour
     [SerializeField] private TextMeshProUGUI StatsSlotPrefab;
     [SerializeField] private Transform SlotParent;
     private List<TextMeshProUGUI> StatSlotList;
-
+    
     PlayerStat playerStat;
     private void Awake()
     {
@@ -16,8 +16,17 @@ public class UIStat : MonoBehaviour
         playerStat.OnStatsChanged += OnupdateStat;
 
     }
+    private void Start()
+    {
+        
+    }
 
     private void OnEnable()
+    {
+        initupdatestatui();
+    }
+
+    private void initupdatestatui()
     {
         OnupdateStat(playerStat);
     }

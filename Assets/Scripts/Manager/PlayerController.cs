@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private LayerMask _obstacleLayer;
     private TestPlayerUI dashCooldownUI;
 
+    private bool _isAttacking = false;
+    private Vector3 _lastMoveDirection;
+
     private void Awake()
     {
         _anim = GetComponent<Animator>();
@@ -22,36 +25,55 @@ public class PlayerController : MonoBehaviour
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
         _obstacleLayer = LayerMask.GetMask("UI");
         dashCooldownUI = FindObjectOfType<TestPlayerUI>();
+        
+        _lastMoveDirection = transform.forward;
     }
+
     public void DirectionCheck()
     {
-        if (_playerStat.IsAttacking) return;
+        if (_isAttacking) return;
 
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
         Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
         Vector3 inputDir = InputJoystick + InputKeyboard;
+        
 
         if (inputDir.sqrMagnitude > 0.05f)
         {
             inputDir = inputDir.normalized;
+            _lastMoveDirection = inputDir;
 
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+            transform.rotation = targetRotation;
 
-            _rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+            Vector3 moveDir = inputDir;
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit slopeHit, 1.5f))
+            {
+                Vector3 slopeNormal = slopeHit.normal;
+                Vector3 projectedDir = Vector3.ProjectOnPlane(inputDir, slopeNormal).normalized;
+                moveDir = projectedDir;
+            }
+
+
+            _rb.velocity = new Vector3(inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed), 
+                                      _rb.velocity.y, 
+                                      inputDir.z * _playerStat.GetStatValue(PlayerStatType.MoveSpeed));
+            //_rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
             SetBool("Run", true);
         }
         else
         {
-            _rb.velocity = Vector3.zero;
+            _rb.velocity = new Vector3(0,_rb.velocity.y,0);
+            _rb.angularVelocity = Vector3.zero;
             SetBool("Run", false);
         }
     }
+
     public void Dash()
     {
-        SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -60,13 +82,14 @@ public class PlayerController : MonoBehaviour
             Debug.Log("쿨타임입니다");
             return;
         }
+        SetTrigger("Dash");
 
         Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
         Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 dir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
         if (dir.sqrMagnitude < 0.01f)
-            dir = transform.forward;
+            dir = _lastMoveDirection;
 
         dir = dir.normalized;
 
@@ -123,5 +146,13 @@ public class PlayerController : MonoBehaviour
     public void SetFloat(string name, float value)
     {
         _anim.SetFloat(name, value);
+    }
+    public void Attacking()
+    {
+        _isAttacking = true;
+    }
+    public void NotAttacking()
+    {
+        _isAttacking = false;
     }
 }

@@ -30,6 +30,7 @@ public class UIPopupInventory : PopupUI
     private EquipMananger equipMananger;
     private InventoryManager inventoryMananger;
     private PlayerManager playerManager;
+    
     private UIHUD uIHUD;
     public enum InventoryTabType
     {
@@ -50,6 +51,7 @@ public class UIPopupInventory : PopupUI
         equipMananger = GameManager.Instance.EquipMananger;
         inventoryMananger = GameManager.Instance.InventoryManager;
         playerManager = GameManager.Instance.PlayerManager;
+        
         uIHUD =FindObjectOfType<UIHUD>();
         uIInventory.UpdateInventory(inventoryMananger);
 
@@ -82,6 +84,8 @@ public class UIPopupInventory : PopupUI
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
         inventoryMananger.OnSlotChanged += HandleSlotChanged;
         inventoryMananger.OnSlotChanged += RefreshInventory;
+        
+
 
     }
 
@@ -207,9 +211,9 @@ public class UIPopupInventory : PopupUI
         Debug.Log("인벤토리 닫힘");
         //메뉴창도 닫아주기
         uIHUD.OnMenu();
+        base.OnCloseButtonClick();
         UIManager.Instance.CloseAllPopupUI();
         // 부모 클래스의 메서드 호출
-        //base.OnCloseButtonClick();
     }
 
     protected override void Clear()

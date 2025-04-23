@@ -12,6 +12,7 @@ public class TestPlayerUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI _GoldText;
     [SerializeField] TextMeshProUGUI _soulText;
 
+    [SerializeField] Button _DashBtn;
     [SerializeField] TextMeshProUGUI _maxHPText;
     [SerializeField] TextMeshProUGUI _hpText;
     [SerializeField] TextMeshProUGUI _maxMPText;
@@ -43,8 +44,6 @@ public class TestPlayerUI : MonoBehaviour
         //_dmgReductionText.text = playerStat.GetStatValue(PlayerStatType.DMGReduction).ToString("F0");  
         //_criticalChanceText.text = playerStat.GetStatValue(PlayerStatType.CriticalChance).ToString("F0");  
         //_criticalDamageText.text = playerStat.GetStatValue(PlayerStatType.CriticalDamage).ToString("F0");
-        //UpdateGold(0);
-        //UpdateSoul(0);
     }
 
     private void UpdateGold(int gold)
@@ -72,12 +71,15 @@ public class TestPlayerUI : MonoBehaviour
 
         while (remaining > 0)
         {
+            Image img = _DashBtn.GetComponent<Image>();
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 0.5f);
             _DashCooldownText.text = $"{remaining:F1}";
             remaining -= Time.deltaTime;
             yield return null;
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 1f);
         }
 
-        _DashCooldownText.text = "Dash";
+        _DashCooldownText.text = "";
     }
 }
 
