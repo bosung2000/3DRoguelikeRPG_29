@@ -34,7 +34,7 @@ public class UISelectedItem : PopupUI
     private void OncloseBtn()
     {
         UIManager.Instance.ClosePopupUI<UIEquipedItem>();
-        OnCloseButtonClick();
+        base.OnCloseButtonClick();
     }
 
     public void Initialize()

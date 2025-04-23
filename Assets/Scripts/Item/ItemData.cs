@@ -161,4 +161,19 @@ public class ItemData : ScriptableObject
                 equipType = EquipType.None;
         }
     }
+
+    /// <summary>
+    /// 아이템의 강화 수치를 초기화합니다. 아이템 판매나 거래 시 호출됩니다.
+    /// </summary>
+    public void ResetEnhancement()
+    {
+        // 장비 아이템인 경우에만 강화 수치 초기화
+        if (itemType == ItemType.Equipment)
+        {
+            enhancementLevel = 0;
+        }
+        // 유물은 이미 enhancementLevel이 0으로 고정되어 있으므로 별도 처리 불필요
+        
+        // 추가적인 초기화 로직이 필요한 경우 여기에 구현
+    }
 }
