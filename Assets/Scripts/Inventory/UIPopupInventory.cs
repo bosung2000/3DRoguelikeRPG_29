@@ -30,6 +30,7 @@ public class UIPopupInventory : PopupUI
     private EquipMananger equipMananger;
     private InventoryManager inventoryMananger;
     private PlayerManager playerManager;
+    private EnhanceManager equipmentEnhancer;
     private UIHUD uIHUD;
     public enum InventoryTabType
     {
@@ -50,6 +51,7 @@ public class UIPopupInventory : PopupUI
         equipMananger = GameManager.Instance.EquipMananger;
         inventoryMananger = GameManager.Instance.InventoryManager;
         playerManager = GameManager.Instance.PlayerManager;
+        equipmentEnhancer =GameManager.Instance.EnhanceManager;
         uIHUD =FindObjectOfType<UIHUD>();
         uIInventory.UpdateInventory(inventoryMananger);
 
@@ -82,6 +84,8 @@ public class UIPopupInventory : PopupUI
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
         inventoryMananger.OnSlotChanged += HandleSlotChanged;
         inventoryMananger.OnSlotChanged += RefreshInventory;
+        equipmentEnhancer.OnSucessEnhancs += RefreshInventory;
+
 
     }
 

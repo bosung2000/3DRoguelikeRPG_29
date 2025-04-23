@@ -37,8 +37,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private EquipMananger _equipMananger;
     public EquipMananger EquipMananger => _equipMananger;
+
     [SerializeField] private ItemManager _itemManager;
     public ItemManager ItemManager => _itemManager;
+
+    [SerializeField] private EnhanceManager _enhanceManager;
+    public EnhanceManager EnhanceManager =>_enhanceManager;
+
     private void Awake()
     {
         //인스턴스가 존재하는지 확인 + 인스턴스가 다른지 확인 

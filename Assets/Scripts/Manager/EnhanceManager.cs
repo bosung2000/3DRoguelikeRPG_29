@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipmentEnhancer : MonoBehaviour
+public class EnhanceManager : MonoBehaviour
 {
     [Header("강화 확률 설정")]
     [SerializeField] private List<float> enhancementSuccessRates;
     [SerializeField] private float minimumSuccessRate = 0.05f;
     [SerializeField] private float fallbackRateDropPerLevel = 0.1f;
+
+    public event Action OnSucessEnhancs;
 
     private void Update()
     {
@@ -54,9 +57,11 @@ public class EquipmentEnhancer : MonoBehaviour
         playerManager.Currency.AddCurrency(CurrencyType.Gold, -(int)cost);
         float successRate = GetSuccessRate(equipment.enhancementLevel);
 
-        if (Random.value <= successRate)
+        if (UnityEngine.Random.value <= successRate)
         {
             equipment.enhancementLevel++;
+            //강화 성공 부분에 playerstat
+            OnSucessEnhancs?.Invoke();
             Debug.Log($"강화 성공! → +{equipment.enhancementLevel}");
             return true;
         }
