@@ -141,7 +141,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         {
             _equipmentBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         {
             _relicBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             _relicBonuses[type] = 0f;
             _buffBonuses[type] = 0f;
         }
-        OnStatsChanged?.Invoke(this);
+        OnStatChanged();
     }
     public void MaxHPUp(float value)
     {

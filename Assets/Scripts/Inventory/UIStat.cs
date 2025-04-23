@@ -8,8 +8,7 @@ public class UIStat : MonoBehaviour
     [SerializeField] private TextMeshProUGUI StatsSlotPrefab;
     [SerializeField] private Transform SlotParent;
     private List<TextMeshProUGUI> StatSlotList;
-    private EnhanceManager enhanceManager;
-
+    
     PlayerStat playerStat;
     private void Awake()
     {
@@ -19,8 +18,7 @@ public class UIStat : MonoBehaviour
     }
     private void Start()
     {
-        enhanceManager = GameManager.Instance.EnhanceManager;
-        enhanceManager.OnSucessEnhancs += initupdatestatui;
+        
     }
 
     private void OnEnable()

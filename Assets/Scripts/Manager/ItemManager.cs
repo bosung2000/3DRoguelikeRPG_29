@@ -50,23 +50,136 @@ public class ItemManager : MonoBehaviour
         allEquipItems.Clear();
         allrelicsItems.Clear();
 
-        // 로드된 장비 아이템 추가 (원본 복사본 생성)
-        foreach (var originalItem in loadedEquipItems)
+        // 원본 아이템 추가 - 일반 장비
+        foreach (var original in loadedEquipItems)
         {
-            // 아이템 인스턴스 생성 (원본을 직접 수정하지 않기 위해)
-            ItemData itemInstance = CreateItemInstanceFromOriginal(originalItem);
-            allEquipItems.Add(itemInstance);
+            // 아이템 복사본 생성
+            ItemData copy = CreateItemCopy(original);
+            if (copy != null)
+            {
+                allEquipItems.Add(copy);
+            }
         }
 
-        // 로드된 유물 아이템 추가 - 별도 리스트에 보관 (원본 복사본 생성)
-        foreach (var originalRelic in loadedRelicsItems)
+        // 원본 아이템 추가 - 유물
+        foreach (var original in loadedRelicsItems)
         {
-            // 유물 인스턴스 생성
-            ItemData relicInstance = CreateItemInstanceFromOriginal(originalRelic);
-            allrelicsItems.Add(relicInstance);
+            // 유물 복사본 생성
+            ItemData copy = CreateItemCopy(original);
+            if (copy != null)
+            {
+                allrelicsItems.Add(copy);
+            }
+        }
+
+        // 중복 ID 체크
+        Dictionary<int, string> idCheck = new Dictionary<int, string>();
+        
+        // 일반 아이템 ID 체크
+        foreach (var item in allEquipItems)
+        {
+            if (!idCheck.ContainsKey(item.id))
+            {
+                idCheck.Add(item.id, $"{item.itemName} (일반 장비)");
+            }
+            else
+            {
+                Debug.LogWarning($"중복된 아이템 ID 발견: {item.id}, 이름: {item.itemName}, 이미 존재: {idCheck[item.id]}");
+            }
+        }
+        
+        // 유물 아이템 ID 체크
+        foreach (var item in allrelicsItems)
+        {
+            if (!idCheck.ContainsKey(item.id))
+            {
+                idCheck.Add(item.id, $"{item.itemName} (유물)");
+            }
+            else
+            {
+                Debug.LogWarning($"중복된 아이템 ID 발견: {item.id}, 이름: {item.itemName}, 이미 존재: {idCheck[item.id]}");
+            }
         }
 
         Debug.Log($"총 {allEquipItems.Count}개의 일반 아이템과 {allrelicsItems.Count}개의 유물 아이템이 로드되었습니다.");
+    }
+    
+    // 아이템의 새 복사본 생성 (원본 아이템 기반)
+    private ItemData CreateItemCopy(ItemData original)
+    {
+        if (original == null) return null;
+
+        // ScriptableObject 복사
+        var copy = ScriptableObject.CreateInstance<ItemData>();
+        copy.id = original.id;
+        copy.itemType = original.itemType;
+        copy.equipType = original.equipType;
+        copy.useType = original.useType;
+        copy.itemName = original.itemName;
+        copy.description = original.description;
+        copy.Tier = original.Tier;
+        copy.gold = original.gold;
+        copy.Icon = original.Icon;
+        copy.itemObj = original.itemObj;
+
+        // 옵션 복사
+        if (original.itemType == ItemType.Equipment)
+        {
+            copy.options = new List<ItemOption>();
+            foreach (var option in original.options)
+            {
+                var optionCopy = new ItemOption
+                {
+                    type = option.type,
+                    baseValue = option.baseValue,
+                    increasePerLevel = option.increasePerLevel
+                };
+                copy.options.Add(optionCopy);
+            }
+            
+            copy.enhancementLevel = 0; // 강화 수치 초기화
+            copy.maxEnhancementLevel = original.maxEnhancementLevel;
+            copy.enhancementCost = original.enhancementCost;
+            copy.enhancementCostMultiplier = original.enhancementCostMultiplier;
+        }
+        else if (original.itemType == ItemType.Relics)
+        {
+            copy.options = new List<ItemOption>();
+            foreach (var option in original.options)
+            {
+                var optionCopy = new ItemOption
+                {
+                    type = option.type,
+                    baseValue = option.baseValue,
+                    increasePerLevel = option.increasePerLevel
+                };
+                copy.options.Add(optionCopy);
+            }
+            
+            copy.enhancementLevel = 0;
+            copy.maxEnhancementLevel = 0;
+        }
+        else if (original.itemType == ItemType.Consumable)
+        {
+            copy.consumableEffects = new List<ConsumableEffect>();
+            foreach (var effect in original.consumableEffects)
+            {
+                var effectCopy = new ConsumableEffect
+                {
+                    type = effect.type,
+                    value = effect.value,
+                    duration = effect.duration
+                };
+                copy.consumableEffects.Add(effectCopy);
+            }
+            
+            copy.maxStack = original.maxStack;
+        }
+
+        // 초기화 메서드 호출하여 기본 상태로 설정
+        copy.Initialize();
+
+        return copy;
     }
 
     /// <summary>
@@ -270,6 +383,7 @@ public class ItemManager : MonoBehaviour
             Debug.Log("잘못된 아이템 입니다.");
         }
     }
+
     // 아이템 생성 (새로운 인스턴스)
     public ItemData CreateItemInstance(int id)
     {
@@ -277,86 +391,7 @@ public class ItemManager : MonoBehaviour
         ItemData original = GetItemById(id);
         if (original == null) return null;
 
-        // ScriptableObject 복사
-        var newItem = ScriptableObject.CreateInstance<ItemData>();
-        newItem.id = original.id;
-        newItem.itemType = original.itemType;
-        newItem.equipType = original.equipType;
-        newItem.useType = original.useType;
-        newItem.itemName = original.itemName;
-        newItem.description = original.description;
-        newItem.Tier = original.Tier;
-        newItem.gold = original.gold;
-        newItem.Icon = original.Icon;
-        newItem.itemObj = original.itemObj;
-
-        // 옵션 복사
-        if (original.itemType == ItemType.Equipment)
-        {
-            newItem.options = new List<ItemOption>(original.options);
-            newItem.enhancementLevel = 0;
-            newItem.maxEnhancementLevel = original.maxEnhancementLevel;
-            newItem.enhancementCost = original.enhancementCost;
-            newItem.enhancementCostMultiplier = original.enhancementCostMultiplier;
-        }
-        else if (original.itemType == ItemType.Relics)
-        {
-            newItem.options = new List<ItemOption>(original.options);
-            // 유물은 강화 불가능
-            newItem.enhancementLevel = 0;
-            newItem.maxEnhancementLevel = 0;
-        }
-        else if (original.itemType == ItemType.Consumable)
-        {
-            newItem.consumableEffects = new List<ConsumableEffect>(original.consumableEffects);
-            newItem.maxStack = original.maxStack;
-        }
-
-        return newItem;
-    }
-
-    /// <summary>
-    /// 원본 아이템을 기반으로 새 인스턴스를 생성합니다.
-    /// </summary>
-    private ItemData CreateItemInstanceFromOriginal(ItemData original)
-    {
-        if (original == null) return null;
-
-        // ScriptableObject 복사
-        var newItem = ScriptableObject.CreateInstance<ItemData>();
-        newItem.id = original.id;
-        newItem.itemType = original.itemType;
-        newItem.equipType = original.equipType;
-        newItem.useType = original.useType;
-        newItem.itemName = original.itemName;
-        newItem.description = original.description;
-        newItem.Tier = original.Tier;
-        newItem.gold = original.gold;
-        newItem.Icon = original.Icon;
-        newItem.itemObj = original.itemObj;
-
-        // 옵션 복사
-        if (original.itemType == ItemType.Equipment)
-        {
-            newItem.options = new List<ItemOption>(original.options);
-            newItem.enhancementLevel = 0; // 강화 수치 초기화
-            newItem.maxEnhancementLevel = original.maxEnhancementLevel;
-            newItem.enhancementCost = original.enhancementCost;
-            newItem.enhancementCostMultiplier = original.enhancementCostMultiplier;
-        }
-        else if (original.itemType == ItemType.Relics)
-        {
-            newItem.options = new List<ItemOption>(original.options);
-            // 유물은 강화 불가능
-            newItem.enhancementLevel = 0;
-            newItem.maxEnhancementLevel = 0;
-        }
-        else if (original.itemType == ItemType.Consumable)
-        {
-            newItem.consumableEffects = new List<ConsumableEffect>(original.consumableEffects);
-            newItem.maxStack = original.maxStack;
-        }
-
-        return newItem;
+        // CreateItemCopy 메서드를 사용하여 아이템 복사
+        return CreateItemCopy(original);
     }
 }

@@ -61,6 +61,14 @@ public class EnhanceManager : MonoBehaviour
         {
             equipment.enhancementLevel++;
             //강화 성공 부분에 playerstat
+            if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(equipment.equipType,out ItemData Equipeditem))
+            {
+                if (Equipeditem.id ==equipment.id)
+                {
+                    //강화된 아이템이 장착된 아이템이라는뜻 
+                    GameManager.Instance.EquipMananger.RecalculateAllStats();
+                }
+            }
             OnSucessEnhancs?.Invoke();
             Debug.Log($"강화 성공! → +{equipment.enhancementLevel}");
             return true;
