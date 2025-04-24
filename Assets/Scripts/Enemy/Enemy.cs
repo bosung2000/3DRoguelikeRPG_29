@@ -99,30 +99,6 @@ public class Enemy : MonoBehaviour
     {
         SpawnCurrency(_goldPrefab, (int)Stat.GetStatValue(EnemyStatType.Gold));
         SpawnCurrency(_soulPrefab, (int)Stat.GetStatValue(EnemyStatType.Soul));
-
-        /*if (dropGold > 0 && _goldPrefab != null)
-        {
-            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            GameObject goldObj = Instantiate(_goldPrefab, dropPos, Quaternion.identity);
-
-            CurrencyData currencyData = goldObj.GetComponent<CurrencyData>();
-            if(currencyData != null)
-            {
-                currencyData.SetAmount(dropGold);
-            }
-        }
-
-        if (dropSoul > 0 && _soulPrefab != null)
-        {
-            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            GameObject soulObj =  Instantiate(_soulPrefab, dropPos, Quaternion.identity);
-
-            CurrencyData currencyData = soulObj.GetComponent<CurrencyData>();
-            if (currencyData != null)
-            {
-                currencyData.SetAmount(dropSoul);
-            }
-        }*/
     }
 
     private void SpawnCurrency(GameObject prefab, int amount)
