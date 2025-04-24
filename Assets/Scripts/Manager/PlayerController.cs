@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         if (_rb != null)
         {
             _rb.drag = 5f; // 수평 저항값 설정
-            _rb.angularDrag = 5f; // 회전 저항값 설정
+            _rb.angularDrag = 100f; // 회전 저항값 설정
             _rb.interpolation = RigidbodyInterpolation.Interpolate; // 부드러운 움직임
         }
     }
