@@ -46,8 +46,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private UIManager _uiManager;
     public UIManager UIManager => _uiManager;
-    
 
+    [SerializeField] private SkillManager _skillManager;
+    public SkillManager SkillManager => _skillManager;
     private void Awake()
     {
         //인스턴스가 존재하는지 확인 + 인스턴스가 다른지 확인 
