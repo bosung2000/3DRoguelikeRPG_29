@@ -97,15 +97,15 @@ public class Enemy : MonoBehaviour
 
     private void DropCurrency()
     {
-        int dropGold = (int)Stat.GetStatValue(EnemyStatType.Gold);
-        int dropSoul =  (int)Stat.GetStatValue(EnemyStatType.Soul);
+        SpawnCurrency(_goldPrefab, (int)Stat.GetStatValue(EnemyStatType.Gold));
+        SpawnCurrency(_soulPrefab, (int)Stat.GetStatValue(EnemyStatType.Soul));
 
-        if(dropGold > 0 && _goldPrefab != null)
+        /*if (dropGold > 0 && _goldPrefab != null)
         {
             Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            Instantiate(_goldPrefab, dropPos, Quaternion.identity);
+            GameObject goldObj = Instantiate(_goldPrefab, dropPos, Quaternion.identity);
 
-            CurrencyData currencyData = _goldPrefab.GetComponent<CurrencyData>();
+            CurrencyData currencyData = goldObj.GetComponent<CurrencyData>();
             if(currencyData != null)
             {
                 currencyData.SetAmount(dropGold);
@@ -115,14 +115,29 @@ public class Enemy : MonoBehaviour
         if (dropSoul > 0 && _soulPrefab != null)
         {
             Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            Instantiate(_soulPrefab, dropPos, Quaternion.identity);
+            GameObject soulObj =  Instantiate(_soulPrefab, dropPos, Quaternion.identity);
 
-            CurrencyData currencyData = _soulPrefab.GetComponent<CurrencyData>();
+            CurrencyData currencyData = soulObj.GetComponent<CurrencyData>();
             if (currencyData != null)
             {
                 currencyData.SetAmount(dropSoul);
             }
+        }*/
+    }
+
+    private void SpawnCurrency(GameObject prefab, int amount)
+    {
+        if (prefab == null || amount <= 0) return;
+
+        Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
+        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity);
+
+        CurrencyData currencyData = Obj.GetComponent<CurrencyData>();
+        if (currencyData != null)
+        {
+            currencyData.SetAmount(amount);
         }
+
     }
 
     public void OnDeadAnimationEnd()
