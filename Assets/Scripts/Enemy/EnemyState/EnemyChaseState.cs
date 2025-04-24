@@ -62,7 +62,7 @@ public class EnemyChaseState : IEnemyState
         //플레이어와 거리가 가까워지면 공격 상태로 전환
         if (distance <= attackRange)
         {
-            controller.ChageState(EnemyStateType.Attack);
+            controller.ChageState(EnemyStateType.KeepDistance);
             return;
         }
         controller.agent.SetDestination(_target.position);
