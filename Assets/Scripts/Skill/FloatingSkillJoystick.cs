@@ -44,23 +44,27 @@ public class FloatingSkillJoystick : Joystick
             inputDir = inputDir.normalized;
             FixedInput = inputDir;
         }
-        if (skillManager.enabledSkills[index].skill == null)
+        
+        // 안전하게 스킬 접근
+        Skill currentSkill = skillManager.GetSkillAtSlot(index);
+        
+        if (currentSkill == null)
         {
             Debug.Log($"{index + 1}번째의 조이스틱에 스킬이 없습니다.");
         }
-        Debug.Log($"현재 방향:{FixedInput}");
-        //해당 방향에 스킬 시전
-        skillManager.OnSkillClick(skillManager.enabledSkills[index].skill, FixedInput);
-        //이후 해당 스킬에 쿨타임 적용
-
-        if (skillManager.enabledSkills[index].skill != null)
-        {
-            skillManager.enabledSkills[index].skill.projectilePrefabs.GetComponent<SkillProjectile>().ShootBullet(skillManager.player.transform.position, inputDir);
-        }
         else
         {
-            Debug.Log("스킬매니저의 enabledSkills가 비어 있습니다.");
+            Debug.Log($"현재 방향:{FixedInput}");
+            //해당 방향에 스킬 시전
+            skillManager.OnSkillClick(currentSkill, FixedInput);
+            
+            //투사체 생성 (스킬에 투사체가 있는 경우)
+            if (currentSkill.projectilePrefabs != null)
+            {
+                currentSkill.projectilePrefabs.GetComponent<SkillProjectile>().ShootBullet(skillManager.player.transform.position, inputDir);
+            }
         }
+        
         background.gameObject.SetActive(false);
         base.OnPointerUp(eventData);
     }
