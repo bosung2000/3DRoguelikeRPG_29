@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
 
     public void Dash()
     {
+        _isAttacking = false;
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
