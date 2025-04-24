@@ -2268,8 +2268,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5880290126817839315}
   - component: {fileID: 5880290126824744765}
-  - component: {fileID: 5880290126824744770}
   - component: {fileID: 5880290126824744769}
+  - component: {fileID: 5880290126824744770}
   - component: {fileID: 5880290126824744768}
   - component: {fileID: 5880290126824744767}
   - component: {fileID: 5880290126824744766}
@@ -3579,7 +3579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statData: {fileID: 11400000, guid: 0e73e0b7c364caa4e924062601b3b565, type: 2}
   _playerStat: {fileID: 0}
-  _playerController: {fileID: 5880290126824744768}
+  _playerController: {fileID: 0}
 --- !u!114 &5880290126824744770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3592,9 +3592,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09cd96357c103d4c8dcaf09ecc2682a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 0e73e0b7c364caa4e924062601b3b565, type: 2}
+  _statData: {fileID: 0}
   playerStat: {fileID: 0}
-  _playerController: {fileID: 5880290126824744768}
+  _playerController: {fileID: 0}
   _Weapon: {fileID: 0}
 --- !u!137 &5880290126829050363
 SkinnedMeshRenderer:
