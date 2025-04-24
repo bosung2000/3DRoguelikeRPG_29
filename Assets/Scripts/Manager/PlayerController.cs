@@ -12,10 +12,12 @@ public class PlayerController : MonoBehaviour
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
     private LayerMask _obstacleLayer;
-    private TestPlayerUI dashCooldownUI;
+    private StatUI _statUI;
 
     private bool _isAttacking = false;
     private Vector3 _lastMoveDirection;
+    Vector3 inputDir;
+    
 
     private void Awake()
     {
@@ -23,10 +25,18 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
-        _obstacleLayer = LayerMask.GetMask("UI");
-        dashCooldownUI = FindObjectOfType<TestPlayerUI>();
-        
+        _obstacleLayer = LayerMask.GetMask("Ground");
+        _statUI = FindObjectOfType<StatUI>();
+
         _lastMoveDirection = transform.forward;
+        
+        // Rigidbody 설정 추가
+        if (_rb != null)
+        {
+            _rb.drag = 5f; // 수평 저항값 설정
+            _rb.angularDrag = 100f; // 회전 저항값 설정
+            _rb.interpolation = RigidbodyInterpolation.Interpolate; // 부드러운 움직임
+        }
     }
 
     public void DirectionCheck()
@@ -37,8 +47,8 @@ public class PlayerController : MonoBehaviour
 
         Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-        Vector3 inputDir = InputJoystick + InputKeyboard;
-        
+        inputDir = InputJoystick + InputKeyboard;
+
 
         if (inputDir.sqrMagnitude > 0.05f)
         {
@@ -48,25 +58,22 @@ public class PlayerController : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = targetRotation;
 
-            Vector3 moveDir = inputDir;
-
-            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit slopeHit, 1.5f))
-            {
-                Vector3 slopeNormal = slopeHit.normal;
-                Vector3 projectedDir = Vector3.ProjectOnPlane(inputDir, slopeNormal).normalized;
-                moveDir = projectedDir;
-            }
-
-
-            _rb.velocity = new Vector3(inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed), 
-                                      _rb.velocity.y, 
-                                      inputDir.z * _playerStat.GetStatValue(PlayerStatType.MoveSpeed));
-            //_rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
+            // 목표 속도 계산
+            Vector3 targetVelocity = new Vector3(
+                inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed),
+                _rb.velocity.y,
+                inputDir.z * _playerStat.GetStatValue(PlayerStatType.MoveSpeed)
+            );
+            
+            // 속도 직접 설정 (가속 없이)
+            _rb.velocity = targetVelocity;
+            
             SetBool("Run", true);
         }
         else
         {
-            _rb.velocity = new Vector3(0,_rb.velocity.y,0);
+            // 즉시 멈추기
+            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             _rb.angularVelocity = Vector3.zero;
             SetBool("Run", false);
         }
@@ -74,6 +81,7 @@ public class PlayerController : MonoBehaviour
 
     public void Dash()
     {
+        _isAttacking = false;
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -107,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(TumbleRoutine(target, dashDuration));
         _lastTumbleTime = Time.time;
-        dashCooldownUI.StartDashCooldown();
+        _statUI.StartDashCooldown();
     }
 
     private IEnumerator TumbleRoutine(Vector3 target, float duration)
@@ -130,6 +138,12 @@ public class PlayerController : MonoBehaviour
         _rb.MovePosition(target);
         _rb.velocity = Vector3.zero;
         _isTumbling = false;
+    }
+    public void StopMove()
+    {
+        _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
+        _rb.angularVelocity = Vector3.zero;
+        //_rb.rotation = Quaternion.LookRotation(inputDir);
     }
 
     public void SetBool(string name, bool value)
