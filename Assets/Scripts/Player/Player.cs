@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     {
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
         if (Time.time - _lastHitTime < 1 / attackSpeed) return;
+        //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
         _lastHitTime = Time.time;
     }
