@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
@@ -97,32 +98,37 @@ public class Enemy : MonoBehaviour
 
     private void DropCurrency()
     {
-        int dropGold = (int)Stat.GetStatValue(EnemyStatType.Gold);
-        int dropSoul =  (int)Stat.GetStatValue(EnemyStatType.Soul);
+        SpawnCurrency(_goldPrefab, (int)Stat.GetStatValue(EnemyStatType.Gold));
+        SpawnCurrency(_soulPrefab, (int)Stat.GetStatValue(EnemyStatType.Soul));
+    }
 
-        if(dropGold > 0 && _goldPrefab != null)
+    private void SpawnCurrency(GameObject prefab, int amount)
+    {
+        if (prefab == null || amount <= 0) return;
+
+        Vector3 dropPos = GetSafeDropPosition(transform.position, 1.5f);
+        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity);
+
+        CurrencyData currencyData = Obj.GetComponent<CurrencyData>();
+        if (currencyData != null)
         {
-            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            Instantiate(_goldPrefab, dropPos, Quaternion.identity);
-
-            CurrencyData currencyData = _goldPrefab.GetComponent<CurrencyData>();
-            if(currencyData != null)
-            {
-                currencyData.SetAmount(dropGold);
-            }
+            currencyData.SetAmount(amount);
         }
 
-        if (dropSoul > 0 && _soulPrefab != null)
-        {
-            Vector3 dropPos = transform.position + new Vector3(Random.Range(-1f, 1f), 0.5f, Random.Range(-1f, 1f));
-            Instantiate(_soulPrefab, dropPos, Quaternion.identity);
+    }
 
-            CurrencyData currencyData = _soulPrefab.GetComponent<CurrencyData>();
-            if (currencyData != null)
-            {
-                currencyData.SetAmount(dropSoul);
-            }
+    private Vector3 GetSafeDropPosition(Vector3 center, float radius = 1.5f)
+    {
+        Vector2 circle = Random.insideUnitCircle * radius;
+        Vector3 randomXZ = new Vector3(circle.x, 0f, circle.y);
+        Vector3 dropPos = center + randomXZ;
+
+        if(NavMesh.SamplePosition(dropPos, out NavMeshHit hit, radius, NavMesh.AllAreas))
+        {
+            return hit.position + Vector3.up * 0.3f;
         }
+
+        return center + Vector3.up * 0.5f;
     }
 
     public void OnDeadAnimationEnd()
