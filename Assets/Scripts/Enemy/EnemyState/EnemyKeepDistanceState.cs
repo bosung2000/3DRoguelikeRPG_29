@@ -15,14 +15,14 @@ public class EnemyKeepDistanceState : IEnemyState
         _prederredDistance = controller.GetStat(EnemyStatType.AttackRange);
         _attackRange = _prederredDistance;
 
+        controller.agent.isStopped = false;
         controller.animator?.SetBool("isMoving", true);
         _moveTimer = 0f;
     }
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator?.SetBool("isMoving", false);
-        controller.agent.ResetPath();
+
     }
 
     public void UpdateState(EnemyController controller)
@@ -34,6 +34,9 @@ public class EnemyKeepDistanceState : IEnemyState
         }
 
         float distance = Vector3.Distance(controller.transform.position, _target.position);
+        float chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
+        float attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
+        bool hasArrived = !controller.agent.pathPending && controller.agent.remainingDistance <= controller.agent.stoppingDistance;
 
         //사거리 밖으로 나가면 다시 추격
         if (distance > _attackRange * 1.5f)
@@ -51,10 +54,20 @@ public class EnemyKeepDistanceState : IEnemyState
         }
 
         //사거리 안에 있고 시간이 쿨타임이 끝났다면 상태 전환
-        if(distance <= _attackRange && Time.time >= controller.lastAttackTime + controller.GetStat(EnemyStatType.AttackCooldown))
+        if(distance <= _attackRange && Time.time >= controller.lastAttackTime + attackCooldown)
         {
             controller.ChageState(EnemyStateType.Attack);
+            return;
         }
+
+        if(distance > chaseRange && hasArrived)
+        {
+            controller.ChageState(EnemyStateType.Idle);
+        }
+
+        //애니메이션 제어
+        bool isMoving = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
+        controller.animator.SetBool("isMoving", isMoving);
     }
 
     private void MoveSide(EnemyController controller)

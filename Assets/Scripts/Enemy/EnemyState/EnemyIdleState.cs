@@ -24,7 +24,6 @@ public class EnemyIdleState : IEnemyState
 
         if (controller.animator != null)
         {
-            controller.animator.SetBool("isMoving", false);
             controller.animator.ResetTrigger("Hit");
         }
 
@@ -39,14 +38,7 @@ public void ExitState(EnemyController controller)
     }
     public void UpdateState(EnemyController controller)
     {
-        /// <summary>
-        /// 플레이어 감지
-        /// </summary>
         Collider[] hit = Physics.OverlapSphere(controller.transform.position, _scanRadius, _targetLayer);
-        foreach (var hits in hit)
-        {
-            Debug.Log($"[Idle 감지] 감지된 오브젝트: {hits.name}, Layer: {LayerMask.LayerToName(hits.gameObject.layer)}");
-        }
         //추격 최대거리에 도달하면 추격상태 전환
         if (hit.Length > 0)
         {
@@ -71,6 +63,10 @@ public void ExitState(EnemyController controller)
                 }
             }
         }
+
+        float dist = controller.agent.remainingDistance;
+        bool isMoving = !controller.agent.pathPending && dist > 0.2f;
+        controller.animator.SetBool("isMoving", isMoving);
     }
 
     private void RandMovePos(EnemyController controller)

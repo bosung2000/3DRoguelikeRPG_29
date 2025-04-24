@@ -5,7 +5,9 @@ using UnityEngine;
 public class EnemyChaseState : IEnemyState
 {
     private Transform _target;
-    private float stopDistance = 1.5f; //플레리어를 공격하기 전 멈추는 거리
+    private float outRangeTime = 0f;
+    private float outRangeTimeHold = 2.0f;
+
 
     public void EnterState(EnemyController controller)
     {
@@ -15,7 +17,6 @@ public class EnemyChaseState : IEnemyState
             Debug.Log("타겟이 없어 Idle상태로 전환");
             controller.ChageState(EnemyStateType.Idle);
         }
-        stopDistance = controller.GetStat(EnemyStatType.AttackRange);
 
         controller.agent.enabled = true;
         controller.agent.isStopped = false;
@@ -28,36 +29,43 @@ public class EnemyChaseState : IEnemyState
             controller.animator.SetBool("isMoving", true);
             controller.animator.ResetTrigger("Hit");
         }
-
-        //Debug.Log("Chase 상태 진입");
     }
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator?.SetBool("isMoving", false);
-        controller.agent.isStopped = true;
+
     }
 
     public void UpdateState(EnemyController controller)
     {
         if (_target == null)
         {
+            controller.ChageState(EnemyStateType.Idle);
             return;
         }
 
         //공격 범위 내면 상태 전환용
         float distance = Vector3.Distance(controller.transform.position, _target.position);
-
         float chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
-
-        if (distance > chaseRange * 1.5)
-        {
-            Debug.Log("Chase: 플레이어가 추적 범위를 벗어났습니다.");
-            controller.ChageState(EnemyStateType.Idle);
-            return;
-        }
-
         float attackRange = controller.GetStat(EnemyStatType.AttackRange);
+        
+        controller.agent.SetDestination(_target.position);
+
+        //범위 밖인 상태 시간 누적
+        if (distance > chaseRange )
+        {
+            outRangeTime += Time.deltaTime;
+
+            if(outRangeTime > outRangeTimeHold)
+            {
+                controller.ChageState(EnemyStateType.Idle);
+                return;
+            }
+        }
+        else
+        {
+            outRangeTime = 0f; //범위 안이면 초기화
+        }
 
         //플레이어와 거리가 가까워지면 공격 상태로 전환
         if (distance <= attackRange)
@@ -65,8 +73,9 @@ public class EnemyChaseState : IEnemyState
             controller.ChageState(EnemyStateType.KeepDistance);
             return;
         }
-        controller.agent.SetDestination(_target.position);
 
-
+        //애니메이션 제어
+        bool isMoving = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
+        controller.animator.SetBool("isMoving", isMoving);
     }
 }
