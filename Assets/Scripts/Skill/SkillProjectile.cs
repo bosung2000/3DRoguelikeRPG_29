@@ -8,8 +8,8 @@ public class SkillProjectile : MonoBehaviour
     [SerializeField] private LayerMask levelCollisionLayer; //읽어온 뒤 데미지를 적용할 대상의 레이어
     private float currentDuration; //지나갈 시간
     private Vector3 direction; //방향
-    private Rigidbody2D _rigidbody; //리지드바디
     private SpriteRenderer spriteRenderer; //
+    [SerializeField] private Rigidbody _rigidbody; //리지드바디
     public float Duration; //투사체 지속시간
     public float ProjectileSpeed; //투사체 속도
     public LayerMask target; //충돌했을때 읽어올 레이어
@@ -26,8 +26,7 @@ public class SkillProjectile : MonoBehaviour
             DestroyProjectile(transform.position, false);
         }
 
-        //아니라면 그냥 날아가게 내버려 두기
-        _rigidbody.velocity = direction * ProjectileSpeed;
+        transform.position += direction * ProjectileSpeed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -48,7 +47,7 @@ public class SkillProjectile : MonoBehaviour
         }
     }
 
-    public void Init(Vector3 startPosition, Vector3 direction)
+    public void Init(Vector3 direction)
     {
         this.direction = direction;
         currentDuration = 0;
@@ -59,11 +58,24 @@ public class SkillProjectile : MonoBehaviour
 
     public void ShootBullet(Vector3 startPosition, Vector3 direction)
     {
-        GameObject obj = Instantiate(this.gameObject, startPosition, Quaternion.identity);
+
+        GameObject obj = Instantiate(this.gameObject);
+        Collider col = obj.GetComponent<Collider>();
+
+
+        float offsetDistance = 0.5f; // 기본값
+        if (col != null)
+        {
+            offsetDistance = col.bounds.extents.magnitude*1.5f; // 투사체의 반지름 거리 정도
+        }
+
+        Vector3 spawnPosition = startPosition + direction.normalized * offsetDistance;
+        obj.transform.position = spawnPosition;
+        obj.transform.rotation = Quaternion.identity;
 
         //그리고 투사체 안에 있는 투사체 제어자를 변수로 지정한 뒤 사격 지시
-        //Projectile projectile = obj.GetComponent<ProjectileController>();
-        //projectile.Init();
+        SkillProjectile projectile = obj.GetComponent<SkillProjectile>();
+        projectile.Init(direction);
     }
 
 

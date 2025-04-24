@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
     private LayerMask _obstacleLayer;
-    private TestPlayerUI dashCooldownUI;
+    private StatUI _statUI;
 
     private bool _isAttacking = false;
     private Vector3 _lastMoveDirection;
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
         _obstacleLayer = LayerMask.GetMask("UI");
-        dashCooldownUI = FindObjectOfType<TestPlayerUI>();
+        _statUI = FindObjectOfType<StatUI>();
         
         _lastMoveDirection = transform.forward;
     }
@@ -47,7 +47,18 @@ public class PlayerController : MonoBehaviour
 
             Quaternion targetRotation = Quaternion.LookRotation(inputDir);
             transform.rotation = targetRotation;
-             _rb.velocity = new Vector3(inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed), 
+
+            Vector3 moveDir = inputDir;
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit slopeHit, 1.5f))
+            {
+                Vector3 slopeNormal = slopeHit.normal;
+                Vector3 projectedDir = Vector3.ProjectOnPlane(inputDir, slopeNormal).normalized;
+                moveDir = projectedDir;
+            }
+
+
+            _rb.velocity = new Vector3(inputDir.x * _playerStat.GetStatValue(PlayerStatType.MoveSpeed), 
                                       _rb.velocity.y, 
                                       inputDir.z * _playerStat.GetStatValue(PlayerStatType.MoveSpeed));
             //_rb.velocity = inputDir * _playerStat.GetStatValue(PlayerStatType.MoveSpeed);
@@ -63,7 +74,6 @@ public class PlayerController : MonoBehaviour
 
     public void Dash()
     {
-        SetTrigger("Dash");
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -72,6 +82,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("쿨타임입니다");
             return;
         }
+        SetTrigger("Dash");
 
         Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
         Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
@@ -96,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(TumbleRoutine(target, dashDuration));
         _lastTumbleTime = Time.time;
-        dashCooldownUI.StartDashCooldown();
+        _statUI.StartDashCooldown();
     }
 
     private IEnumerator TumbleRoutine(Vector3 target, float duration)

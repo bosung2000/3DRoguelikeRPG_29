@@ -37,8 +37,8 @@ public class FloatingSkillJoystick : Joystick
     {
         //마지막 방향 저장
         Vector3 InputJoystick = Vector3.forward * this.Vertical + Vector3.right * this.Horizontal;
-        Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        Vector3 inputDir = InputJoystick + InputKeyboard;
+        //Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector3 inputDir = InputJoystick;
         if (inputDir.sqrMagnitude > 0.01f)
         {
             inputDir = inputDir.normalized;
@@ -52,7 +52,15 @@ public class FloatingSkillJoystick : Joystick
         //해당 방향에 스킬 시전
         skillManager.OnSkillClick(skillManager.enabledSkills[index].skill, FixedInput);
         //이후 해당 스킬에 쿨타임 적용
-        //skillManager.enabledSkills[i]
+
+        if (skillManager.enabledSkills[index].skill != null)
+        {
+            skillManager.enabledSkills[index].skill.projectilePrefabs.GetComponent<SkillProjectile>().ShootBullet(skillManager.player.transform.position, inputDir);
+        }
+        else
+        {
+            Debug.Log("스킬매니저의 enabledSkills가 비어 있습니다.");
+        }
         background.gameObject.SetActive(false);
         base.OnPointerUp(eventData);
     }

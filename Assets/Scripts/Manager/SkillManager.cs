@@ -11,100 +11,33 @@ public class SkillInstance
 {
     public Skill skill;
     public int index;
-    //private void FireProjectile(Vector2 _lookDirection, float angle)
-    //{
-    //    //투사체 관리자에서 사격 메서드 호출
-    //    ShootBullet(
-    //        this, //이 스크립트에서
-    //              //투사체가 발사되는 지점을 기점으로
-    //        RotateVector2(_lookDirection, angle) //lookdirection에서 angle만큼 회전시킨 값으로 발사하겠다
-    //        );
-    //}
-
-    //public void ShootBullet(RangeWeaponHandler rangeWeaponHandler, Vector2 startPosition, Vector2 direction)
-    //{
-    //    //rangeWeaponHandler에 저장되어있는 BulletIndex의 투사체를 변수로 가져온 뒤 복제
-    //    GameObject origin = projectilePrefabs[rangeWeaponHandler.BulletIndex];
-    //    GameObject obj = Instantiate(origin, startPosition, Quaternion.identity);
-
-    //    //그리고 투사체 안에 있는 투사체 제어자를 변수로 지정한 뒤 사격 지시
-    //    ProjectileController projectileController = obj.GetComponent<ProjectileController>();
-    //    projectileController.Init(direction, rangeWeaponHandler, this);
-    //}
-
-    //public void Init(Vector2 direction, RangeWeaponHandler weaponHandler, ProjectileManager projectileManager)
-    //{
-    //    //입력받은 매개변수를 저장하고 그 값에 맞춰서 조정하기
-    //    this.projectileManager = projectileManager;
-    //    rangeWeaponHandler = weaponHandler;
-    //    this.direction = direction;
-    //    currentDuration = 0;
-    //    transform.localScale = Vector3.one * weaponHandler.BulletSize;
-    //    spriteRenderer.color = weaponHandler.ProjectileColor;
-
-    //    //오른쪽 축을 이 스크립트의 방향으로 설정하기
-    //    transform.right = this.direction;
-
-    //    if (direction.x < 0)
-    //    {
-    //        pivot.localRotation = Quaternion.Euler(180, 0, 0);
-    //    }
-    //    else
-    //    {
-    //        pivot.localRotation = Quaternion.Euler(0, 0, 0);
-    //    }
-    //    isReady = true;
-    //}
-
-    //private static Vector2 RotateVector2(Vector2 v, float degree)
-    //{
-    //    //쿼터니언의 각도만큼 벡터 회전시키기
-    //    return Quaternion.Euler(0, 0, degree) * v;
-    //}
-
 }
 
 public class SkillManager : MonoBehaviour
 {
-    private static SkillManager instance;
-    public static SkillManager Instance { get; set; }
-
     public Player player;
     public UISkill uiSkill;
     public bool attacking;
     public float attackRate;
     private Camera _camera; 
     private Skill[] skills;
-    private SkillInstance[] SkillInstances;
+    private SkillInstance[] skillInstances;
     public EnabledSkills[] enabledSkills;
-
-    private void Awake()
-    {
-        player= GetComponent<Player>();
-        if (instance != null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            if (instance != null)
-            {
-                Destroy(gameObject);
-            }
-        }
-    }
-
+    
     // Start is called before the first frame update
     void Start()
     {
         //Resources폴더의 /PlayerSkill 폴더의 모든 것을 가져와 배열로 만들고
-        skills = Resources.LoadAll<Skill>("/PlayerSkills");
+        skills = Resources.LoadAll<Skill>("PlayerSkills");
+
+
+        skillInstances=new SkillInstance[skills.Length];
 
         for(int i=0;i<skills.Length;i++)
         {
-            SkillInstances[i].skill = skills[i];
-            SkillInstances[i].index = i;
+            skillInstances[i] = new SkillInstance();
+            skillInstances[i].skill = skills[i];
+            skillInstances[i].index = i;
         }
 
         //스킬 ui가 표시할 수 있는 스킬 수만큼 스킬배열 길이를 정하고 반복문 시작
@@ -112,10 +45,10 @@ public class SkillManager : MonoBehaviour
 
         for (int i = 0; i < enabledSkills.Length; i++)
         {
+            enabledSkills[i]=new EnabledSkills();
+            enabledSkills[i].skill=skillInstances[0].skill;
             uiSkill.skillConditions[i].index = i;
             uiSkill.skillConditions[i].joystick.index = i;
-            //enabledSkills의 고유 번호 지정 및 해당 enabledSkills로 UI 초기화
-            enabledSkills[i] = new EnabledSkills();
             enabledSkills[i].index = i;
             ResetSkillUI(i);
             Debug.Log($"조이스틱 인덱스:{uiSkill.skillConditions[i].joystick.index}, 착용 스킬 인덱스: {enabledSkills[i].index}, 현재 순환:{i}");
