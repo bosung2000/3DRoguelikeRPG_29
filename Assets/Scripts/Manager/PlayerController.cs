@@ -18,8 +18,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 _lastMoveDirection;
     Vector3 inputDir;
     
-    // 속도 제어를 위한 변수 추가
-    private float _velocityDampingTime = 0.1f;
 
     private void Awake()
     {
