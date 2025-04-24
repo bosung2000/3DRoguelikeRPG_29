@@ -858,9 +858,10 @@ MonoBehaviour:
   plusValue: 0
   index: 0
   uiBar: {fileID: 311726422}
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 741611378}
   skill: {fileID: 0}
   joystick: {fileID: 741611376}
+  defaultEmptyIcon: {fileID: 0}
 --- !u!114 &741611378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1745,9 +1746,10 @@ MonoBehaviour:
   plusValue: 0
   index: 0
   uiBar: {fileID: 1423264282}
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 1505486008}
   skill: {fileID: 0}
   joystick: {fileID: 1389202036}
+  defaultEmptyIcon: {fileID: 0}
 --- !u!114 &1389202038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2052,6 +2054,7 @@ MonoBehaviour:
   skillIcon: {fileID: 0}
   skill: {fileID: 0}
   joystick: {fileID: 1505486006}
+  defaultEmptyIcon: {fileID: 0}
 --- !u!114 &1505486008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2791,6 +2794,10 @@ PrefabInstance:
       propertyPath: _itemManager
       value: 
       objectReference: {fileID: 763143915}
+    - target: {fileID: 7508205960733686480, guid: 280220dd00033fa43be12f8fd9fa3d45, type: 3}
+      propertyPath: _skillManager
+      value: 
+      objectReference: {fileID: 1030330834}
     - target: {fileID: 7508205960733686480, guid: 280220dd00033fa43be12f8fd9fa3d45, type: 3}
       propertyPath: _equipMananger
       value: 

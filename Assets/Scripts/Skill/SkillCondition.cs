@@ -8,9 +8,6 @@ public class SkillCondition : MonoBehaviour
 {
     public float currentCooldown; //현재 쿨타임
     public float maximumCooldown; //최대 쿨타임
-    public float startValue; //시작값
-    public float passiveValue;
-    public float plusValue;
     public int index;
     public Image uiBar; // 쿨타임 표시할 이미지
     [SerializeField] private Image skillIcon; // 스킬 아이콘
