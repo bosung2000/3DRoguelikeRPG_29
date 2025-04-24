@@ -6,12 +6,22 @@ using UnityEngine.UI;
 
 public class StatUI : MonoBehaviour
 {
-    [SerializeField] PlayerStat _player;
+    [SerializeField] Player _player;
+    [SerializeField] PlayerStat _playerStat;
 
     [SerializeField] Button _dashBtn;
+    [SerializeField] Button _attackBtn;
+    [SerializeField] Button _healingBtn;
+    [SerializeField] Button _moveSpeedUpBtn;
+    [SerializeField] Button _attackUpBtn;
+    [SerializeField] Button _reductionUpBtn;
+    [SerializeField] Button _criticalUpBtn;
+    [SerializeField] Button _attackSpeedUpBtn;
+
     [SerializeField] TextMeshProUGUI _hpTxt;
     [SerializeField] TextMeshProUGUI _mpTxt;
     [SerializeField] TextMeshProUGUI _dashCooldownText;
+
     [SerializeField] Image _hpImage;
     [SerializeField] Image _mpImage;
     [SerializeField] Image _dashImage;
@@ -20,12 +30,21 @@ public class StatUI : MonoBehaviour
 
     private void Awake()
     {
-
+        _player = FindObjectOfType<Player>();
+        _playerStat = _player._playerStat;
     }
     private void Start()
     {
-        _player.OnStatsChanged += UpdateStats;
-        _dashBtn.onClick.AddListener(() => { GameManager.Instance.PlayerManager.Player.Dash(); });
+        _dashBtn.onClick.AddListener(() => _player.Dash());
+        _attackBtn.onClick.AddListener(() => _player.Attack());
+        _healingBtn.onClick.AddListener(() => _player.Healing());
+        _moveSpeedUpBtn.onClick.AddListener(() => _player.SpeedUp());
+        _attackUpBtn.onClick.AddListener(() => _player.AttackUp());
+        _reductionUpBtn.onClick.AddListener(() => _player.DMGReductionUp());
+        _criticalUpBtn.onClick.AddListener(() => _player.CriticalChanceUp());
+        _attackSpeedUpBtn.onClick.AddListener(() => _player.AttackSpeedUp());
+
+        _playerStat.OnStatsChanged += UpdateStats;
     }
     private void UpdateStats(PlayerStat playerStat)
     { 
@@ -37,7 +56,7 @@ public class StatUI : MonoBehaviour
 
     public void StartDashCooldown()
     {
-        float dashCooldown = _player.GetStatValue(PlayerStatType.DashCooldown);
+        float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
         if (_cooldownRoutine != null)
         {
