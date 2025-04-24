@@ -14,18 +14,15 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
+        _playerController = GetComponent<PlayerController>();
     }
     private void Start()
     {
         _playerStat.InitBaseStat(statData);
     }
-    private void Update()
-    {
-        _playerController.DirectionCheck();
-        
-    }
     public void FixedUpdate()
     {
+        _playerController.DirectionCheck();
     }
 
 
