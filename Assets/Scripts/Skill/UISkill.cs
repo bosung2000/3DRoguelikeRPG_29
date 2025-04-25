@@ -18,16 +18,6 @@ public class UISkill : MonoBehaviour
             skillConditions[i].joystick.index = i;
         }
     }
-
-    private void Start()
-    {
-
-    }
-    private void Update()
-    {
-        
-    }
-
     /// <summary>
     /// 바뀐 enabledSkills에 맞게 스킬 UI 변경
     /// </summary>

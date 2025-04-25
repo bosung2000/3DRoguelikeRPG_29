@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class SkillProjectile : MonoBehaviour
 {
-    [SerializeField] private LayerMask levelCollisionLayer; //읽어온 뒤 데미지를 적용할 대상의 레이어
-    private float currentDuration; //지나갈 시간
-    private Vector3 direction; //방향
-    private SpriteRenderer spriteRenderer; //
-    [SerializeField] private Rigidbody _rigidbody; //리지드바디
-    public float Duration; //투사체 지속시간
-    [SerializeField]private float ProjectileSpeed; //투사체 속도
-    public LayerMask target; //충돌했을때 읽어올 레이어
+    [SerializeField] private float currentDuration; //지나갈 시간
+    [SerializeField] private Vector3 direction; //방향
+    [SerializeField] private float Duration; //투사체 지속시간
+    [SerializeField] private float ProjectileSpeed; //투사체 속도
+    public LayerMask target; //충돌했을때 읽어올 레이어 (적, 벽 등 모든 충돌 대상 포함)
     public bool fxOnDestroy; //없어질 때 이펙트를 호출하는 투사체인지
-    
+
     // 데미지 관련 변수 추가
     [HideInInspector] public int damage = 0; // 투사체가 적중 시 입힐 데미지
     [SerializeField] private float criticalChance = 0.1f; // 크리티컬 확률 (10%)
@@ -27,7 +24,7 @@ public class SkillProjectile : MonoBehaviour
     [SerializeField] private bool isHoming = false; // 유도 미사일 여부
     [SerializeField] private float homingSpeed = 5.0f; // 유도 회전 속도
     [SerializeField] private float homingRadius = 10.0f; // 유도 감지 범위
-    
+
     // 특수 효과
     [SerializeField] private bool hasSplashDamage = false; // 폭발 여부
     [SerializeField] private float splashRadius = 3.0f; // 폭발 범위
@@ -39,8 +36,6 @@ public class SkillProjectile : MonoBehaviour
 
     private void Awake()
     {
-        if (_rigidbody == null)
-            _rigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -69,61 +64,59 @@ public class SkillProjectile : MonoBehaviour
 
         // 이동 방향을 forward로 변경하여 일관성 있게 처리
         transform.position += transform.forward * ProjectileSpeed * Time.deltaTime;
-        
+
         // 디버그용 - 실제 투사체 이동 방향 시각화
         Debug.DrawRay(transform.position, transform.forward * 2f, Color.red);
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        //레이어를 충돌한 오브젝트의 레이어만큼 계속 밀어서 나온 이진값이 투사체의 레이어와 같을 경우
-        if (levelCollisionLayer.value == (levelCollisionLayer.value | (1 << collision.gameObject.layer)))
+        // 충돌 대상이 target 레이어에 포함되어 있는지 확인
+        if (target.value == (target.value | (1 << collision.gameObject.layer)))
         {
-            //투사체 파괴, 이 경우 벽에 부딪힌거라 충돌지점에서 살짝 뒤로 빠진 위치에서 파티클 생성
+            // 적인지 확인
+            Enemy enemy = collision.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                // 적에게 데미지 적용
+                ApplyDamageToEnemy(enemy);
+                
+                // 관통 로직
+                hitCount++;
+                if (isPenetrating && hitCount <= penetrationCount)
+                {
+                    // 관통 효과 표시만 하고 파괴하지 않음
+                    if (impactEffectPrefab != null)
+                    {
+                        GameObject impact = Instantiate(impactEffectPrefab, collision.ClosestPoint(transform.position), Quaternion.identity);
+                        Destroy(impact, 2f);
+                    }
+                    
+                    // 폭발 데미지 적용 (관통 시에도)
+                    if (hasSplashDamage)
+                    {
+                        ApplySplashDamage(collision.ClosestPoint(transform.position));
+                    }
+                    
+                    // 관통이므로 파괴하지 않고 계속 진행
+                    return;
+                }
+            }
+            
+            // 폭발 효과 적용 (적 또는 벽에 부딪힐 때)
             if (hasSplashDamage)
             {
                 ApplySplashDamage(collision.ClosestPoint(transform.position));
             }
-            DestroyProjectile(collision.ClosestPoint(transform.position) - direction * 0.2f, fxOnDestroy);
-        }
-        //레이어를 충돌한 오브젝트의 레이어만큼 계속 밀어서 나온 이진값이 rangeWeaponHandler의 탐색 레이어와 같을 경우
-        else if (target.value == (target.value | (1 << collision.gameObject.layer)))
-        {
-            //해당 개체한테 데미지 적용
-            Enemy enemy = collision.GetComponent<Enemy>();
-            if (enemy != null)
+            
+            // 충돌 지점에서 이펙트 생성 후 투사체 제거
+            Vector3 hitPoint = collision.ClosestPoint(transform.position);
+            if (enemy == null) // 벽이나 다른 장애물인 경우
             {
-                ApplyDamageToEnemy(enemy);
+                hitPoint -= direction * 0.2f; // 벽 관통 방지용 약간 후퇴
             }
             
-            // 관통 로직
-            hitCount++;
-            if (isPenetrating && hitCount <= penetrationCount)
-            {
-                // 관통 효과 표시만 하고 파괴하지 않음
-                if (impactEffectPrefab != null)
-                {
-                    GameObject impact = Instantiate(impactEffectPrefab, collision.ClosestPoint(transform.position), Quaternion.identity);
-                    Destroy(impact, 2f);
-                }
-                
-                // 폭발 데미지 적용 (관통 시에도)
-                if (hasSplashDamage)
-                {
-                    ApplySplashDamage(collision.ClosestPoint(transform.position));
-                }
-            }
-            else
-            {
-                // 관통이 아니거나 관통 횟수를 초과한 경우
-                if (hasSplashDamage)
-                {
-                    ApplySplashDamage(collision.ClosestPoint(transform.position));
-                }
-                
-                //투사체 파괴, 단. 이 경우 적을 맞춘거니 그 자리에 파티클 생성
-                DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
-            }
+            DestroyProjectile(hitPoint, fxOnDestroy);
         }
     }
 
@@ -133,16 +126,16 @@ public class SkillProjectile : MonoBehaviour
         // 크리티컬 판정
         bool isCritical = Random.value <= criticalChance;
         int damageAmount = damage;
-        
+
         // 크리티컬 히트 시 데미지 증가
         if (isCritical)
         {
             damageAmount = Mathf.RoundToInt(damage * criticalMultiplier);
         }
-        
+
         // 데미지 적용
         enemy.TakeDamage(damageAmount);
-        
+
         // 크리티컬 효과 (선택적)
         if (isCritical && impactEffectPrefab != null)
         {
@@ -152,7 +145,7 @@ public class SkillProjectile : MonoBehaviour
             Destroy(impact, 2f);
         }
     }
-    
+
     // 범위 데미지 적용
     private void ApplySplashDamage(Vector3 center)
     {
@@ -162,10 +155,10 @@ public class SkillProjectile : MonoBehaviour
             GameObject explosion = Instantiate(explosionEffectPrefab, center, Quaternion.identity);
             Destroy(explosion, 2f);
         }
-        
+
         // 범위 내 적 탐색
         Collider[] hitColliders = Physics.OverlapSphere(center, splashRadius, target);
-        
+
         foreach (var hitCollider in hitColliders)
         {
             Enemy enemy = hitCollider.GetComponent<Enemy>();
@@ -175,19 +168,19 @@ public class SkillProjectile : MonoBehaviour
                 float distance = Vector3.Distance(center, hitCollider.transform.position);
                 float damageRatio = 1 - (distance / splashRadius); // 거리가 멀수록 데미지 감소
                 damageRatio = Mathf.Clamp(damageRatio, 0.1f, 1f) * splashDamageRatio;
-                
+
                 int splashDamage = Mathf.RoundToInt(damage * damageRatio);
                 enemy.TakeDamage(splashDamage);
             }
         }
     }
-    
+
     // 유도 대상 찾기
     private void FindHomingTarget()
     {
         // 일정 범위 내 적 검색
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, homingRadius, target);
-        
+
         if (hitColliders.Length > 0)
         {
             // 가장 가까운 적 선택
@@ -204,17 +197,17 @@ public class SkillProjectile : MonoBehaviour
         }
     }
 
-    public void Init(Vector3 _direction,int _projectileSpeed)
+    public void Init(Vector3 _direction, int _projectileSpeed)
     {
         // 방향 벡터 정규화
         this.direction = _direction.normalized;
-        this.ProjectileSpeed = _projectileSpeed; 
+        this.ProjectileSpeed = _projectileSpeed;
         currentDuration = 0;
 
         // 방향 벡터에 맞게 오브젝트 회전 설정
         // 이전 코드: transform.right = this.direction
         transform.forward = this.direction; // 앞쪽 방향을 이동 방향으로 설정
-        
+
         // 속도가 0인 경우 기본값 설정
         if (ProjectileSpeed <= 0)
         {
@@ -222,28 +215,6 @@ public class SkillProjectile : MonoBehaviour
             Debug.LogWarning("ProjectileSpeed was 0 or negative, set to default 10");
         }
     }
-
-    public void ShootBullet(Vector3 startPosition, Vector3 direction)
-    {
-        GameObject obj = Instantiate(this.gameObject);
-        Collider col = obj.GetComponent<Collider>();
-
-        float offsetDistance = 0.5f; // 기본값
-        if (col != null)
-        {
-            offsetDistance = col.bounds.extents.magnitude*1.5f; // 투사체의 반지름 거리 정도
-        }
-
-        Vector3 spawnPosition = startPosition + direction.normalized * offsetDistance;
-        obj.transform.position = spawnPosition;
-        obj.transform.rotation = Quaternion.identity;
-
-        //그리고 투사체 안에 있는 투사체 제어자를 변수로 지정한 뒤 사격 지시
-        SkillProjectile projectile = obj.GetComponent<SkillProjectile>();
-        projectile.SetDirection(direction);
-    }
-
-
 
     private void DestroyProjectile(Vector3 position, bool createFx)
     {
@@ -267,21 +238,21 @@ public class SkillProjectile : MonoBehaviour
         this.isHoming = isHoming;
         this.hasSplashDamage = hasSplashDamage;
     }
-    
+
     // 개별 속성 설정 메소드들
     public void SetPenetrating(bool isPenetrating, int count = 3)
     {
         this.isPenetrating = isPenetrating;
         this.penetrationCount = count;
     }
-    
+
     public void SetHoming(bool isHoming, float speed = 5.0f, float radius = 10.0f)
     {
         this.isHoming = isHoming;
         this.homingSpeed = speed;
         this.homingRadius = radius;
     }
-    
+
     public void SetSplashDamage(bool hasSplash, float radius = 3.0f, float damageRatio = 0.5f)
     {
         this.hasSplashDamage = hasSplash;
@@ -291,7 +262,7 @@ public class SkillProjectile : MonoBehaviour
 
     private void SetDirection(Vector3 _direction)
     {
-       this.direction = _direction;
+        this.direction = _direction;
     }
 
     // 속성 접근자 (읽기 전용)
