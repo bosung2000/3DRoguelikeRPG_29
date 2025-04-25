@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6989626496270678351}
   - component: {fileID: 4131601597733009817}
   - component: {fileID: -328979381274602392}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TrainingSupportBot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -176,6 +176,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _goldPrefab: {fileID: 5607812118361291365, guid: f087d0246a56ba649a04174a42087e82, type: 3}
   _soulPrefab: {fileID: 2218287214163529481, guid: 90e04c482f5ba1344b98dd366c5aa44b, type: 3}
+  _firePoint: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
 --- !u!114 &6989626496270678351
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,9 +9,9 @@ public class EnemyIdleState : IEnemyState
     private LayerMask _targetLayer;
 
     // 정찰/순찰 시스템
-    private float _wanderRadius = 10f;// 이동 가능 범위
-    private float _waitTime = 2f; //도착 후 대기 시간
-    private float _waitTimer = 0;// 대기 시간 체크
+    private float _wanderRadius = 10f;  // 이동 가능 범위
+    private float _waitTime = 2f;       //도착 후 대기 시간
+    private float _waitTimer = 0;       // 대기 시간 체크
     private bool _isWaiting = false;
 
 
@@ -24,29 +24,24 @@ public class EnemyIdleState : IEnemyState
 
         if (controller.animator != null)
         {
-            controller.animator.SetBool("isMoving", false);
             controller.animator.ResetTrigger("Hit");
         }
 
         controller.agent.isStopped = false;
+        //애니메이션 파라미터 초기화
+        controller.animator.SetBool("isWalk", false);
+        controller.animator.SetBool("isRun", false);
+
         _waitTimer = 0;
         _isWaiting = true;
-
-}
-public void ExitState(EnemyController controller)
+    }
+    public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isWalk", false );
     }
     public void UpdateState(EnemyController controller)
     {
-        /// <summary>
-        /// 플레이어 감지
-        /// </summary>
         Collider[] hit = Physics.OverlapSphere(controller.transform.position, _scanRadius, _targetLayer);
-        foreach (var hits in hit)
-        {
-            Debug.Log($"[Idle 감지] 감지된 오브젝트: {hits.name}, Layer: {LayerMask.LayerToName(hits.gameObject.layer)}");
-        }
         //추격 최대거리에 도달하면 추격상태 전환
         if (hit.Length > 0)
         {
@@ -71,6 +66,11 @@ public void ExitState(EnemyController controller)
                 }
             }
         }
+
+        float dist = controller.agent.remainingDistance;
+        bool isWalk = !controller.agent.pathPending && dist > 0.2f;
+        controller.animator.SetBool("isWalk", isWalk);
+        controller.animator.SetBool("isRun", false);
     }
 
     private void RandMovePos(EnemyController controller)

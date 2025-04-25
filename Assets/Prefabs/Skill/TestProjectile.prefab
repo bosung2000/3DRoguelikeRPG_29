@@ -121,14 +121,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCollisionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   _rigidbody: {fileID: 4713656435625734015}
   Duration: 3
   ProjectileSpeed: 5
   target:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   fxOnDestroy: 0
+  damage: 0
+  criticalChance: 0.1
+  criticalMultiplier: 1.5
+  impactEffectPrefab: {fileID: 0}
+  isPenetrating: 0
+  penetrationCount: 0
+  isHoming: 0
+  homingSpeed: 5
+  homingRadius: 10
+  hasSplashDamage: 0
+  splashRadius: 3
+  splashDamageRatio: 0.5
+  explosionEffectPrefab: {fileID: 0}
 --- !u!54 &4713656435625734015
 Rigidbody:
   m_ObjectHideFlags: 0

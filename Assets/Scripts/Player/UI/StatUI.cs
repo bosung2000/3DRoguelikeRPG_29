@@ -31,10 +31,10 @@ public class StatUI : MonoBehaviour
     private void Awake()
     {
         _player = FindObjectOfType<Player>();
-        _playerStat = _player._playerStat;
     }
     private void Start()
     {
+        _playerStat = _player._playerStat;
         _dashBtn.onClick.AddListener(() => _player.Dash());
         _attackBtn.onClick.AddListener(() => _player.Attack());
         _healingBtn.onClick.AddListener(() => _player.Healing());
