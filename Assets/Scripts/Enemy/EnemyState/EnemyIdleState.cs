@@ -9,9 +9,9 @@ public class EnemyIdleState : IEnemyState
     private LayerMask _targetLayer;
 
     // 정찰/순찰 시스템
-    private float _wanderRadius = 10f;// 이동 가능 범위
-    private float _waitTime = 2f; //도착 후 대기 시간
-    private float _waitTimer = 0;// 대기 시간 체크
+    private float _wanderRadius = 10f;  // 이동 가능 범위
+    private float _waitTime = 2f;       //도착 후 대기 시간
+    private float _waitTimer = 0;       // 대기 시간 체크
     private bool _isWaiting = false;
 
 
@@ -28,13 +28,16 @@ public class EnemyIdleState : IEnemyState
         }
 
         controller.agent.isStopped = false;
+        //애니메이션 파라미터 초기화
+        controller.animator.SetBool("isWalk", false);
+        controller.animator.SetBool("isRun", false);
+
         _waitTimer = 0;
         _isWaiting = true;
-
-}
-public void ExitState(EnemyController controller)
+    }
+    public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isWalk", false );
     }
     public void UpdateState(EnemyController controller)
     {
@@ -65,8 +68,9 @@ public void ExitState(EnemyController controller)
         }
 
         float dist = controller.agent.remainingDistance;
-        bool isMoving = !controller.agent.pathPending && dist > 0.2f;
-        controller.animator.SetBool("isMoving", isMoving);
+        bool isWalk = !controller.agent.pathPending && dist > 0.2f;
+        controller.animator.SetBool("isWalk", isWalk);
+        controller.animator.SetBool("isRun", false);
     }
 
     private void RandMovePos(EnemyController controller)

@@ -7,8 +7,9 @@ public class EnemyKeepDistanceState : IEnemyState
     private Transform _target;          //타겟(플레이어)
     private float _prederredDistance;   //유지거리
     private float _attackRange;         //공격범위
-    private float _moveCooldown = 1.5f;
+    private float _moveCooldown = 1f;
     private float _moveTimer = 0f;
+    
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
@@ -16,13 +17,18 @@ public class EnemyKeepDistanceState : IEnemyState
         _attackRange = _prederredDistance;
 
         controller.agent.isStopped = false;
-        controller.animator?.SetBool("isMoving", true);
+        controller.animator.SetBool("isWalk", true);
+        controller.animator.SetBool("isRun", false);
         _moveTimer = 0f;
+
+        float baseSpeed = controller.GetStat(EnemyStatType.Speed);
+        controller.agent.speed = baseSpeed * 0.5f;
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isWalk", false);
+        controller.agent.speed = controller.GetStat(EnemyStatType.Speed);
     }
 
     public void UpdateState(EnemyController controller)
@@ -46,12 +52,17 @@ public class EnemyKeepDistanceState : IEnemyState
         }
 
         //사거리 안이면 좌우 이동(쿨타임으로 설정)
-        _moveTimer += Time.deltaTime;
-        if(_moveTimer >= _moveCooldown)
+        if(hasArrived)
         {
-            _moveTimer = 0f;
-            MoveSide(controller);
+            _moveTimer += Time.deltaTime;
+
+            if (_moveTimer >= _moveCooldown)
+            {
+                _moveTimer = 0f;
+                MoveSide(controller);
+            }
         }
+        
 
         //사거리 안에 있고 시간이 쿨타임이 끝났다면 상태 전환
         if(distance <= _attackRange && Time.time >= controller.lastAttackTime + attackCooldown)
@@ -65,9 +76,34 @@ public class EnemyKeepDistanceState : IEnemyState
             controller.ChageState(EnemyStateType.Idle);
         }
 
+        Vector3 toPlayer = _target.position - controller.transform.position;
+        toPlayer.y = 0f;
+
+        Quaternion lookRot = Quaternion.LookRotation(toPlayer.normalized);
+        Vector3 moveDir = controller.agent.desiredVelocity.normalized;
+
+        if( moveDir.magnitude > 0.1f)
+        {
+            Vector3 relativeDir = Quaternion.Inverse(lookRot) * moveDir;
+            controller.animator.SetFloat("MoveX", relativeDir.x);
+            controller.animator.SetFloat("MoveZ", relativeDir.z);
+        }
+        else
+        {
+            controller.animator.SetFloat("MoveX", 0);
+            controller.animator.SetFloat("MoveZ", 0);
+        }
+
+        if(toPlayer != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(toPlayer);
+            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+
         //애니메이션 제어
-        bool isMoving = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
-        controller.animator.SetBool("isMoving", isMoving);
+        bool isWalk = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
+        controller.animator.SetBool("isWalk", isWalk);
+        controller.animator.SetBool("isRun", false);
     }
 
     private void MoveSide(EnemyController controller)

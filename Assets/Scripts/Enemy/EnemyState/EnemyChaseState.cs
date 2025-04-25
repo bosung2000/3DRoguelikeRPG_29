@@ -26,14 +26,15 @@ public class EnemyChaseState : IEnemyState
 
         if (controller.animator != null)
         {
-            controller.animator.SetBool("isMoving", true);
+            controller.animator.SetBool("isRun", true);
+            controller.animator.SetBool("isMoving", false);
             controller.animator.ResetTrigger("Hit");
         }
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isRun", false);
     }
 
     public void UpdateState(EnemyController controller)
@@ -75,7 +76,8 @@ public class EnemyChaseState : IEnemyState
         }
 
         //애니메이션 제어
-        bool isMoving = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
-        controller.animator.SetBool("isMoving", isMoving);
+        bool isRun = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
+        controller.animator.SetBool("isRun", isRun);
+        controller.animator.SetBool("isWalk", false);
     }
 }

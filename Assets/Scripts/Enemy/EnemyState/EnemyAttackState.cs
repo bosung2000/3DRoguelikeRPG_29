@@ -76,12 +76,12 @@ public class EnemyAttackState : IEnemyState
 
     private void PerformMeleeAttack(EnemyController controller)
     {
-        if(_target != null)
+        /*if(_target != null)
         {
             float damage = controller.GetAttack();
             _target.GetComponent<PlayerStat>()?.TakeDamage((int)damage);
             Debug.Log($"Melee Attack {damage} 데미지");
-        }
+        }*/
     }
     private void PerformRangedAttack(EnemyController controller)
     {
