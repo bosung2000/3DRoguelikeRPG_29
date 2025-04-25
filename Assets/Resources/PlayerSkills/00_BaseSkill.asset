@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30285c5cf2675144083a365543bde066, type: 3}
   m_Name: 00_BaseSkill
   m_EditorClassIdentifier: 
-  index: 0
-  _name: 
+  index: 1
+  _name: "\uC6D0\uAC70\uB9AC\uACF5\uACA9"
   description: 
   value: 50
   requiredMana: 0
   cooldown: 0
-  maxCooldown: 10
+  maxCooldown: 0
   attackRange: 100
   projectileSpeed: 50
   skillType: 1
@@ -26,4 +26,19 @@ MonoBehaviour:
   isOwned: 0
   projectilePrefabs: {fileID: 4937715729989965735, guid: 8cf868bc5de05a94a9c736bbcac29781, type: 3}
   effectPrefab: {fileID: 0}
+  projectileType: 1
+  castPattern: 0
+  burstCount: 3
+  burstDelay: 0.15
+  spreadCount: 3
+  spreadAngle: 15
+  rainCount: 7
+  rainRadius: 5
+  circleCount: 8
   buffType: 2
+  soundEffectPrefab: {fileID: 0}
+  level: 1
+  maxLevel: 5
+  valueLevelMultiplier: 1.2
+  cooldownLevelMultiplier: 0.9
+  rangeLevelMultiplier: 1.1
