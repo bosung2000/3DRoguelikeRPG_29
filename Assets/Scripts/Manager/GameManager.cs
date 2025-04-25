@@ -46,7 +46,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private UIManager _uiManager;
     public UIManager UIManager => _uiManager;
-    
+
+    [SerializeField] private PortalManager _portalManager;
+    public PortalManager PortalManager => _portalManager;
+
 
     private void Awake()
     {
