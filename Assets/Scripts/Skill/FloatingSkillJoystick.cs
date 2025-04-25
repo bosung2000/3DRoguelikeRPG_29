@@ -57,12 +57,6 @@ public class FloatingSkillJoystick : Joystick
             Debug.Log($"현재 방향:{FixedInput}");
             //해당 방향에 스킬 시전
             skillManager.OnSkillClick(currentSkill, FixedInput);
-            
-            //투사체 생성 (스킬에 투사체가 있는 경우)
-            if (currentSkill.projectilePrefabs != null)
-            {
-                currentSkill.projectilePrefabs.GetComponent<SkillProjectile>().ShootBullet(skillManager.player.transform.position, inputDir);
-            }
         }
         
         background.gameObject.SetActive(false);
