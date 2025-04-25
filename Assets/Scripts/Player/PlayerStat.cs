@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public PlayerStat playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
+    [SerializeField] private CameraShake cameraShake;
 
     private float _lastHitTime = -100f;
 
@@ -395,6 +397,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _lastHitTime = Time.time;
 
         SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+
+        cameraShake.ShakeCamera(2f, 0.3f);
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
