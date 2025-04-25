@@ -21,6 +21,7 @@ public enum BuffType
 // 스킬 발사체 타입 추가
 public enum ProjectileType
 {
+    None,
     Normal,     // 일반 발사체
     Penetrating, // 관통 발사체
     Homing,     // 유도 발사체
@@ -32,6 +33,7 @@ public enum ProjectileType
 // 스킬 시전 패턴 추가
 public enum CastPattern
 {
+    None,
     Single,     // 단일 발사
     Burst,      // 연속 발사
     Spread,     // 부채꼴 발사
