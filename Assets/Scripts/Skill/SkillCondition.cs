@@ -19,16 +19,7 @@ public class SkillCondition : MonoBehaviour
 
     private void Awake()
     {
-        //만약 스킬아이콘이 지정되어있지 않다면, 객체의 이미지 컴포넌트 가져오기
-        //if (skillIcon == null)
-        //{
-        //    skillIcon = this.GetComponent<Image>();
-        //}
-        //만약 쿨다운 이미지가 지정되어있지 않다면 마찬가지로 가져오기
-        //if (uiBar==null)
-        //{
-        //    uiBar = this.transform.Find("UICooldown").GetComponent<Image>();
-        //}
+
     }
     private void Start()
     {

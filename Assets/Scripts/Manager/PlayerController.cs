@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("쿨타임입니다");
             return;
         }
+
+        _isTumbling = true;
         SetTrigger("Dash");
 
         Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
@@ -120,8 +122,9 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator TumbleRoutine(Vector3 target, float duration)
     {
-        _isTumbling = true;
-
+        yield return new WaitForFixedUpdate();
+        float DashSpeed = _anim.GetCurrentAnimatorClipInfo(0)[0].clip.length / duration;
+        SetFloat("DashSpeed", DashSpeed);
         Vector3 start = transform.position;
         float elapsed = 0f;
 
@@ -137,6 +140,7 @@ public class PlayerController : MonoBehaviour
 
         _rb.MovePosition(target);
         _rb.velocity = Vector3.zero;
+        yield return new WaitUntil(() => _anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Dash" || _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1); 
         _isTumbling = false;
     }
     public void StopMove()
