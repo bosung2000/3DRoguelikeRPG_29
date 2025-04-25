@@ -25,7 +25,7 @@ public class Skill : ScriptableObject
     public int index;
     public string _name;
     public string description;
-    public float value;
+    public int value;
     public int requiredMana;
     public float cooldown;
     public float maxCooldown; // 최대 쿨다운 (초기화용)

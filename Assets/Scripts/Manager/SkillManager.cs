@@ -287,7 +287,7 @@ public class SkillManager : MonoBehaviour
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    //enemy.TakeDamage(skill.value);
+                    enemy.TakeDamage(skill.value);
                 }
             }
         }
