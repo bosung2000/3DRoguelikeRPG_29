@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
-    private LayerMask _obstacleLayer;
     private StatUI _statUI;
 
     private bool _isAttacking = false;
@@ -25,7 +24,6 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
-        _obstacleLayer = LayerMask.GetMask("Ground");
         _statUI = FindObjectOfType<StatUI>();
 
         _lastMoveDirection = transform.forward;
@@ -42,6 +40,8 @@ public class PlayerController : MonoBehaviour
     public void DirectionCheck()
     {
         if (_isAttacking) return;
+        if(_isTumbling) return;
+
 
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
@@ -104,9 +104,9 @@ public class PlayerController : MonoBehaviour
         Vector3 origin = transform.position + Vector3.up * 0.01f;
         Vector3 target = transform.position + dir * dashDistance;
 
-        if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
+        if (_rb.SweepTest(dir, out RaycastHit hit, dashDistance))
         {
-            float safeDist = Mathf.Max(hit.distance - 0.01f, 0f);
+            float safeDist = Mathf.Max(hit.distance - 0.05f, 0f);
             target = transform.position + dir * safeDist;
         }
 
