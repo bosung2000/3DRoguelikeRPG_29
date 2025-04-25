@@ -22,12 +22,13 @@ public class EnemyAttackState : IEnemyState
         attackRange = controller.GetStat(EnemyStatType.AttackRange);
         attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
 
-        controller.animator?.SetBool("isMoving", false);
+        controller.agent.isStopped = true;
+        controller.animator.SetTrigger("Attack");
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isMoving", false);
     }
 
     public void UpdateState(EnemyController controller)
@@ -35,6 +36,7 @@ public class EnemyAttackState : IEnemyState
         if (_target == null) return;
 
         float distance = Vector3.Distance(controller.transform.position, _target.position);
+        controller.animator.SetBool("isMoving", false);
 
         if (distance > attackRange)
         {

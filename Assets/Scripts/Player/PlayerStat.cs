@@ -18,7 +18,7 @@ public interface BaseEntity
 }
 public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 {
-    [SerializeField] PlayerStatData statData;
+    [SerializeField] PlayerStatData _statData;
     public PlayerStat playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
@@ -63,7 +63,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     
     private void Start()
     {
-        InitBaseStat(statData);
+        InitBaseStat(_statData);
     }
     
     private void Update()
