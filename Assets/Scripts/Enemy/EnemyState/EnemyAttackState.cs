@@ -76,12 +76,7 @@ public class EnemyAttackState : IEnemyState
 
     private void PerformMeleeAttack(EnemyController controller)
     {
-        /*if(_target != null)
-        {
-            float damage = controller.GetAttack();
-            _target.GetComponent<PlayerStat>()?.TakeDamage((int)damage);
-            Debug.Log($"Melee Attack {damage} 데미지");
-        }*/
+        
     }
     private void PerformRangedAttack(EnemyController controller)
     {
@@ -105,10 +100,8 @@ public class EnemyAttackState : IEnemyState
             proj.Intialize(dir, damage);
         }
         
-        Debug.Log("Ranged Attack 원거리 투사체 발사");
     }
     private void PerformSupportAttack(EnemyController controller)
     {
-        Debug.Log("Support Skill 지원 스킬 발동");
     }
 }
