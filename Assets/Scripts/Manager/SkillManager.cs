@@ -381,8 +381,8 @@ public class SkillManager : MonoBehaviour
         
         if (projectileScript != null)
         {
-            // 공통 속성 설정
-            projectileScript.Init(direction,skill.projectileSpeed); // 방향 설정
+            // 공통 속성 설정 - 방향, 속도, 플레이어 참조 전달
+            projectileScript.Init(direction, skill.projectileSpeed, player);
             
             // 데미지 설정 (플레이어 스탯 반영)
             float damageMultiplier = 1.0f + (player._playerStat.GetStatValue(PlayerStatType.Attack) * 0.01f);
@@ -421,9 +421,8 @@ public class SkillManager : MonoBehaviour
             
             if (projectileScript != null)
             {
-                // 공통 속성 설정
-                
-                projectileScript.Init(rotatedDirection,skill.projectileSpeed);
+                // 공통 속성 설정 - 플레이어 참조 추가
+                projectileScript.Init(rotatedDirection, skill.projectileSpeed, player);
                 
                 // 데미지 설정 (플레이어 스탯 반영)
                 float damageMultiplier = 1.0f + (player._playerStat.GetStatValue(PlayerStatType.Attack) * 0.01f);
@@ -459,8 +458,8 @@ public class SkillManager : MonoBehaviour
             
             if (projectileScript != null)
             {
-                // 공통 속성 설정
-                projectileScript.Init(direction, skill.projectileSpeed);
+                // 공통 속성 설정 - 플레이어 참조 추가
+                projectileScript.Init(direction, skill.projectileSpeed, player);
                 
                 // 데미지 설정 (플레이어 스탯 반영)
                 float damageMultiplier = 1.0f + (player._playerStat.GetStatValue(PlayerStatType.Attack) * 0.01f);
@@ -516,8 +515,8 @@ public class SkillManager : MonoBehaviour
             
             if (projectileScript != null)
             {
-                // 공통 속성 설정
-                projectileScript.Init(direction, skill.projectileSpeed);
+                // 공통 속성 설정 - 플레이어 참조 추가
+                projectileScript.Init(direction, skill.projectileSpeed, player);
                 
                 // 데미지 설정 (플레이어 스탯 반영)
                 float damageMultiplier = 1.0f + (player._playerStat.GetStatValue(PlayerStatType.Attack) * 0.01f);
@@ -562,8 +561,8 @@ public class SkillManager : MonoBehaviour
             
             if (projectileScript != null)
             {
-                // 공통 속성 설정
-                projectileScript.Init(direction, skill.projectileSpeed);
+                // 공통 속성 설정 - 플레이어 참조 추가
+                projectileScript.Init(direction, skill.projectileSpeed, player);
                 
                 // 데미지 설정 (플레이어 스탯 반영)
                 float damageMultiplier = 1.0f + (player._playerStat.GetStatValue(PlayerStatType.Attack) * 0.01f);

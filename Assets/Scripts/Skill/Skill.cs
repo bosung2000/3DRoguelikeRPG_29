@@ -86,7 +86,16 @@ public class Skill : ScriptableObject
     // 스킬 생성 시 최대 쿨다운 초기화
     private void OnEnable()
     {
-        maxCooldown = cooldown;
+        // maxCooldown이 아직 초기화되지 않았거나 0인 경우,
+        // Inspector에서 설정된 cooldown 값을 기본값으로 사용
+        if (maxCooldown <= 0)
+        {
+            maxCooldown = cooldown;
+        }
+        
+        // 스킬 활성화 시 cooldown을 maxCooldown으로 초기화
+        // (스킬이 사용 가능한 상태로 시작)
+        cooldown = 0;
     }
 
     // 쿨다운 리셋 메서드

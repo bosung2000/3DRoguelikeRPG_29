@@ -14,8 +14,11 @@ public class SkillProjectile : MonoBehaviour
 
     // 데미지 관련 변수 추가
     [HideInInspector] public int damage = 0; // 투사체가 적중 시 입힐 데미지
-    [SerializeField] private float criticalChance = 0.1f; // 크리티컬 확률 (10%)
-    [SerializeField] private float criticalMultiplier = 1.5f; // 크리티컬 데미지 배율 (150%)
+
+    // 플레이어 참조 (크리티컬 확률 및 배율을 가져오기 위함)
+    private Player playerRef;
+
+    // 이펙트 관련
     [SerializeField] private GameObject impactEffectPrefab; // 적중 효과 프리팹
 
     // 투사체 특성 (선택적)
@@ -71,6 +74,15 @@ public class SkillProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
+        // Ground 레이어 체크 (9번은 일반적으로 Ground 레이어 번호, 프로젝트에 맞게 조정 필요)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            // 지면에 부딪혔을 때 간단한 이펙트 생성 후 파괴
+            Vector3 hitPoint = collision.ClosestPoint(transform.position);
+            DestroyProjectile(hitPoint, fxOnDestroy);
+            return;
+        }
+        
         // 충돌 대상이 target 레이어에 포함되어 있는지 확인
         if (target.value == (target.value | (1 << collision.gameObject.layer)))
         {
@@ -119,31 +131,62 @@ public class SkillProjectile : MonoBehaviour
             DestroyProjectile(hitPoint, fxOnDestroy);
         }
     }
+    
+    // 지형과의 충돌도 체크하기 위한 OnCollisionEnter 추가
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Ground 레이어 체크 (Collider가 아닌 경우도 처리)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            // 충돌 지점 계산
+            ContactPoint contact = collision.GetContact(0);
+            
+            // 지면에 부딪혔을 때 이펙트 생성 후 파괴
+            DestroyProjectile(contact.point, fxOnDestroy);
+        }
+    }
 
     // 적에게 데미지 적용
     private void ApplyDamageToEnemy(Enemy enemy)
     {
-        // 크리티컬 판정
-        bool isCritical = Random.value <= criticalChance;
         int damageAmount = damage;
 
-        // 크리티컬 히트 시 데미지 증가
-        if (isCritical)
+        // 플레이어 정보가 있을 경우 플레이어의 크리티컬 확률과 배율 사용
+        if (playerRef != null && playerRef._playerStat != null)
         {
-            damageAmount = Mathf.RoundToInt(damage * criticalMultiplier);
+            // 플레이어의 크리티컬 확률 가져오기
+            float criticalChance = playerRef._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f; // % 값을 0~1 범위로 변환
+
+            // 플레이어의 크리티컬 데미지 배율 가져오기
+            float criticalMultiplier = playerRef._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f; // % 값을 배수로 변환
+
+            // 기본값이 너무 낮은 경우 최소값 설정
+            if (criticalMultiplier < 1.5f) criticalMultiplier = 1.5f;
+
+            // 크리티컬 판정
+            bool isCritical = Random.value <= criticalChance;
+
+            if (isCritical)
+            {
+                // 크리티컬 히트 시 데미지 증가
+                damageAmount = Mathf.RoundToInt(damage * criticalMultiplier);
+
+                // 크리티컬 효과 (선택적)
+                if (impactEffectPrefab != null)
+                {
+                    GameObject impact = Instantiate(impactEffectPrefab, enemy.transform.position, Quaternion.identity);
+                    // 크리티컬 효과 크기 조정
+                    impact.transform.localScale *= 1.5f;
+                    Destroy(impact, 2f);
+                }
+
+                // 크리티컬 데미지 로그 (디버그용)
+                Debug.Log($"크리티컬 히트! 데미지: {damageAmount} (기본 {damage} x {criticalMultiplier})");
+            }
         }
 
         // 데미지 적용
         enemy.TakeDamage(damageAmount);
-
-        // 크리티컬 효과 (선택적)
-        if (isCritical && impactEffectPrefab != null)
-        {
-            GameObject impact = Instantiate(impactEffectPrefab, enemy.transform.position, Quaternion.identity);
-            // 크리티컬 효과 크기 조정 (예시)
-            impact.transform.localScale *= 1.5f;
-            Destroy(impact, 2f);
-        }
     }
 
     // 범위 데미지 적용
@@ -197,15 +240,18 @@ public class SkillProjectile : MonoBehaviour
         }
     }
 
-    public void Init(Vector3 _direction, int _projectileSpeed)
+    public void Init(Vector3 _direction, int _projectileSpeed, Player player = null)
     {
         // 방향 벡터 정규화
         this.direction = _direction.normalized;
         this.ProjectileSpeed = _projectileSpeed;
+        if (playerRef == null)
+        {
+            this.playerRef = player; // 플레이어 참조 저장
+        }
         currentDuration = 0;
 
         // 방향 벡터에 맞게 오브젝트 회전 설정
-        // 이전 코드: transform.right = this.direction
         transform.forward = this.direction; // 앞쪽 방향을 이동 방향으로 설정
 
         // 속도가 0인 경우 기본값 설정
@@ -213,6 +259,12 @@ public class SkillProjectile : MonoBehaviour
         {
             ProjectileSpeed = 10f; // 기본 속도 값
             Debug.LogWarning("ProjectileSpeed was 0 or negative, set to default 10");
+        }
+
+        // 플레이어 참조 확인 (디버그용)
+        if (player == null)
+        {
+            Debug.LogWarning("투사체에 플레이어 참조가 전달되지 않았습니다. 크리티컬 계산에 기본값을 사용합니다.");
         }
     }
 
