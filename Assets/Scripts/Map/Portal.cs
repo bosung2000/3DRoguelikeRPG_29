@@ -27,7 +27,7 @@ public class Portal : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.P))
         {
             GameManager.Instance.PortalManager.UnlockPortal("Room1ToRoom2");
-            Debug.Log("포탈 오픈됨");
+            Debug.Log("포탈 오픈");
         }
     }
 }

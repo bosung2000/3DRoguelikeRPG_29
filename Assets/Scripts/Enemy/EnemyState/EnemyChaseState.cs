@@ -27,7 +27,7 @@ public class EnemyChaseState : IEnemyState
         if (controller.animator != null)
         {
             controller.animator.SetBool("isRun", true);
-            controller.animator.SetBool("isMoving", false);
+            controller.animator.SetBool("isWalk", false);
             controller.animator.ResetTrigger("Hit");
         }
     }
@@ -68,7 +68,7 @@ public class EnemyChaseState : IEnemyState
             outRangeTime = 0f; //범위 안이면 초기화
         }
 
-        //플레이어와 거리가 가까워지면 공격 상태로 전환
+        //플레이어와 거리가 가까워지면 대치 상태로 전환
         if (distance <= attackRange)
         {
             controller.ChageState(EnemyStateType.KeepDistance);

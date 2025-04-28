@@ -36,7 +36,8 @@ public enum EnemyStatType
     Soul,//일반 1, 엘리트 5, 보스 10
     AttackRange,
     AttackCooldown,
-    ChaseRange
+    ChaseRange,
+    KeepDistanceRange
 }
 
 public interface IBaseStat<T>
