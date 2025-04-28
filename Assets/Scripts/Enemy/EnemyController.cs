@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour
     public Animator animator { get; private set; }
     public Vector3 SpawnPosition { get; private set; }
     public float lastAttackTime { get; private set; }
+    public EnemyStateType LastStateType { get; private set; } = EnemyStateType.Idle;
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
@@ -39,16 +40,13 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
-
         if (_enemy == null)
         {
-            Debug.LogError("EnemyController: _enemy가 null!");
             return;
         }
 
         if (_enemy.Stat == null)
         {
-            Debug.LogError("EnemyController: _enemy.Stat이 null!");
             return;
         }
 
@@ -67,22 +65,16 @@ public class EnemyController : MonoBehaviour
     {
         if (CurrentStateType == newStateType)
         {
-            Debug.Log("[ChageState] 같은 상태로 전이 시도 → 무시");
             return;
         }
+
+        LastStateType = CurrentStateType;
 
         _currentState?.ExitState(this);
         _currentState = CreateStateByType(newStateType);
-        if (_currentState == null)
-        {
-            Debug.LogError("[ChageState] 상태 생성 실패!");
-            return;
-        }
-
         _currentState?.EnterState(this);
 
         CurrentStateType = newStateType;
-        Debug.Log($"[ChageState] {newStateType} 상태 전이 완료");
 
     }
 

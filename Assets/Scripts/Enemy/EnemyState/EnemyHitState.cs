@@ -32,7 +32,18 @@ public class EnemyHitState : IEnemyState
             }
             else
             {
-                controller.ChageState(EnemyStateType.Idle);
+                switch(controller.LastStateType)
+                {
+                    case EnemyStateType.Chase:
+                        controller.ChageState(EnemyStateType.Chase);
+                        break;
+                    case EnemyStateType.KeepDistance:
+                        controller.ChageState(EnemyStateType.KeepDistance);
+                        break;
+                    default:
+                        controller.ChageState(EnemyStateType.Idle);
+                        break;
+                }
             }
         }
     }
