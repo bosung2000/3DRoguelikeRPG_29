@@ -5,27 +5,16 @@ using UnityEngine.UI;
 
 public class CameraShake : MonoBehaviour
 {
-    public CinemachineVirtualCamera virtualCam;
+    [SerializeField] CinemachineVirtualCamera virtualCam;
     private CinemachineBasicMultiChannelPerlin noise;
     private Coroutine shakeRoutine;
     [SerializeField] Image _takeDamageImage;
-    //[SerializeField] Vector3 minBounds;
-    //[SerializeField] Vector3 maxBounds;
+
 
     private void Awake()
     {
         noise = virtualCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
-
-    //private void LateUpdate()
-    //{
-    //    Vector3 clampedPosition = new Vector3(
-    //        Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x),
-    //        Mathf.Clamp(transform.position.y, minBounds.y, maxBounds.y),
-    //        Mathf.Clamp(transform.position.z, minBounds.z, maxBounds.z)
-    //    );
-    //    transform.position = clampedPosition;
-    //}
     public void ShakeCamera(float intensity, float duration)
     {
         if (shakeRoutine != null)
