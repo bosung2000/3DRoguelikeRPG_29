@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseSkill : MonoBehaviour
+public class MagicSkillBase : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
