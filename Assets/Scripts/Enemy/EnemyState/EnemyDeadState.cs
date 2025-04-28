@@ -5,12 +5,10 @@ using UnityEngine;
 public class EnemyDeadState : IEnemyState
 {
     private float _deadDuration = 1.5f;
-    private float _timer = 0f;
     private bool _animationEnded = false;
 
     public void EnterState(EnemyController controller)
     {
-        _timer = 0f;
         controller.agent.isStopped = true; ;
 
         controller.animator.SetTrigger("DIe");
@@ -27,14 +25,7 @@ public class EnemyDeadState : IEnemyState
 
         if (enemy == null) return;
 
-        if (!enemy.IsDeadAnimationEnded())
-        {
-            return;
-        }
-
-        _timer += Time.deltaTime;
-
-        if (_timer >= _deadDuration)
+        if (enemy.IsDeadAnimationEnded())
         {
             GameObject.Destroy(controller.gameObject);
         }
