@@ -1,23 +1,28 @@
 using Cinemachine;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-    public string portalID;                   //포탈의 고유 id ex)room1,room2
-    public Transform targetSpawnPoint;        // 이동할 위치
-    [SerializeField] private CinemachineConfiner confiner;
-    [SerializeField] private Collider boundingVolume;
+    //public string portalID;                   //포탈의 고유 id ex)room1,room2
+    //public Transform targetSpawnPoint;        // 이동할 위치
+    [SerializeField] CinemachineConfiner _confiner;
+    [SerializeField] List<PortalData> _portalList = new List<PortalData>();
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        string enteredPortalID = GetPortalID(other.transform);
+        PortalData portalData = FindPortalData(enteredPortalID);
+
         {
-            if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalID))
+            if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalData.portalID))
             {
-                confiner.m_BoundingVolume = boundingVolume;
-                confiner.InvalidatePathCache();
-                other.transform.position = targetSpawnPoint.position;
+                _confiner.m_BoundingVolume = portalData.targetCollider;
+                _confiner.InvalidatePathCache();
+                other.transform.position = portalData.targetSpawnPoint.position;
             }
             else
             {
@@ -25,12 +30,20 @@ public class Portal : MonoBehaviour
             }
         }
     }
+    private PortalData FindPortalData(string portalID)
+    {
+        return _portalList.Find(portal => portal.portalID == portalID);
+    }
+    private string GetPortalID(Transform player)
+    {
+        return this.name;
+    }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            GameManager.Instance.PortalManager.UnlockPortal("Room1ToRoom2");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
             Debug.Log("포탈 오픈");
         }
     }
