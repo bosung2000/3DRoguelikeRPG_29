@@ -3,9 +3,9 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private Player player;
-    [SerializeField] private Vector3 offset = new Vector3(0, 7.5f, -10);
+    [SerializeField] private Vector3 offset = new Vector3(0, 7.5f, -4);
     [SerializeField] private Vector3 Rotation = new Vector3(60, 0, 0);
-    [SerializeField] private float followSpeed = 0;
+    [SerializeField] private float followSpeed = 5;
 
     private void LateUpdate()
     {
