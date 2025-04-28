@@ -1,11 +1,13 @@
+using Cinemachine;
+using System.ComponentModel;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
     public string portalID;                   //포탈의 고유 id ex)room1,room2
     public Transform targetSpawnPoint;        // 이동할 위치
-
-
+    [SerializeField] private CinemachineConfiner confiner;
+    [SerializeField] private Collider boundingVolume;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -13,6 +15,8 @@ public class Portal : MonoBehaviour
         {
             if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalID))
             {
+                confiner.m_BoundingVolume = boundingVolume;
+                confiner.InvalidatePathCache();
                 other.transform.position = targetSpawnPoint.position;
             }
             else
