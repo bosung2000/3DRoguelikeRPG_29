@@ -25,6 +25,7 @@ public class UISkill : MonoBehaviour
     {
         skillConditions[index].skill = enabledSkills.skill;
         skillConditions[index].ResetCondition();
+        
     }
 
     /// <summary>
