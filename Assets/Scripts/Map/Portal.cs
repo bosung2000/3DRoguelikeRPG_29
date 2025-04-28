@@ -20,9 +20,6 @@ public class Portal : MonoBehaviour
         {
             if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalData.portalID))
             {
-                confiner.m_BoundingVolume = boundingVolume;
-                confiner.InvalidatePathCache();
-                other.transform.position = targetSpawnPoint.position;
                 _confiner.m_BoundingVolume = portalData.targetCollider;
                 _confiner.InvalidatePathCache();
                 other.transform.position = portalData.targetSpawnPoint.position;
