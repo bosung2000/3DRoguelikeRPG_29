@@ -5,13 +5,13 @@ using UnityEngine;
 public class EnemyKeepDistanceState : IEnemyState
 {
     private Transform _target;          //타겟(플레이어)
-    private float _attackRange;         //공격범위
+    private float _attackRange;
     private float _keepDistanceRange;   //대치범위
     private float _stayDuration;        //대치범위 안에 머무는 시간
     private float _stayTimer = 0f;      //머무는 시간 계산
     private float _moveCooldown = 1f;   //대치 이동 쿨타임
     private float _moveTimer = 0f;      //이동쿨타임 계산
-
+    private bool _firstAttacked = false;//첫 공격 여부 
     
     public void EnterState(EnemyController controller)
     {
@@ -68,7 +68,13 @@ public class EnemyKeepDistanceState : IEnemyState
                 MoveSide(controller);
             }
         }
-        
+
+        if(!_firstAttacked && distance <= _attackRange)
+        {
+            controller.ChageState(EnemyStateType.Attack);
+            _firstAttacked = true; //첫 공격 체크
+            return;
+        }
 
         //사거리 안에 있고 시간이 쿨타임이 끝났다면 상태 전환
         if(distance <= _keepDistanceRange)
