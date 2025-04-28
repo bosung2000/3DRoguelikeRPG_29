@@ -23,7 +23,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public PlayerStat playerStat;
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
-    [SerializeField] private CameraShake cameraShake;
+    [SerializeField] private CameraShake _cameraShake;
 
     private float _lastHitTime = -100f;
 
@@ -398,7 +398,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
 
-        cameraShake.ShakeCamera(2f, 0.3f);
+        _cameraShake.ShakeCamera(2f, 0.3f);
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {

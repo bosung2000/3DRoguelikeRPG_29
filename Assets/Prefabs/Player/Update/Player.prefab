@@ -775,7 +775,7 @@ MonoBehaviour:
   playerStat: {fileID: 0}
   _playerController: {fileID: 0}
   _Weapon: {fileID: 0}
-  cameraShake: {fileID: 0}
+  _cameraShake: {fileID: 0}
 --- !u!114 &7695647897173464371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -835,7 +835,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 1
 --- !u!1 &2958287194784035083
 GameObject:
@@ -1649,12 +1649,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.048487987, y: 0.32470888, z: 0.1748324}
-  m_Center: {x: -0.00000021998207, y: 0.75728273, z: 0.12415232}
+  m_Size: {x: 0.048487987, y: 0.9048026, z: 0.17483242}
+  m_Center: {x: -0.00000031610872, y: 0.46723682, z: 0.12415293}
 --- !u!1 &6489403809880046877
 GameObject:
   m_ObjectHideFlags: 0
