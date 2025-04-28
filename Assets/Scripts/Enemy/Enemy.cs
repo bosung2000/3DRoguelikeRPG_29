@@ -185,4 +185,13 @@ public class Enemy : MonoBehaviour
 
         DisableWeaponCollider();
     }
+
+    //공격 끝나는 시간 체크
+    public void OnAttackAnimationEnd()
+    {
+        if(enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
+        {
+            enemyController.ChageState(EnemyStateType.KeepDistance);
+        }
+    }
 }

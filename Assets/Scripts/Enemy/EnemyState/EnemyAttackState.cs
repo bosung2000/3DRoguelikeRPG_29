@@ -7,8 +7,6 @@ using static UnityEngine.GraphicsBuffer;
 public class EnemyAttackState : IEnemyState
 {
     private Transform _target;
-    private float attackRange;
-    private float attackCooldown;
 
     public void EnterState(EnemyController controller)
     {
@@ -19,40 +17,37 @@ public class EnemyAttackState : IEnemyState
             controller.ChageState(EnemyStateType.Idle);
         }
 
-        attackRange = controller.GetStat(EnemyStatType.AttackRange);
-        attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
+        if (controller.Enemy.Role == EnemyRoleType.Melee)
+        {
+            controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
+        }
+        else
+        {
+            controller.agent.isStopped = false; // 원거리/지원형은 이동 유지하고 공격
+        }
 
-        controller.agent.isStopped = true;
         controller.animator.SetTrigger("Attack");
     }
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator.SetBool("isMoving", false);
+        //controller.animator.SetBool("isRun", false);
     }
 
     public void UpdateState(EnemyController controller)
     {
         if (_target == null) return;
 
-        float distance = Vector3.Distance(controller.transform.position, _target.position);
-        controller.animator.SetBool("isMoving", false);
-
-        if (distance > attackRange)
+        //animator에서 레이어(0) -> base Layer에서 진행 중인 애니메이션의 정보를 가져옴
+        AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
+        
+        //이름이 일치한지 확인하고 애니메이션의 진행파악함 시작(0.0), 끝(1.0)
+        if(stateInfo.IsName("Attack") && stateInfo.normalizedTime < 1.0f)
         {
-            controller.ChageState(EnemyStateType.Chase);
             return;
         }
 
-        if (Time.time >= controller.lastAttackTime + attackCooldown)
-        {
-            controller.ResetAttackCooldown();
-
-            controller.animator?.SetTrigger("Attack");
-            PerformAttack(controller);
-
-            controller.ChageState(EnemyStateType.KeepDistance);
-        }
+        PerformAttack(controller);
     }
 
     private void PerformAttack(EnemyController controller)
@@ -76,7 +71,22 @@ public class EnemyAttackState : IEnemyState
 
     private void PerformMeleeAttack(EnemyController controller)
     {
+        if(_target == null) return;
         
+        float attackRange = controller.GetStat(EnemyStatType.AttackRange);
+        float distance = Vector3.Distance(controller.transform.position, _target.position);
+
+        //공격 범위 밖이라면
+        if(distance >  attackRange)
+        {
+            controller.agent.isStopped = false;
+            controller.agent.SetDestination(_target.position);
+        }
+        //공격 범위 안이라면
+        else
+        {
+            controller.agent.isStopped = true;
+        }
     }
     private void PerformRangedAttack(EnemyController controller)
     {
