@@ -245,14 +245,11 @@ public class SkillManager : MonoBehaviour
                 direction = Vector3.forward;
             }
             
-            Debug.LogWarning($"스킬 사용 시 방향 벡터가 0입니다. 플레이어 전방 방향({direction})으로 대체합니다.");
         }
 
-        Debug.Log($"스킬 {skill.name} 발동 시작: 타입={skill.skillType}, 방향={direction}");
         
         // 마나 소모
-        player.GetComponent<PlayerStat>().UseMana(skill.requiredMana);
-        Debug.Log($"마나 {skill.requiredMana} 소모됨, 남은 마나: {player._playerStat.GetStatValue(PlayerStatType.MP)}");
+        player._playerStat.UseMana(skill.requiredMana);
 
         // 스킬 타입에 따라 처리
         switch (skill.skillType)
@@ -282,70 +279,50 @@ public class SkillManager : MonoBehaviour
 
         // 쿨타임 적용
         skill.cooldown = skill.maxCooldown;
-        Debug.Log($"스킬 {skill.name}에 쿨타임 {skill.maxCooldown}초 적용됨");
 
         // 스킬 사용 이벤트 발생 (애니메이션 등)
         player.GetComponent<PlayerController>().SetTrigger("Skill");
-        Debug.Log("Skill 애니메이션 트리거 발동");
         
         // 스킬 이벤트 발생 (UI 업데이트 등)
         OnSkillUsed?.Invoke(skill);
-        Debug.Log("OnSkillUsed 이벤트 발생됨");
     }
 
     private void CastMeleeSkill(Skill skill, Vector3 direction)
     {
-        Debug.Log($"CastMeleeSkill 함수 진입: 스킬={skill.name}, 방향={direction}");
-        
-        // 방향 벡터 검증 - 제로 벡터인 경우 처리
-        if (direction == Vector3.zero)
-        {
-            // 플레이어가 바라보는 방향을 기본값으로 사용
-            direction = player.transform.forward;
-            
-            // 여전히 제로 벡터라면 기본 방향(앞쪽)으로 설정
-            if (direction == Vector3.zero)
-            {
-                direction = Vector3.forward;
-            }
-            
-            Debug.LogWarning("근접 스킬 사용 시 방향 벡터가 0입니다. 플레이어 전방 방향으로 대체합니다.");
-        }
-        
         // 방향 벡터 정규화
         direction = direction.normalized;
-        Debug.Log($"정규화된 방향 벡터: {direction}");
         
         // 근접 스킬 로직
         Vector3 center = player.transform.position;
         
-        // 공격 범위를 더 크게 설정 (기존 값의 1.5배로 증가)
-        float adjustedRange = skill.attackRange ;
-        Vector3 halfExtents = new Vector3(adjustedRange, 2f, adjustedRange);
+        // 스킬 범위 설정
+        float attackRange = skill.attackRange;
         
-        Quaternion orientation = Quaternion.LookRotation(direction);
-        
-        Debug.Log($"스킬 패러미터: center={center}, 범위={adjustedRange} (원래 범위={skill.attackRange}), 방향={direction}");
-        Debug.Log($"스킬 범위 크기: {halfExtents}, 회전: {orientation.eulerAngles}");
-
         // 부채꼴 범위 공격을 위한 각도 계산
         float angle = 90f; // 90도 부채꼴
         Vector3 forward = direction;
         Debug.Log($"부채꼴 범위 설정: 각도={angle}도, 전방벡터={forward}");
 
         // 스킬 범위 시각화 (게임 내에서 실제로 보이는 효과)
-        ShowMeleeSkillRange(center, forward, adjustedRange, angle);
+        ShowMeleeSkillRange(center, forward, attackRange, angle);
         Debug.Log("스킬 범위 시각화 완료");
 
-        // 플레이어 앞쪽으로 더 멀리 탐색 범위 조정
-        Vector3 searchCenter = center + forward * adjustedRange;
+        // 박스 감지를 위한 설정
+        // 플레이어 위치에서 스킬 범위의 절반 거리만큼 앞으로 이동한 위치를 박스 중심으로 설정
+        Vector3 searchCenter = center + forward * (attackRange * 0.5f);
+        
+        // 박스 크기 설정 - 반드시 반쪽 크기로 지정
+        Vector3 halfExtents = new Vector3(attackRange * 0.5f, 1f, attackRange * 0.5f);
+        
+        // 박스 회전 설정
+        Quaternion orientation = Quaternion.LookRotation(direction);
         
         // 범위 내 적 탐색
         Collider[] hitColliders = Physics.OverlapBox(searchCenter,
-                                                    halfExtents,
-                                                    orientation,
-                                                    LayerMask.GetMask("Enemy"));
-                                                    
+                                                   halfExtents,
+                                                   orientation,
+                                                   LayerMask.GetMask("Enemy"));
+                                                   
         Debug.Log($"감지된 적의 수: {hitColliders.Length}");
         Debug.Log($"박스캐스트 위치: {searchCenter}, 크기: {halfExtents}");
 
@@ -355,9 +332,8 @@ public class SkillManager : MonoBehaviour
             // 각도 체크 (부채꼴 범위 내에 있는지)
             Vector3 dirToTarget = (hitCollider.transform.position - center).normalized;
             float angleToTarget = Vector3.Angle(forward, dirToTarget);
-            Debug.Log($"적 감지: {hitCollider.name}, 각도={angleToTarget}도, 위치={hitCollider.transform.position}");
 
-            if (angleToTarget <= angle)
+            if (angleToTarget <= angle * 0.5f) // 부채꼴 각도의 절반과 비교해야 함
             {
                 // 적에게 데미지 적용
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
@@ -367,29 +343,19 @@ public class SkillManager : MonoBehaviour
                     enemy.TakeDamage(skill.value);
                     enemiesHit++;
                     
-                    // 히트 이펙트 생성 (선택적)
+                    // 히트 이펙트 생성
                     ShowHitEffect(enemy.transform.position);
                 }
-                else
-                {
-                    Debug.LogWarning($"콜라이더 {hitCollider.name}에 Enemy 컴포넌트가 없습니다.");
-                }
-            }
-            else
-            {
-                Debug.Log($"각도 밖의 적: {hitCollider.name}, 각도={angleToTarget}도, 범위 최대 각도={angle * 0.5f}도");
             }
         }
-        Debug.Log($"총 {enemiesHit}명의 적에게 데미지를 입혔습니다.");
 
         // 이펙트 생성 (필요시)
         if (skill.effectPrefab != null)
         {
-            // 이펙트 위치 플레이어 앞으로 조정
-            Vector3 effectPosition = center + forward * adjustedRange * 0.5f;
+            // 이펙트 위치 플레이어 앞으로 조정 - 플레이어 바로 앞에서 시작하도록 수정
+            Vector3 effectPosition = center + forward * (attackRange * 0.5f);
             effectPosition.y += 0.5f; // 약간 위로 올려서 바닥에 묻히지 않게
             
-            Debug.Log($"이펙트 생성: 위치={effectPosition}, 방향={direction}");
             GameObject effect = Instantiate(skill.effectPrefab,
                 effectPosition,
                 Quaternion.LookRotation(direction));
@@ -399,21 +365,16 @@ public class SkillManager : MonoBehaviour
             
             Destroy(effect, 2f);
         }
-        else
-        {
-            Debug.LogWarning($"스킬 {skill.name}에 이펙트 프리팹이 설정되지 않았습니다.");
-        }
         
         // Gizmos 범위 표시 정보 업데이트
         lastMeleeCenter = center;
         lastMeleeDirection = forward;
-        lastMeleeRange = adjustedRange;
+        lastMeleeRange = attackRange;
         lastMeleeAngle = angle;
         showLastMeleeRange = true;
         
         // 5초 후 Gizmos 표시 숨김
         StartCoroutine(HideGizmosAfterDelay(5f));
-        Debug.Log("CastMeleeSkill 함수 종료");
     }
     
     // 근접 스킬 범위 시각화 (게임 내에서 보이는 효과)
@@ -422,63 +383,67 @@ public class SkillManager : MonoBehaviour
         // 일시적인 바닥 범위 표시기 생성
         GameObject rangeIndicator = new GameObject("MeleeSkillRangeIndicator");
         
-        // 플레이어 앞쪽에 범위 지시자 위치 (플레이어 발 아래가 아니라 앞쪽으로 배치)
+        // 플레이어 바로 앞에서 시작하여 범위의 중간 지점에 지시자 배치
         Vector3 indicatorPosition = center + direction * (range * 0.5f);
-        indicatorPosition.y = 0.1f; // 바닥 위 약간 띄움 (더 높게 설정)
+        indicatorPosition.y = 0.1f; // 바닥 위 약간 띄움
         rangeIndicator.transform.position = indicatorPosition;
         
         // 방향에 맞춰 회전
         rangeIndicator.transform.rotation = Quaternion.LookRotation(direction);
         
-        // 범위 표시를 위한 메시 생성 (부채꼴 형태)
+        // 메시 생성 시 원점을 조정하여 플레이어 위치에서 시작하도록 설정
         MeshFilter meshFilter = rangeIndicator.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = rangeIndicator.AddComponent<MeshRenderer>();
         
-        // 반투명 재질 설정 (더 눈에 띄게 색상 조정)
+        // 반투명 재질 설정
         Material material = new Material(Shader.Find("Standard"));
-        material.color = new Color(1f, 0.3f, 0f, 0.5f); // 주황색 반투명 (더 진하게)
+        material.color = new Color(1f, 0.3f, 0f, 0.5f); // 주황색 반투명
         meshRenderer.material = material;
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         meshRenderer.receiveShadows = false;
         
-        // 메시 생성 (부채꼴, 더 큰 규모로)
-        Mesh mesh = CreateArcMesh(range * 1.2f, angle); // 범위를 20% 더 크게 표시
+        // 메시 생성 (플레이어 위치에서 시작하도록 조정된 부채꼴)
+        Mesh mesh = CreateArcMesh(range, angle, true); // 플레이어 시작점 파라미터 추가
         meshFilter.mesh = mesh;
         
-        // 잠시 후 제거 (표시 시간 증가)
-        Destroy(rangeIndicator, 0.7f); // 더 오래 표시 (0.5초에서 0.7초로)
+        // 잠시 후 제거
+        Destroy(rangeIndicator, 0.7f);
         
-        // 범위 외곽선 효과 추가
-        StartCoroutine(CreateRangeOutline(indicatorPosition, direction, range * 1.2f, angle));
+        // 범위 외곽선 효과 추가 (플레이어 위치부터 시작하도록)
+        StartCoroutine(CreateRangeOutline(center, direction, range, angle));
     }
     
     // 부채꼴 메시 생성
-    private Mesh CreateArcMesh(float radius, float angle)
+    private Mesh CreateArcMesh(float radius, float angle, bool startFromPlayer = false)
     {
         Mesh mesh = new Mesh();
         
-        int segments = 30; // 원호 세그먼트 수 증가 (더 부드러운 곡선)
+        int segments = 30;
         float halfAngle = angle * 0.5f * Mathf.Deg2Rad;
         
         Vector3[] vertices = new Vector3[segments + 2];
         int[] triangles = new int[segments * 3];
         
-        // 중앙 정점
-        vertices[0] = Vector3.zero;
+        // 중앙 정점 - 플레이어 위치에서 시작하도록 조정
+        vertices[0] = startFromPlayer ? new Vector3(0, 0, -radius * 0.5f) : Vector3.zero;
         
-        // 원호 정점들
+        // 원호 정점들 조정
         for (int i = 0; i <= segments; i++)
         {
             float segmentAngle = -halfAngle + ((float)i / segments) * 2 * halfAngle;
             float x = Mathf.Sin(segmentAngle) * radius;
             float z = Mathf.Cos(segmentAngle) * radius;
+            
+            if (startFromPlayer)
+                z -= radius * 0.5f; // 플레이어 위치에서 시작하도록 z값 조정
+            
             vertices[i + 1] = new Vector3(x, 0, z);
         }
         
-        // 삼각형 인덱스
+        // 삼각형 인덱스는 동일
         for (int i = 0; i < segments; i++)
         {
-            triangles[i * 3] = 0; // 중앙점
+            triangles[i * 3] = 0;
             triangles[i * 3 + 1] = i + 1;
             triangles[i * 3 + 2] = i + 2;
         }
@@ -555,12 +520,10 @@ public class SkillManager : MonoBehaviour
 
     private void CastRangedSkill(Skill skill, Vector3 direction)
     {
-        Debug.Log($"CastRangedSkill 함수 진입: 스킬={skill.name}, 방향={direction}");
         
         // 원거리 스킬 로직 개선
         if (skill.projectilePrefabs != null)
         {
-            Debug.Log($"발사체 프리팹 확인됨: {skill.projectilePrefabs.name}");
             
             // 방향 벡터 검증 - 제로 벡터인 경우 처리
             if (direction == Vector3.zero)
@@ -574,18 +537,15 @@ public class SkillManager : MonoBehaviour
                     direction = Vector3.forward;
                 }
                 
-                Debug.LogWarning("원거리 스킬 사용 시 방향 벡터가 0입니다. 플레이어 전방 방향으로 대체합니다.");
             }
             
             // 방향 벡터 정규화 (필수)
             direction = direction.normalized;
-            Debug.Log($"정규화된 방향 벡터: {direction}");
             
             // 발사 위치 계산 (플레이어 위치에서 약간 앞으로)
             Vector3 spawnPosition = player.transform.position + direction * 1.0f;
             spawnPosition.y += 1.0f; // 바닥보다 약간 위에서 발사
             
-            Debug.Log($"발사 위치 계산: {spawnPosition}, 플레이어 위치: {player.transform.position}");
             
             // 스킬 속도 검증 (0이하면 기본값 설정)
             if (skill.projectileSpeed <= 0)
@@ -595,7 +555,6 @@ public class SkillManager : MonoBehaviour
             }
             
             // 발사 패턴에 따른 분기 처리
-            Debug.Log($"발사 패턴: {skill.castPattern}, 속도: {skill.projectileSpeed}");
             
             switch (skill.castPattern)
             {
@@ -634,7 +593,6 @@ public class SkillManager : MonoBehaviour
             // 발사 효과음 재생 (필요시)
             if (skill.soundEffectPrefab != null)
             {
-                Debug.Log($"효과음 재생: {skill.soundEffectPrefab.name}");
                 AudioSource.PlayClipAtPoint(skill.soundEffectPrefab, spawnPosition);
             }
             else
@@ -645,7 +603,6 @@ public class SkillManager : MonoBehaviour
             // 발사 이펙트 생성 (필요시)
             if (skill.effectPrefab != null)
             {
-                Debug.Log($"이펙트 생성: {skill.effectPrefab.name}, 위치={spawnPosition}");
                 GameObject effect = Instantiate(skill.effectPrefab, spawnPosition, Quaternion.LookRotation(direction));
                 Destroy(effect, 2f);
             }
@@ -659,7 +616,6 @@ public class SkillManager : MonoBehaviour
             Debug.LogError($"스킬 '{skill._name}'의 발사체 프리팹이 설정되지 않았습니다.");
         }
         
-        Debug.Log("CastRangedSkill 함수 종료");
     }
     
     // 단일 발사체 생성
