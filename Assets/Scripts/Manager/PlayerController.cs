@@ -11,15 +11,12 @@ public class PlayerController : MonoBehaviour
 
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
-    private LayerMask _obstacleLayer;
     private StatUI _statUI;
 
     private bool _isAttacking = false;
     private Vector3 _lastMoveDirection;
     Vector3 inputDir;
     
-    // 속도 제어를 위한 변수 추가
-    private float _velocityDampingTime = 0.1f;
 
     private void Awake()
     {
@@ -27,7 +24,6 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _playerStat = GetComponent<PlayerStat>();
         _floatingJoystick = FindObjectOfType<FloatingJoystick>();
-        _obstacleLayer = LayerMask.GetMask("Ground");
         _statUI = FindObjectOfType<StatUI>();
 
         _lastMoveDirection = transform.forward;
@@ -36,7 +32,7 @@ public class PlayerController : MonoBehaviour
         if (_rb != null)
         {
             _rb.drag = 5f; // 수평 저항값 설정
-            _rb.angularDrag = 5f; // 회전 저항값 설정
+            _rb.angularDrag = 100f; // 회전 저항값 설정
             _rb.interpolation = RigidbodyInterpolation.Interpolate; // 부드러운 움직임
         }
     }
@@ -44,6 +40,8 @@ public class PlayerController : MonoBehaviour
     public void DirectionCheck()
     {
         if (_isAttacking) return;
+        if(_isTumbling) return;
+
 
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
 
@@ -83,6 +81,7 @@ public class PlayerController : MonoBehaviour
 
     public void Dash()
     {
+        _isAttacking = false;
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -91,6 +90,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("쿨타임입니다");
             return;
         }
+
+        _isTumbling = true;
         SetTrigger("Dash");
 
         Vector3 joystickInput = new Vector3(_floatingJoystick.Horizontal, 0, _floatingJoystick.Vertical);
@@ -105,9 +106,9 @@ public class PlayerController : MonoBehaviour
         Vector3 origin = transform.position + Vector3.up * 0.01f;
         Vector3 target = transform.position + dir * dashDistance;
 
-        if (Physics.Raycast(origin, dir, out RaycastHit hit, dashDistance, _obstacleLayer))
+        if (_rb.SweepTest(dir, out RaycastHit hit, dashDistance))
         {
-            float safeDist = Mathf.Max(hit.distance - 0.01f, 0f);
+            float safeDist = Mathf.Max(hit.distance - 0.05f, 0f);
             target = transform.position + dir * safeDist;
         }
 
@@ -121,8 +122,9 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator TumbleRoutine(Vector3 target, float duration)
     {
-        _isTumbling = true;
-
+        yield return new WaitForFixedUpdate();
+        float DashSpeed = _anim.GetCurrentAnimatorClipInfo(0)[0].clip.length / duration;
+        SetFloat("DashSpeed", DashSpeed);
         Vector3 start = transform.position;
         float elapsed = 0f;
 
@@ -138,6 +140,7 @@ public class PlayerController : MonoBehaviour
 
         _rb.MovePosition(target);
         _rb.velocity = Vector3.zero;
+        yield return new WaitUntil(() => _anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Dash" || _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1); 
         _isTumbling = false;
     }
     public void StopMove()

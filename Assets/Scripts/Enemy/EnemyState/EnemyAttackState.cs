@@ -9,7 +9,6 @@ public class EnemyAttackState : IEnemyState
     private Transform _target;
     private float attackRange;
     private float attackCooldown;
-    private float lastAttackTime;
 
     public void EnterState(EnemyController controller)
     {
@@ -22,14 +21,14 @@ public class EnemyAttackState : IEnemyState
 
         attackRange = controller.GetStat(EnemyStatType.AttackRange);
         attackCooldown = controller.GetStat(EnemyStatType.AttackCooldown);
-        lastAttackTime = Time.time;
 
-        controller.animator?.SetBool("isMoving", false);
+        controller.agent.isStopped = true;
+        controller.animator.SetTrigger("Attack");
     }
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.animator.SetBool("isMoving", false);
     }
 
     public void UpdateState(EnemyController controller)
@@ -37,6 +36,7 @@ public class EnemyAttackState : IEnemyState
         if (_target == null) return;
 
         float distance = Vector3.Distance(controller.transform.position, _target.position);
+        controller.animator.SetBool("isMoving", false);
 
         if (distance > attackRange)
         {
@@ -44,12 +44,14 @@ public class EnemyAttackState : IEnemyState
             return;
         }
 
-        if (Time.time >= lastAttackTime + attackCooldown)
+        if (Time.time >= controller.lastAttackTime + attackCooldown)
         {
-            lastAttackTime = Time.time;
+            controller.ResetAttackCooldown();
 
             controller.animator?.SetTrigger("Attack");
             PerformAttack(controller);
+
+            controller.ChageState(EnemyStateType.KeepDistance);
         }
     }
 
@@ -70,19 +72,11 @@ public class EnemyAttackState : IEnemyState
 
     }
 
-    public void ResetAttackCooldown()
-    {
-        lastAttackTime = Time.time;
-    }
+    
 
     private void PerformMeleeAttack(EnemyController controller)
     {
-        if(_target != null)
-        {
-            float damage = controller.GetAttack();
-            _target.GetComponent<PlayerStat>()?.TakeDamage((int)damage);
-            Debug.Log($"Melee Attack {damage} 데미지");
-        }
+        
     }
     private void PerformRangedAttack(EnemyController controller)
     {
@@ -106,10 +100,8 @@ public class EnemyAttackState : IEnemyState
             proj.Intialize(dir, damage);
         }
         
-        Debug.Log("Ranged Attack 원거리 투사체 발사");
     }
     private void PerformSupportAttack(EnemyController controller)
     {
-        Debug.Log("Support Skill 지원 스킬 발동");
     }
 }

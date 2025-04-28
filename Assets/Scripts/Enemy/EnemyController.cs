@@ -16,8 +16,8 @@ public enum EnemyStateType
     Chase,
     Attack,
     Hit,
+    KeepDistance,
     Dead
-
 }
 public class EnemyController : MonoBehaviour
 {
@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour
     public NavMeshAgent agent { get; private set; }
     public Animator animator { get; private set; }
     public Vector3 SpawnPosition { get; private set; }
-
+    public float lastAttackTime { get; private set; }
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
@@ -105,16 +105,14 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Attack => new EnemyAttackState(),
             EnemyStateType.Dead => new EnemyDeadState(),
             EnemyStateType.Hit => new EnemyHitState(),
+            EnemyStateType.KeepDistance => new EnemyKeepDistanceState(),
             _ => null
         };
     }
 
     public void ResetAttackCooldown()
     {
-        if (_currentState is EnemyAttackState attackState)
-        {
-            attackState.ResetAttackCooldown();
-        }
+        lastAttackTime = Time.time;
     }
 
 
