@@ -289,8 +289,15 @@ public class SkillManager : MonoBehaviour
 
     private void CastMeleeSkill(Skill skill, Vector3 direction)
     {
-        direction = meleeSkill.HalfMoon(skill, direction,player);
-
+        // 스킬 이름에 따라 다른 근접 공격 패턴 적용
+        if (skill.name.Contains("Stab") || skill.name.Contains("찌르기"))
+        {
+            direction = meleeSkill.Stab(skill, direction, player);
+        }
+        else // 기본값은 HalfMoon
+        {
+            direction = meleeSkill.HalfMoon(skill, direction, player);
+        }
     }
     private void CastRangedSkill(Skill skill, Vector3 direction)
     {
