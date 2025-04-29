@@ -1,4 +1,5 @@
 using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -8,45 +9,46 @@ public class Portal : MonoBehaviour
 {
     [SerializeField] CinemachineConfiner _confiner;
     [SerializeField] List<PortalData> _portalList = new List<PortalData>();
+    [SerializeField] Player _player;
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!other.CompareTag("Player")) return;
+
+    //    _enteredPlayer = other.transform;
+    //    _enteredPortalID = GetPortalID(other.transform);
+    //}
+
+    //private Transform _enteredPlayer;
+    //private string _enteredPortalID;
+
+    public void TryUsePortal(string targetPortalID)
     {
-        if (!other.CompareTag("Player")) return;
-
-        _enteredPlayer = other.transform;
-        _enteredPortalID = GetPortalID(other.transform);
+        StartCoroutine(TeleportWithConfiner(targetPortalID));
     }
-
-    private Transform _enteredPlayer;
-    private string _enteredPortalID;
-
-    public void TryUsePortal()
+    private IEnumerator TeleportWithConfiner(string portalID)
     {
-        if (_enteredPlayer == null)
+        yield return new WaitForFixedUpdate();
+
+        PortalData portalData = FindPortalData(portalID);
+        if (portalData == null) yield break;
+
+        var player = _player;
+        if (player == null) yield break;
+
+        player.transform.position = portalData.targetSpawnPoint.position;
+
+        var rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
         {
-            Debug.LogWarning("플레이어가 포탈에 닿지 않았습니다.");
-            return;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        PortalData portalData = FindPortalData(_enteredPortalID);
-        if (portalData == null)
-        {
-            Debug.LogWarning($"포탈 ID {_enteredPortalID}를 찾을 수 없습니다.");
-            return;
-        }
-
-        if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalData.portalID))
-        {
-            _confiner.m_BoundingVolume = portalData.targetCollider;
-            _confiner.InvalidatePathCache();
-            _enteredPlayer.position = portalData.targetSpawnPoint.position;
-        }
-        else
-        {
-            Debug.Log("포탈이 아직 잠겨있습니다.");
-        }
+        yield return null;
+        _confiner.m_BoundingVolume = portalData.targetCollider;
+        _confiner.InvalidatePathCache();
     }
-
     private PortalData FindPortalData(string portalID)
     {
         return _portalList.Find(portal => portal.portalID == portalID);
@@ -61,6 +63,11 @@ public class Portal : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom3");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom4");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom5");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom6");
+            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom7");
             Debug.Log("포탈 오픈");
         }
     }

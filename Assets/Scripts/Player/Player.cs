@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
     }
     public void AttackSpeedUp()
     {
-        _playerStat.AttackSpeedUp(0.1f);
+        _playerStat.AttackSpeedUp(1f);
     }
     public void Dash()
     {
