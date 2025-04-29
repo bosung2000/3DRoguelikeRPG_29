@@ -2,11 +2,10 @@ using Cinemachine;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Portal : MonoBehaviour
 {
-    //public string portalID;                   //포탈의 고유 id ex)room1,room2
-    //public Transform targetSpawnPoint;        // 이동할 위치
     [SerializeField] CinemachineConfiner _confiner;
     [SerializeField] List<PortalData> _portalList = new List<PortalData>();
 
@@ -14,31 +13,49 @@ public class Portal : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        string enteredPortalID = GetPortalID(other.transform);
-        PortalData portalData = FindPortalData(enteredPortalID);
+        _enteredPlayer = other.transform;
+        _enteredPortalID = GetPortalID(other.transform);
+    }
 
+    private Transform _enteredPlayer;
+    private string _enteredPortalID;
+
+    public void TryUsePortal()
+    {
+        if (_enteredPlayer == null)
         {
-            if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalData.portalID))
-            {
-                _confiner.m_BoundingVolume = portalData.targetCollider;
-                _confiner.InvalidatePathCache();
-                other.transform.position = portalData.targetSpawnPoint.position;
-            }
-            else
-            {
-                Debug.Log("포탈이 아직 잠겨있습니다.");
-            }
+            Debug.LogWarning("플레이어가 포탈에 닿지 않았습니다.");
+            return;
+        }
+
+        PortalData portalData = FindPortalData(_enteredPortalID);
+        if (portalData == null)
+        {
+            Debug.LogWarning($"포탈 ID {_enteredPortalID}를 찾을 수 없습니다.");
+            return;
+        }
+
+        if (GameManager.Instance.PortalManager.IsPortalUnlocked(portalData.portalID))
+        {
+            _confiner.m_BoundingVolume = portalData.targetCollider;
+            _confiner.InvalidatePathCache();
+            _enteredPlayer.position = portalData.targetSpawnPoint.position;
+        }
+        else
+        {
+            Debug.Log("포탈이 아직 잠겨있습니다.");
         }
     }
+
     private PortalData FindPortalData(string portalID)
     {
         return _portalList.Find(portal => portal.portalID == portalID);
     }
+
     private string GetPortalID(Transform player)
     {
         return this.name;
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
