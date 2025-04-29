@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInventory : MonoBehaviour
+public class UIInventory : PopupUI
 {
     public List<UISlot> slots;
     //public int MaxSlots = 12;
