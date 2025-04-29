@@ -214,4 +214,6 @@ public class Enemy : MonoBehaviour
             Die();
         }
     }
+
+
 }
