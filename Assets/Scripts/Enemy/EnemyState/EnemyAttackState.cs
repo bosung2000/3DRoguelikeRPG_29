@@ -7,12 +7,10 @@ using static UnityEngine.GraphicsBuffer;
 public class EnemyAttackState : IEnemyState
 {
     private Transform _target;
-    private bool _hasAttacked = false;
 
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
-        _hasAttacked = false;
 
         if (_target == null)
         {
@@ -20,14 +18,7 @@ public class EnemyAttackState : IEnemyState
             return;
         }
 
-        if (controller.Enemy.Role == EnemyRoleType.Melee)
-        {
-            controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
-        }
-        else
-        {
-            controller.agent.isStopped = false; // 원거리/지원형은 이동 유지하고 공격
-        }
+        controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
 
         controller.animator.SetTrigger("Attack");
     }
@@ -58,14 +49,8 @@ public class EnemyAttackState : IEnemyState
             Quaternion lookRotation = Quaternion.LookRotation(toTarget);
             controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, lookRotation, Time.deltaTime * 10f);
         }
-
-        if (!_hasAttacked)
-        {
-            {
-                _hasAttacked = true;
-                PerformAttack(controller);
-            }
-        }
+  
+        PerformAttack(controller);
     }
 
     private void PerformAttack(EnemyController controller)
@@ -82,10 +67,7 @@ public class EnemyAttackState : IEnemyState
                 PerformSupportAttack(controller);
                 break;
         }
-
     }
-
-    
 
     private void PerformMeleeAttack(EnemyController controller)
     {
@@ -108,26 +90,6 @@ public class EnemyAttackState : IEnemyState
     }
     private void PerformRangedAttack(EnemyController controller)
     {
-        GameObject prefab = controller.Enemy.ProjectilePrefab;
-        Transform firePoint = controller.Enemy.FirePoint;
-        if(prefab == null || firePoint == null) return;
-
-        Vector3 targetPos = controller.GetTarget().position;
-        targetPos.y += 1.0f;
-        Vector3 spawnPos = firePoint.position;//발사 위치
-
-        Vector3 dir = (targetPos - spawnPos).normalized;
-
-        //회전값 계산
-        Quaternion rot = Quaternion.LookRotation(dir);
-
-        GameObject projectile = GameObject.Instantiate(prefab, spawnPos, rot);
-        Projectile proj = projectile.GetComponent<Projectile>();
-        if(proj != null )
-        {
-            int damage = (int)controller.GetAttack();
-            proj.Intialize(dir, damage);
-        }
         
     }
     private void PerformSupportAttack(EnemyController controller)

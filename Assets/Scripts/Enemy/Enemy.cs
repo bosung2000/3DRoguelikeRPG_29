@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR;
 using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
@@ -192,6 +193,28 @@ public class Enemy : MonoBehaviour
         if(enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
         {
             enemyController.ChageState(EnemyStateType.KeepDistance);
+        }
+    }
+
+    //원거리 공격
+    public void FireProjectile()
+    {
+        if (ProjectilePrefab == null || _firePoint == null) return;
+
+        Transform target = GetPlayerTarget();
+        if (target == null) return;
+
+        Vector3 spawnPos = FirePoint.position;
+        Vector3 dir = transform.forward;
+
+        Quaternion rot = Quaternion.LookRotation(dir);
+
+        GameObject projectile = GameObject.Instantiate(ProjectilePrefab, spawnPos, rot);
+        Projectile proj = projectile.GetComponent<Projectile>();
+        if (proj != null)
+        {
+            int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
+            proj.Intialize(dir, damage);
         }
     }
 }
