@@ -16,7 +16,7 @@ public class SkillProjectile : MonoBehaviour
     [HideInInspector] public int damage = 0; // 투사체가 적중 시 입힐 데미지
 
     // 플레이어 참조 (크리티컬 확률 및 배율을 가져오기 위함)
-    private Player playerRef;
+    private Player player;
 
     // 이펙트 관련
     [SerializeField] private GameObject impactEffectPrefab; // 적중 효과 프리팹
@@ -152,37 +152,42 @@ public class SkillProjectile : MonoBehaviour
         int damageAmount = damage;
 
         // 플레이어 정보가 있을 경우 플레이어의 크리티컬 확률과 배율 사용
-        if (playerRef != null && playerRef._playerStat != null)
+        if (player != null && player._playerStat != null)
         {
-            // 플레이어의 크리티컬 확률 가져오기
-            float criticalChance = playerRef._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f; // % 값을 0~1 범위로 변환
-
-            // 플레이어의 크리티컬 데미지 배율 가져오기
-            float criticalMultiplier = playerRef._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f; // % 값을 배수로 변환
-
-            // 기본값이 너무 낮은 경우 최소값 설정
-            if (criticalMultiplier < 1.5f) criticalMultiplier = 1.5f;
-
-            // 크리티컬 판정
-            bool isCritical = Random.value <= criticalChance;
-
+            // 크리티컬 적용
+            bool isCritical = IsAttackCritical(player);
             if (isCritical)
             {
-                // 크리티컬 히트 시 데미지 증가
-                damageAmount = Mathf.RoundToInt(damage * criticalMultiplier);
-
-                // 강화된 크리티컬 효과 표시
+                float critMultiplier = GetCriticalDamageMultiplier(player);
+                damageAmount = Mathf.RoundToInt(damageAmount * critMultiplier);
                 ShowCriticalHitEffect(enemy.transform.position);
-
-                // 크리티컬 데미지 로그 (디버그용)
-                Debug.Log($"크리티컬 히트! 데미지: {damageAmount} (기본 {damage} x {criticalMultiplier})");
+                Debug.Log($"크리티컬 히트! 데미지: {damageAmount} (기본 {damage} x {critMultiplier})");
             }
         }
 
         // 데미지 적용
         enemy.TakeDamage(damageAmount);
     }
-    
+    // 크리티컬 발생 확인
+    private bool IsAttackCritical(Player player)
+    {
+        if (player == null || player._playerStat == null)
+            return false;
+
+        float critChance = player._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f;
+        return Random.value <= critChance;
+    }
+    // 크리티컬 데미지 배율 구하기
+    private float GetCriticalDamageMultiplier(Player player)
+    {
+        if (player == null || player._playerStat == null)
+            return 1.5f; // 기본 배율
+
+        float critDamage = player._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f;
+        return Mathf.Max(1.5f, critDamage); // 최소 1.5배
+    }
+
+
     // 크리티컬 히트 이펙트 표시
     private void ShowCriticalHitEffect(Vector3 position)
     {
@@ -262,9 +267,9 @@ public class SkillProjectile : MonoBehaviour
         // 방향 벡터 정규화
         this.direction = _direction.normalized;
         this.ProjectileSpeed = _projectileSpeed;
-        if (playerRef == null)
+        if (this.player == null)
         {
-            this.playerRef = player; // 플레이어 참조 저장
+            this.player = player; // 플레이어 참조 저장
         }
         currentDuration = 0;
 
