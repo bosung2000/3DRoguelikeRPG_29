@@ -10,6 +10,7 @@ public class UISkillSlot : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private Button SlotButton;
     [SerializeField] private TextMeshProUGUI txt_equip;
+    [SerializeField] private TextMeshProUGUI Level;
 
     public SkillInstance currentSkill;
 
@@ -18,6 +19,7 @@ public class UISkillSlot : MonoBehaviour
     void Start()
     {
         txt_equip.gameObject.SetActive(false);
+        Level.gameObject.SetActive(false);
         Init();
     }
 
@@ -42,7 +44,7 @@ public class UISkillSlot : MonoBehaviour
     {
         currentSkill = _skill;
 
-        if (_skill != null)
+        if (_skill.skill != null)
         {
             iconImage.sprite = _skill.skill.icon;
             iconImage.enabled = true;
@@ -52,6 +54,7 @@ public class UISkillSlot : MonoBehaviour
             iconImage.sprite = null;
             iconImage.enabled = false;
             txt_equip.gameObject.SetActive(false);
+            Level.gameObject.SetActive(false);
         }
     }
 
