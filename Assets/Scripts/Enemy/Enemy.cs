@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
+
 
 public class Enemy : MonoBehaviour
 {
@@ -25,7 +27,11 @@ public class Enemy : MonoBehaviour
 
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
-    private bool _isDead = false;    
+    private bool _isDead = false;
+
+    public event Action<Enemy> OnDeath; //이벤트
+
+
 
     private void Awake()
     {
@@ -92,6 +98,7 @@ public class Enemy : MonoBehaviour
 
     }
 
+    
     //죽음 - 재화 드랍
     public void Die()
     {
@@ -105,6 +112,10 @@ public class Enemy : MonoBehaviour
         }
 
         DropCurrency();
+
+        //존 내의 적 처치 이벤트
+        OnDeath?.Invoke(this);
+        
     }
     
     //재화 드랍
@@ -132,7 +143,7 @@ public class Enemy : MonoBehaviour
     //생성 위치 보정
     private Vector3 GetSafeDropPosition(Vector3 center, float radius = 1.5f)
     {
-        Vector2 circle = Random.insideUnitCircle * radius;
+        Vector2 circle = UnityEngine.Random.insideUnitCircle * radius;
         Vector3 randomXZ = new Vector3(circle.x, 0f, circle.y);
         Vector3 dropPos = center + randomXZ;
 
