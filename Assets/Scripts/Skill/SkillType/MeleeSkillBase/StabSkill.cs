@@ -9,14 +9,15 @@ public class StabSkill : MeleeSkillBase
     [SerializeField] private float stabSpeed = 15f; // 찌르기 속도
     [SerializeField] private float criticalChanceBonus = 20f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 30f; // 크리티컬 데미지 보너스
-
+    [SerializeField] private PlayerController _playerController;
 
 
     protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
-
+        player.GetComponent<PlayerController>().SetTrigger("StabSkill");
+        yield return new WaitForSeconds(1);
         // 크리티컬 보너스 적용
         ApplyCriticalBonusToPlayer(player, true);
 
