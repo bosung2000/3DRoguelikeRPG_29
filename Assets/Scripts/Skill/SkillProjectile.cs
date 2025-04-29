@@ -171,14 +171,8 @@ public class SkillProjectile : MonoBehaviour
                 // 크리티컬 히트 시 데미지 증가
                 damageAmount = Mathf.RoundToInt(damage * criticalMultiplier);
 
-                // 크리티컬 효과 (선택적)
-                if (impactEffectPrefab != null)
-                {
-                    GameObject impact = Instantiate(impactEffectPrefab, enemy.transform.position, Quaternion.identity);
-                    // 크리티컬 효과 크기 조정
-                    impact.transform.localScale *= 1.5f;
-                    Destroy(impact, 2f);
-                }
+                // 강화된 크리티컬 효과 표시
+                ShowCriticalHitEffect(enemy.transform.position);
 
                 // 크리티컬 데미지 로그 (디버그용)
                 Debug.Log($"크리티컬 히트! 데미지: {damageAmount} (기본 {damage} x {criticalMultiplier})");
@@ -188,7 +182,30 @@ public class SkillProjectile : MonoBehaviour
         // 데미지 적용
         enemy.TakeDamage(damageAmount);
     }
-
+    
+    // 크리티컬 히트 이펙트 표시
+    private void ShowCriticalHitEffect(Vector3 position)
+    {
+        GameObject critEffect = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        position.y += 0.5f;
+        critEffect.transform.position = position;
+        critEffect.transform.localScale = Vector3.one * 0.8f;
+        
+        Destroy(critEffect.GetComponent<Collider>());
+        
+        Material material = new Material(Shader.Find("Standard"));
+        material.color = new Color(1f, 0f, 0f, 1f); // 순수한 빨간색, 완전 불투명
+        material.EnableKeyword("_EMISSION");
+        material.SetColor("_EmissionColor", new Color(1f, 0f, 0f) * 5f); // 강한 빨간색 발광
+        critEffect.GetComponent<Renderer>().material = material;
+        
+        // 크리티컬 이펙트에 자체 스크립트 추가
+        CriticalEffectController effectController = critEffect.AddComponent<CriticalEffectController>();
+        effectController.Init(position, 0.5f);
+        
+        // 자동 삭제는 CriticalEffectController에서 처리
+    }
+   
     // 범위 데미지 적용
     private void ApplySplashDamage(Vector3 center)
     {

@@ -7,7 +7,7 @@ public class OneArrow : RangeSkillBase
     [SerializeField] private float arrowSpeed = 25f;
     [SerializeField] private float arrowLifetime = 5f;
     [SerializeField] private float damageMultiplier = 1.2f;
-    [SerializeField] private float criticalChanceBonus = 25f; // 크리티컬 확률 보너스
+    [SerializeField] private float criticalChanceBonus = 90f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
 
     public override void Execute(Player player, Vector3 direction)
@@ -68,9 +68,6 @@ public class OneArrow : RangeSkillBase
             Destroy(effect, 2f);
         }
 
-        // 크리티컬 강화 효과 표시
-        ShowCriticalBoostEffect(player.transform.position);
-
         // 공격 딜레이
         yield return new WaitForSeconds(attackDelay);
         
@@ -96,63 +93,6 @@ public class OneArrow : RangeSkillBase
             // 보너스 제거
             player._playerStat.ModifyStat(PlayerStatType.CriticalChance, -criticalChanceBonus);
             player._playerStat.ModifyStat(PlayerStatType.CriticalDamage, -criticalDamageBonus);
-        }
-    }
-    
-    // 크리티컬 강화 이펙트 표시
-    private void ShowCriticalBoostEffect(Vector3 position)
-    {
-        // 크리티컬 강화 시각 효과
-        GameObject critEffect = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        position.y += 0.5f;
-        critEffect.transform.position = position;
-        critEffect.transform.localScale = Vector3.one * 0.7f;
-        
-        Destroy(critEffect.GetComponent<Collider>());
-        
-        Material material = new Material(Shader.Find("Standard"));
-        material.color = new Color(1f, 0f, 0f, 1f); // 순수한 빨간색, 완전 불투명
-        material.EnableKeyword("_EMISSION");
-        material.SetColor("_EmissionColor", new Color(1f, 0f, 0f) * 5f); // 강한 빨간색 발광
-        critEffect.GetComponent<Renderer>().material = material;
-        
-        // 효과 애니메이션
-        StartCoroutine(AnimateCriticalEffect(critEffect));
-    }
-    
-    // 크리티컬 이펙트 애니메이션
-    private IEnumerator AnimateCriticalEffect(GameObject effect)
-    {
-        if (effect == null) yield break;
-        
-        float duration = 0.5f;
-        float elapsed = 0f;
-        
-        Vector3 startScale = Vector3.one * 0.7f;
-        Vector3 endScale = Vector3.one * 1.8f;
-        
-        while (elapsed < duration && effect != null)
-        {
-            float t = elapsed / duration;
-            
-            if (effect != null)
-            {
-                effect.transform.localScale = Vector3.Lerp(startScale, endScale, t);
-                
-                Renderer renderer = effect.GetComponent<Renderer>();
-                if (renderer != null && renderer.material != null)
-                {
-                    renderer.material.color = new Color(1f, 0f, 0f, Mathf.Lerp(1f, 0f, t));
-                }
-            }
-            
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        
-        if (effect != null)
-        {
-            Destroy(effect);
         }
     }
 }
