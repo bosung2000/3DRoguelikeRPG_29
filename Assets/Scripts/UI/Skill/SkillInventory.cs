@@ -18,6 +18,7 @@ public class SkillInventory : MonoBehaviour
     {
         skillManager = GameManager.Instance.SkillManager;
         InitSlots();
+        ShowSkillInventory();
     }
 
     // 초기화 (한 번만 실행)
@@ -54,6 +55,9 @@ public class SkillInventory : MonoBehaviour
         {
             slots[i].SetSlotData(skillManager.skillInstances[i]);
         }
+
+
+
     }
 
     private void ResetSlots()
@@ -72,6 +76,9 @@ public class SkillInventory : MonoBehaviour
     private void HandleItemOneClick(SkillInstance _skill)
     {
         //스킬 정보 Popup 띄워주기 
+       var skillinfopopup= UIManager.Instance.ShowPopupUI<UISkillInformation>();
+        skillinfopopup.Init(_skill);
+
     }
 
     private void RemoveSlots()
