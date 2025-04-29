@@ -205,4 +205,13 @@ public class Enemy : MonoBehaviour
             enemyController.ChageState(EnemyStateType.KeepDistance);
         }
     }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            Debug.Log("적 죽음");
+            Die();
+        }
+    }
 }
