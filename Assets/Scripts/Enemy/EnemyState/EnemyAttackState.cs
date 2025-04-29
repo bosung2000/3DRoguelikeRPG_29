@@ -7,14 +7,17 @@ using static UnityEngine.GraphicsBuffer;
 public class EnemyAttackState : IEnemyState
 {
     private Transform _target;
+    private bool _hasAttacked = false;
 
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
+        _hasAttacked = false;
+
         if (_target == null)
         {
-            Debug.Log("타겟이 없어 Idle상태로 전환");
             controller.ChageState(EnemyStateType.Idle);
+            return;
         }
 
         if (controller.Enemy.Role == EnemyRoleType.Melee)
@@ -40,9 +43,9 @@ public class EnemyAttackState : IEnemyState
 
         //animator에서 레이어(0) -> base Layer에서 진행 중인 애니메이션의 정보를 가져옴
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
-        
+
         //이름이 일치한지 확인하고 애니메이션의 진행파악함 시작(0.0), 끝(1.0)
-        if(stateInfo.IsName("Attack") && stateInfo.normalizedTime < 1.0f)
+        if (stateInfo.IsName("Attack") && stateInfo.normalizedTime < 1.0f)
         {
             return;
         }
@@ -56,7 +59,13 @@ public class EnemyAttackState : IEnemyState
             controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, lookRotation, Time.deltaTime * 10f);
         }
 
-        PerformAttack(controller);
+        if (!_hasAttacked)
+        {
+            {
+                _hasAttacked = true;
+                PerformAttack(controller);
+            }
+        }
     }
 
     private void PerformAttack(EnemyController controller)
@@ -104,6 +113,7 @@ public class EnemyAttackState : IEnemyState
         if(prefab == null || firePoint == null) return;
 
         Vector3 targetPos = controller.GetTarget().position;
+        targetPos.y += 1.0f;
         Vector3 spawnPos = firePoint.position;//발사 위치
 
         Vector3 dir = (targetPos - spawnPos).normalized;

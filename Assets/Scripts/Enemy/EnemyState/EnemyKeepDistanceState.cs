@@ -53,8 +53,11 @@ public class EnemyKeepDistanceState : IEnemyState
         //사거리 밖으로 나가면 다시 추격
         if (distance > _keepDistanceRange * 1.5f)
         {
-            controller.ChageState(EnemyStateType.Chase);
-            return;
+            if(distance > _attackRange * 1.2f)
+            {
+                controller.ChageState(EnemyStateType.Chase);
+                return;
+            }
         }
 
         //사거리 안이면 좌우 이동(쿨타임으로 설정)

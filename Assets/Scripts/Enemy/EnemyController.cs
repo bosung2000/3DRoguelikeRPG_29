@@ -75,7 +75,7 @@ public class EnemyController : MonoBehaviour
         _currentState?.EnterState(this);
 
         CurrentStateType = newStateType;
-
+        Debug.Log("현재" + CurrentStateType);
     }
 
     public float GetSpeed() => _enemy.Stat.GetStatValue(EnemyStatType.Speed);//속도를 가져옴
