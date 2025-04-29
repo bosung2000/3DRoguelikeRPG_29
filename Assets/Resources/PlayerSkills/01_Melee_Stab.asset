@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30285c5cf2675144083a365543bde066, type: 3}
-  m_Name: 00_Bow_oneArrow
+  m_Name: 01_Melee_Stab
   m_EditorClassIdentifier: 
-  index: 1
-  _name: oneArrow
+  index: 2
+  _name: Stab
   description: 
-  value: 30
+  value: 50
   requiredMana: 0
   cooldown: 0
   maxCooldown: 0
-  attackRange: 100
+  attackRange: 3
   projectileSpeed: 10
-  skillType: 1
-  icon: {fileID: 21300000, guid: bf3ff223f0952714fb38b9f17f16f840, type: 3}
+  skillType: 0
+  icon: {fileID: 21300000, guid: 998bc0332839081459a836477da289e9, type: 3}
   isOwned: 0
-  projectilePrefabs: {fileID: 4937715729989965735, guid: 8cf868bc5de05a94a9c736bbcac29781, type: 3}
+  projectilePrefabs: {fileID: 0}
   effectPrefab: {fileID: 0}
-  projectileType: 1
+  projectileType: 0
   castPattern: 0
   burstCount: 3
   burstDelay: 0.15
@@ -35,7 +35,7 @@ MonoBehaviour:
   rainCount: 7
   rainRadius: 5
   circleCount: 8
-  buffType: 2
+  buffType: 0
   soundEffectPrefab: {fileID: 0}
   level: 1
   maxLevel: 5

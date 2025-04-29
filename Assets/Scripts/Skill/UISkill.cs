@@ -21,7 +21,7 @@ public class UISkill : MonoBehaviour
     /// <summary>
     /// 바뀐 enabledSkills에 맞게 스킬 UI 변경
     /// </summary>
-    public void ResetSkillUI(int index, EnabledSkills enabledSkills)
+    public void ResetSkillUI(int index, SkillInstance enabledSkills)
     {
         skillConditions[index].skill = enabledSkills.skill;
         skillConditions[index].ResetCondition();

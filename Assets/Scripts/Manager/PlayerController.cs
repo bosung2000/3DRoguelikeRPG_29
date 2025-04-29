@@ -143,12 +143,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitUntil(() => _anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Dash" || _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1); 
         _isTumbling = false;
     }
-    public void StopMove()
-    {
-        _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
-        _rb.angularVelocity = Vector3.zero;
-        //_rb.rotation = Quaternion.LookRotation(inputDir);
-    }
 
     public void SetBool(string name, bool value)
     {
