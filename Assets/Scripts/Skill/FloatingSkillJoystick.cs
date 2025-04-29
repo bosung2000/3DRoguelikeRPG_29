@@ -54,7 +54,7 @@ public class FloatingSkillJoystick : Joystick
         }
         else
         {
-            Debug.Log($"현재 방향:{FixedInput}");
+            //Debug.Log($"현재 방향:{FixedInput}");
             //해당 방향에 스킬 시전
             skillManager.OnSkillClick(currentSkill, FixedInput);
         }

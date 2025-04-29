@@ -44,9 +44,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private EnhanceManager _enhanceManager;
     public EnhanceManager EnhanceManager =>_enhanceManager;
 
-    [SerializeField] private UIManager _uiManager;
-    public UIManager UIManager => _uiManager;
-
     [SerializeField] private PortalManager _portalManager;
     public PortalManager PortalManager => _portalManager;
 

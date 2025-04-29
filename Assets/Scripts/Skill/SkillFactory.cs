@@ -3,20 +3,20 @@ using UnityEngine;
 
 public class SkillFactory : MonoBehaviour
 {
-    private static SkillFactory instance;
-    public static SkillFactory Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                GameObject go = new GameObject("SkillFactory");
-                instance = go.AddComponent<SkillFactory>();
-                DontDestroyOnLoad(go);
-            }
-            return instance;
-        }
-    }
+    //private static SkillFactory instance;
+    //public static SkillFactory Instance
+    //{
+    //    get
+    //    {
+    //        if (instance == null)
+    //        {
+    //            GameObject go = new GameObject("SkillFactory");
+    //            instance = go.AddComponent<SkillFactory>();
+    //            DontDestroyOnLoad(go);
+    //        }
+    //        return instance;
+    //    }
+    //}
 
     private Dictionary<string, System.Type> skillTypes;
 
@@ -26,6 +26,8 @@ public class SkillFactory : MonoBehaviour
         // 스킬 타입 등록
         RegisterSkillType("Stab", typeof(StabSkill));
         RegisterSkillType("HalfMoon", typeof(HalfMoon));
+        RegisterSkillType("OneArrow", typeof(OneArrow));
+        
         // 여기에 다른 스킬들도 등록
     }
 

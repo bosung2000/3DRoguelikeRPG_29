@@ -476,7 +476,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void AttackSpeedUp(float attackSpeed)
     {
         ModifyStat(PlayerStatType.AttackSpeed, attackSpeed);
-        _playerController._anim.speed = (GetStatValue(PlayerStatType.AttackSpeed)) / 5;
+        _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
     }
 
     private void OnCollisionEnter(Collision other)

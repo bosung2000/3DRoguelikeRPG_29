@@ -12,6 +12,7 @@ public class UIHUD : MonoBehaviour
     [SerializeField] private Button btn_Menu;
     private void Start()
     {
+        objMenu.gameObject.SetActive(false);
         btn_Menu.onClick.AddListener(OnMenu);
     }
 
