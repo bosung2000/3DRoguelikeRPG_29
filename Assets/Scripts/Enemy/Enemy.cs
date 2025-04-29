@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
     private bool _isDead = false;
+    private Vector3 _cachedTargetPosition;
 
     public event Action<Enemy> OnDeath; //이벤트
 
@@ -41,9 +42,7 @@ public class Enemy : MonoBehaviour
         CachePlayer();
     }
 
-    /// <summary>
     /// 플레이어 찾기
-    /// </summary>
     private void CachePlayer()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -58,9 +57,8 @@ public class Enemy : MonoBehaviour
         if(_weaponCollider != null)
             _weaponCollider.enabled = false;
     }
-    /// <summary>
+
     /// 플레이어를 찾지 못하면 다시 시도
-    /// </summary>
     public Transform GetPlayerTarget()
     {
         if (PlayerTarget == null)
@@ -207,6 +205,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //타겟 위치 저장
+    public void CachedTargetPosition(Vector3 position)
+    {
+        position.y += 1.0f;
+        _cachedTargetPosition = position;
+    }
     //원거리 공격
     public void FireProjectile()
     {
@@ -216,8 +220,7 @@ public class Enemy : MonoBehaviour
         if (target == null) return;
 
         Vector3 spawnPos = FirePoint.position;
-        Vector3 dir = transform.forward;
-
+        Vector3 dir = (_cachedTargetPosition - spawnPos).normalized;
         Quaternion rot = Quaternion.LookRotation(dir);
 
         GameObject projectile = GameObject.Instantiate(ProjectilePrefab, spawnPos, rot);

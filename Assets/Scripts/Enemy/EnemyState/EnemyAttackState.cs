@@ -18,8 +18,9 @@ public class EnemyAttackState : IEnemyState
             return;
         }
 
-        controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
+        controller.Enemy.CachedTargetPosition(_target.position);
 
+        controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
         controller.animator.SetTrigger("Attack");
     }
 
