@@ -16,8 +16,19 @@ public class SkillManager : MonoBehaviour
     public Player player;
     public UISkill uiSkill;
     private Skill[] skills;
-    private SkillInstance[] skillInstances;
-    private Dictionary<int, SkillInstance> activeSkills = new Dictionary<int, SkillInstance>(); // 활성화된 스킬들
+    public SkillInstance[] skillInstances
+    {
+        get;
+        private set;
+    }
+
+    // Dictionary를 프로퍼티로 변경
+    private Dictionary<int, SkillInstance> _activeSkills = new Dictionary<int, SkillInstance>();
+    public Dictionary<int, SkillInstance> ActiveSkills
+    {
+        get { return _activeSkills; }
+        private set { _activeSkills = value; }
+    }
 
     private SkillFactory skillFactory;
     private void Awake()
@@ -37,7 +48,7 @@ public class SkillManager : MonoBehaviour
     private void Start()
     {
         // 활성 스킬 리스트 초기화
-        activeSkills.Clear();
+        ActiveSkills.Clear();
 
         // UI 슬롯 수만큼 스킬 초기화
         for (int i = 0; i < uiSkill.transform.childCount; i++)
@@ -46,7 +57,7 @@ public class SkillManager : MonoBehaviour
             {
                 var skillInstance = skillInstances[i];
                 skillInstance.skillComponent = CreateSkillComponent(skillInstance.skill);
-                activeSkills[i] = skillInstance;
+                ActiveSkills[i] = skillInstance;
                 uiSkill.ResetSkillUI(i, skillInstance);
             }
         }
@@ -71,7 +82,7 @@ public class SkillManager : MonoBehaviour
     void Update()
     {
         // 활성화된 스킬만 쿨다운 감소 처리
-        foreach (var skillInstance in activeSkills.Values)
+        foreach (var skillInstance in ActiveSkills.Values)
         {
             if (skillInstance.skill.cooldown > 0)
             {
@@ -109,9 +120,9 @@ public class SkillManager : MonoBehaviour
         }
 
         // 기존 슬롯의 스킬 제거
-        if (activeSkills.ContainsKey(slotIndex))
+        if (ActiveSkills.ContainsKey(slotIndex))
         {
-            var oldSkill = activeSkills[slotIndex];
+            var oldSkill = ActiveSkills[slotIndex];
             if (oldSkill.skillComponent != null)
             {
                 Destroy(oldSkill.skillComponent.gameObject);
@@ -121,7 +132,7 @@ public class SkillManager : MonoBehaviour
         // 새 스킬 설정
         var newSkill = skillInstances[skillIndex];
         newSkill.skillComponent = CreateSkillComponent(newSkill.skill);
-        activeSkills[slotIndex] = newSkill;
+        ActiveSkills[slotIndex] = newSkill;
 
         // UI 업데이트
         uiSkill.ResetSkillUI(slotIndex, newSkill);
@@ -131,20 +142,20 @@ public class SkillManager : MonoBehaviour
 
     public void UnequipSkill(int slotIndex)
     {
-        if (activeSkills.TryGetValue(slotIndex, out var skillInstance))
+        if (ActiveSkills.TryGetValue(slotIndex, out var skillInstance))
         {
             if (skillInstance.skillComponent != null)
             {
                 Destroy(skillInstance.skillComponent.gameObject);
             }
-            activeSkills.Remove(slotIndex);
+            ActiveSkills.Remove(slotIndex);
             uiSkill.ClearSkillUI(slotIndex);
         }
     }
 
     public Skill GetSkillAtSlot(int slotIndex)
     {
-        if (activeSkills.TryGetValue(slotIndex, out var skillInstance))
+        if (ActiveSkills.TryGetValue(slotIndex, out var skillInstance))
         {
             return skillInstance.skill;
         }
@@ -153,7 +164,7 @@ public class SkillManager : MonoBehaviour
 
     public bool HasSkillAtSlot(int slotIndex)
     {
-        return activeSkills.ContainsKey(slotIndex);
+        return ActiveSkills.ContainsKey(slotIndex);
     }
 
     public void OnSkillClick(Skill skill, Vector3 direction)
@@ -192,7 +203,7 @@ public class SkillManager : MonoBehaviour
         player._playerStat.UseMana(skill.requiredMana);
 
         // 스킬 실행
-        foreach (var skillInstance in activeSkills.Values)
+        foreach (var skillInstance in ActiveSkills.Values)
         {
             if (skillInstance.skill == skill)
             {
@@ -213,6 +224,11 @@ public class SkillManager : MonoBehaviour
 
         // 스킬 사용 이벤트 발생
         player.GetComponent<PlayerController>().SetTrigger("Skill");
+    }
+
+    internal int ReturnTotalSlotCount()
+    {
+        return skillInstances.Length;
     }
 }
 
