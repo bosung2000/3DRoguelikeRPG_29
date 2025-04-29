@@ -47,6 +47,15 @@ public class EnemyAttackState : IEnemyState
             return;
         }
 
+        // 애니메이션이 끝났으면 타겟 방향으로 회전
+        Vector3 toTarget = _target.position - controller.transform.position;
+        toTarget.y = 0f; // 수평만 회전
+        if (toTarget != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(toTarget);
+            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, lookRotation, Time.deltaTime * 10f);
+        }
+
         PerformAttack(controller);
     }
 
