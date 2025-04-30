@@ -1,15 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class FloatingSkillJoystick : Joystick
 {
     public int index;
     public SkillManager skillManager;
     public Vector3 FixedInput;
-
+    private Player _player;
     public void Awake()
     {
         skillManager = FindAnyObjectByType<SkillManager>();
@@ -24,10 +29,15 @@ public class FloatingSkillJoystick : Joystick
     {
         base.Start();
         background.gameObject.SetActive(false);
+        _player = FindObjectOfType<Player>();
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if (skillManager._isBoolSkill == true)
+        {
+            return;
+        }
         background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
         background.gameObject.SetActive(true);
         base.OnPointerDown(eventData);
@@ -35,16 +45,30 @@ public class FloatingSkillJoystick : Joystick
 
     public override void OnPointerUp(PointerEventData eventData)
     {
+        if (skillManager._isBoolSkill == true)
+        {
+            return;
+        }
         //마지막 방향 저장
         Vector3 InputJoystick = Vector3.forward * this.Vertical + Vector3.right * this.Horizontal;
         //Vector3 InputKeyboard = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 inputDir = InputJoystick;
+
         if (inputDir.sqrMagnitude > 0.01f)
         {
             inputDir = inputDir.normalized;
             FixedInput = inputDir;
         }
         
+        _player.transform.rotation = Quaternion.LookRotation(FixedInput);
+
+        var rb = _player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
         // 안전하게 스킬 접근
         Skill currentSkill = skillManager.GetSkillAtSlot(index);
         
@@ -56,7 +80,22 @@ public class FloatingSkillJoystick : Joystick
         {
             //Debug.Log($"현재 방향:{FixedInput}");
             //해당 방향에 스킬 시전
-            skillManager.OnSkillClick(currentSkill, FixedInput);
+            skillManager.InitSkillData(currentSkill, FixedInput);
+            if (skillManager.IsCkSkill())
+            {
+                if (currentSkill._name == "HalfMoon")
+                {
+                    _player.GetComponent<PlayerController>().SetTrigger("HalfMoon");
+                }
+                else if (currentSkill._name == "OneArrow")
+                {
+                    _player.GetComponent<PlayerController>().SetTrigger("OneArrow");
+                }
+                else if (currentSkill._name == "Stab")
+                {
+                    _player.GetComponent<PlayerController>().SetTrigger("StabSkill");
+                }
+            }
         }
         
         background.gameObject.SetActive(false);

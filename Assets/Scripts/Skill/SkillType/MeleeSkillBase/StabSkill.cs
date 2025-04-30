@@ -16,8 +16,8 @@ public class StabSkill : MeleeSkillBase
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
-        player.GetComponent<PlayerController>().SetTrigger("StabSkill");
-        yield return new WaitForSeconds(1);
+        //player.GetComponent<PlayerController>().SetTrigger("StabSkill");
+        //yield return new WaitForSeconds(1);
         // 크리티컬 보너스 적용
         ApplyCriticalBonusToPlayer(player, true);
 

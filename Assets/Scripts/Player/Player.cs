@@ -114,6 +114,18 @@ public class Player : MonoBehaviour
     {
         _playerController.Dash();
     }
+    public void ActiveSkill()
+    {
+        GameManager.Instance.SkillManager.ActiveSkill();
+    }
+    public void SetActiveSkilltrue()
+    {
+        GameManager.Instance.SkillManager.SetActiveSkilltrue();
+    }
+    public void SetActiveSkillfalse()
+    {
+         GameManager.Instance.SkillManager.SetActiveSkillfalse();
+    }
     //public void Flash()
     //{
     //    if (Time.time >= lastFlashTime + 5)
