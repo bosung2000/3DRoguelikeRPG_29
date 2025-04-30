@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerStat _playerStat;
     private FloatingJoystick _floatingJoystick;
+    private Vector3? _queuedLookDirection = null;
+
 
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;

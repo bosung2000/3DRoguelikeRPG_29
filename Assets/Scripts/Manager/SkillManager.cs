@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +17,7 @@ public class SkillManager : MonoBehaviour
     public Player player;
     public UISkill uiSkill;
     private Skill[] skills;
+    public bool _isBoolSkill { get; private set; } = false;
     public SkillInstance[] skillInstances
     {
         get;
@@ -167,68 +169,145 @@ public class SkillManager : MonoBehaviour
         return ActiveSkills.ContainsKey(slotIndex);
     }
 
-    public void OnSkillClick(Skill skill, Vector3 direction)
+    public Skill _skill;
+    public Vector3 _direction;
+    public void InitSkillData(Skill skill, Vector3 direction)
     {
-        if (skill == null)
+        _skill = skill;
+        _direction = direction;
+    }
+    public bool IsCkSkill()
+    {
+        if (_skill == null)
         {
             Debug.LogError("스킬이 없습니다. 스킬을 장착했는지 확인하세요.");
-            return;
+            return false;
         }
 
         // 쿨다운 체크
-        if (skill.cooldown > 0)
+        if (_skill.cooldown > 0)
         {
-            Debug.Log($"스킬 {skill._name}이(가) 쿨다운 중입니다. 남은 시간: {skill.cooldown:F1}초");
-            return;
+            Debug.Log($"스킬 {_skill._name}이(가) 쿨다운 중입니다. 남은 시간: {_skill.cooldown:F1}초");
+            return false;
         }
 
         // 마나 체크
-        if (player._playerStat.GetStatValue(PlayerStatType.MP) < skill.requiredMana)
+        if (player._playerStat.GetStatValue(PlayerStatType.MP) < _skill.requiredMana)
         {
-            Debug.Log($"마나가 부족합니다. 필요: {skill.requiredMana}, 현재: {player._playerStat.GetStatValue(PlayerStatType.MP)}");
-            return;
+            Debug.Log($"마나가 부족합니다. 필요: {_skill.requiredMana}, 현재: {player._playerStat.GetStatValue(PlayerStatType.MP)}");
+            return false;
         }
 
+        return true;
+    }
+    public void ActiveSkill()
+    {
         // 방향 벡터 검증
-        if (direction == Vector3.zero)
+        if (_direction == Vector3.zero)
         {
-            direction = player.transform.forward;
-            if (direction == Vector3.zero)
+            _direction = player.transform.forward;
+            if (_direction == Vector3.zero)
             {
-                direction = Vector3.forward;
+                _direction = Vector3.forward;
             }
         }
 
         // 마나 소모
-        player._playerStat.UseMana(skill.requiredMana);
+        player._playerStat.UseMana(_skill.requiredMana);
 
         // 스킬 실행
         foreach (var skillInstance in ActiveSkills.Values)
         {
-            if (skillInstance.skill == skill)
+            if (skillInstance.skill == _skill)
             {
                 if (skillInstance.skillComponent is MeleeSkillBase meleeSkill)
                 {
-                    meleeSkill.Execute(player, direction);
+                    meleeSkill.Execute(player, _direction);
                 }
                 else if (skillInstance.skillComponent is RangeSkillBase rangeSkill)
                 {
-                    rangeSkill.Execute(player, direction);
+                    rangeSkill.Execute(player, _direction);
                 }
                 break;
             }
         }
 
         // 쿨타임 적용
-        skill.cooldown = skill.maxCooldown;
+        _skill.cooldown = _skill.maxCooldown;
 
         // 스킬 사용 이벤트 발생
-        player.GetComponent<PlayerController>().SetTrigger("Skill");
+        //player.GetComponent<PlayerController>().SetTrigger("Skill");
     }
+    //public void OnSkillClick(Skill skill, Vector3 direction)
+    //{
+    //    if (skill == null)
+    //    {
+    //        Debug.LogError("스킬이 없습니다. 스킬을 장착했는지 확인하세요.");
+    //        return;
+    //    }
+
+    //    // 쿨다운 체크
+    //    if (skill.cooldown > 0)
+    //    {
+    //        Debug.Log($"스킬 {skill._name}이(가) 쿨다운 중입니다. 남은 시간: {skill.cooldown:F1}초");
+    //        return;
+    //    }
+
+    //    // 마나 체크
+    //    if (player._playerStat.GetStatValue(PlayerStatType.MP) < skill.requiredMana)
+    //    {
+    //        Debug.Log($"마나가 부족합니다. 필요: {skill.requiredMana}, 현재: {player._playerStat.GetStatValue(PlayerStatType.MP)}");
+    //        return;
+    //    }
+
+    //    // 방향 벡터 검증
+    //    if (direction == Vector3.zero)
+    //    {
+    //        direction = player.transform.forward;
+    //        if (direction == Vector3.zero)
+    //        {
+    //            direction = Vector3.forward;
+    //        }
+    //    }
+
+    //    // 마나 소모
+    //    player._playerStat.UseMana(skill.requiredMana);
+
+    //    // 스킬 실행
+    //    foreach (var skillInstance in ActiveSkills.Values)
+    //    {
+    //        if (skillInstance.skill == skill)
+    //        {
+    //            if (skillInstance.skillComponent is MeleeSkillBase meleeSkill)
+    //            {
+    //                meleeSkill.Execute(player, direction);
+    //            }
+    //            else if (skillInstance.skillComponent is RangeSkillBase rangeSkill)
+    //            {
+    //                rangeSkill.Execute(player, direction);
+    //            }
+    //            break;
+    //        }
+    //    }
+
+    //    // 쿨타임 적용
+    //    skill.cooldown = skill.maxCooldown;
+
+    //    // 스킬 사용 이벤트 발생
+    // //player.GetComponent<PlayerController>().SetTrigger("Skill");
+    //}
 
     internal int ReturnTotalSlotCount()
     {
         return skillInstances.Length;
+    }
+    public void SetActiveSkilltrue()
+    {
+        _isBoolSkill = true;
+    }
+    public void SetActiveSkillfalse()
+    {
+        _isBoolSkill = false;
     }
 }
 

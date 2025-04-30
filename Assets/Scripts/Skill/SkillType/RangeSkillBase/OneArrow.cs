@@ -22,6 +22,8 @@ public class OneArrow : RangeSkillBase
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
+        //player.GetComponent<PlayerController>().SetTrigger("OneArrow");
+        //yield return new WaitForSeconds(0.8f);
 
         // 크리티컬 보너스 적용
         ApplyCriticalBonusToPlayer(player, true);
