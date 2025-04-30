@@ -8,17 +8,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerStat _playerStat;
     private FloatingJoystick _floatingJoystick;
-    private Vector3? _queuedLookDirection = null;
-
-
     private float _lastTumbleTime = -100f;
     private bool _isTumbling = false;
     private StatUI _statUI;
-
     private bool _isAttacking = false;
     private Vector3 _lastMoveDirection;
     Vector3 inputDir;
-    
+    private float _rotationLockEndTime = 0f;
+    public bool IsRotationLocked => Time.time < _rotationLockEndTime;
+
 
     private void Awake()
     {
@@ -38,11 +36,14 @@ public class PlayerController : MonoBehaviour
             _rb.interpolation = RigidbodyInterpolation.Interpolate; // 부드러운 움직임
         }
     }
+    public void LockRotationFor(float duration)
+    {
+        _rotationLockEndTime = Time.time + duration;
+    }
 
     public void DirectionCheck()
     {
-        if (_isAttacking) return;
-        if(_isTumbling) return;
+        if (_isAttacking || _isTumbling || IsRotationLocked) return;
 
 
         Vector3 InputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
@@ -125,8 +126,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator TumbleRoutine(Vector3 target, float duration)
     {
         yield return new WaitForFixedUpdate();
-        float DashSpeed = _anim.GetCurrentAnimatorClipInfo(0)[0].clip.length / duration;
-        SetFloat("DashSpeed", DashSpeed);
+        //float DashSpeed = _anim.GetCurrentAnimatorClipInfo(0)[0].clip.length / duration;
+        //SetFloat("DashSpeed", DashSpeed);
         Vector3 start = transform.position;
         float elapsed = 0f;
 
