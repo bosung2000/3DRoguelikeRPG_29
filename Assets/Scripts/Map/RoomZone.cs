@@ -9,6 +9,11 @@ public class RoomZone : MonoBehaviour
     public List<Transform> spawnPoints;
     public RoomZone nextRoom;
 
+    [Header("Spawn 설정")]
+    public int enemyCounterPerPoint = 2;
+
+
+
     private List<Enemy> spawnedEnemies = new();
 
     public void ActivateRoom()
