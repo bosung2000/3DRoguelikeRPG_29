@@ -63,11 +63,11 @@ public class Portal : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom3");
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom4");
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom5");
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom6");
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom7");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom3");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom4");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom5");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom6");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom7");
             Debug.Log("포탈 오픈");
         }
     }
