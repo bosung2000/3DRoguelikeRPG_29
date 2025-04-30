@@ -96,6 +96,7 @@ public class SkillCondition : MonoBehaviour
             if (defaultEmptyIcon != null && UICoolDown != null)
             {
                 UICoolDown.sprite = defaultEmptyIcon;
+                backGroundKillImage.sprite = defaultEmptyIcon;
             }
 
             // 쿨다운 바를 비움

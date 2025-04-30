@@ -25,7 +25,16 @@ public class UISkill : MonoBehaviour
     {
         skillConditions[index].skill = enabledSkills.skill;
         skillConditions[index].ResetCondition();
-        
+    }
+
+    public void ResetSkillUIAll(Dictionary<int, SkillInstance> _ActiveSkill)
+    {
+        for (int i = 0; i < _ActiveSkill.Count; i++)
+        {
+            skillConditions[i].skill= _ActiveSkill[i].skill;
+            skillConditions[i].ResetCondition();
+        }
+
     }
 
     /// <summary>
@@ -40,7 +49,7 @@ public class UISkill : MonoBehaviour
         skillConditions[index].ClearSkill();
         
         // UI 갱신
-        //skillConditions[index].RefreshUI();
+        skillConditions[index].RefreshUI();
     }
 
     public void UIUpdate(int index, float cooldown)

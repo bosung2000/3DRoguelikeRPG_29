@@ -24,7 +24,7 @@ public class SkillManager : MonoBehaviour
         private set;
     }
 
-    // Dictionary를 프로퍼티로 변경
+    // ActiveSkill =지금 장착되어 있는 스킬 
     private Dictionary<int, SkillInstance> _activeSkills = new Dictionary<int, SkillInstance>();
     public Dictionary<int, SkillInstance> ActiveSkills
     {
@@ -59,8 +59,8 @@ public class SkillManager : MonoBehaviour
             {
                 var skillInstance = skillInstances[i];
                 skillInstance.skillComponent = CreateSkillComponent(skillInstance.skill);
-                ActiveSkills[i] = skillInstance;
-                uiSkill.ResetSkillUI(i, skillInstance);
+                //ActiveSkills[i] = skillInstance;
+                //uiSkill.ResetSkillUI(i, skillInstance);
             }
         }
     }
@@ -84,12 +84,15 @@ public class SkillManager : MonoBehaviour
     void Update()
     {
         // 활성화된 스킬만 쿨다운 감소 처리
-        foreach (var skillInstance in ActiveSkills.Values)
+        foreach (var kvp in ActiveSkills)
         {
+            int slotIndex = kvp.Key;
+            SkillInstance skillInstance = kvp.Value;
+            
             if (skillInstance.skill.cooldown > 0)
             {
                 skillInstance.skill.cooldown -= Time.deltaTime;
-                uiSkill.UIUpdate(skillInstance.index, skillInstance.skill.cooldown);
+                uiSkill.UIUpdate(slotIndex, skillInstance.skill.cooldown); // 슬롯 인덱스 사용
             }
         }
     }
@@ -115,20 +118,23 @@ public class SkillManager : MonoBehaviour
 
     public bool EquipSkill(int skillIndex, int slotIndex)
     {
-        if (!HasThisSkill(skillIndex) || slotIndex >= uiSkill.transform.childCount)
+
+        if (HasThisSkill(skillIndex) || slotIndex < 0 || slotIndex >= uiSkill.transform.childCount)
         {
-            Debug.Log("스킬을 장착할 수 없습니다.");
+            Debug.Log($"스킬을 장착할 수 없습니다. 슬롯 인덱스: {slotIndex}, 유효 범위: 0-{uiSkill.transform.childCount - 1}");
             return false;
         }
 
         // 기존 슬롯의 스킬 제거
         if (ActiveSkills.ContainsKey(slotIndex))
         {
-            var oldSkill = ActiveSkills[slotIndex];
-            if (oldSkill.skillComponent != null)
-            {
-                Destroy(oldSkill.skillComponent.gameObject);
-            }
+            //var oldSkill = ActiveSkills[slotIndex];
+            //if (oldSkill.skillComponent != null)
+            //{
+            //    Destroy(oldSkill.skillComponent.gameObject);
+            //}
+            //기술 슬롯의 UI 제거 
+            UnequipSkill(slotIndex);
         }
 
         // 새 스킬 설정
@@ -153,6 +159,8 @@ public class SkillManager : MonoBehaviour
             ActiveSkills.Remove(slotIndex);
             uiSkill.ClearSkillUI(slotIndex);
         }
+        // UI 업데이트
+        uiSkill.ResetSkillUIAll(ActiveSkills);
     }
 
     public Skill GetSkillAtSlot(int slotIndex)

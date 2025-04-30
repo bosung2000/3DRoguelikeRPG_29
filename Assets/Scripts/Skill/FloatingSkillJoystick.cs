@@ -19,10 +19,6 @@ public class FloatingSkillJoystick : Joystick
     {
         skillManager = FindAnyObjectByType<SkillManager>();
 
-        if (skillManager != null )
-        {
-            Debug.Log("스킬 조작 UI에 스킬매니저가 제대로 들어갔습니다.");
-        }
     }
 
     protected override void Start()
