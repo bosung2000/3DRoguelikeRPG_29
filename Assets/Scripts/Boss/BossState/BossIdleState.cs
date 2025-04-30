@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossIdleState : MonoBehaviour
+public class BossIdleState : IBossState
 {
-    // Start is called before the first frame update
-    void Start()
+    public void EnterState(BossController controller)
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ExitState(BossController controller)
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void UpdateState(BossController controller)
+    {
+        throw new System.NotImplementedException();
     }
 }
