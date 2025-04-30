@@ -17,8 +17,6 @@ public class EnemyIdleState : IEnemyState
 
     public void EnterState(EnemyController controller)
     {
-        Debug.Log("Enemy : Idle 상태 진입");
-
         _scanRadius = controller.GetStat(EnemyStatType.ChaseRange);
         _targetLayer = LayerMask.GetMask("Player");
 

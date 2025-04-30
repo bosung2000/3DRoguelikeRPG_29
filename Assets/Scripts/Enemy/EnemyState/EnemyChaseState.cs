@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class EnemyChaseState : IEnemyState
 {
     private Transform _target;
     private float outRangeTime = 0f;
     private float outRangeTimeHold = 2.0f;
+    private float _chaseRange;
+    private float _keepDistance;
+    private float _attackRange;
+
 
 
     public void EnterState(EnemyController controller)
@@ -18,6 +23,9 @@ public class EnemyChaseState : IEnemyState
             controller.ChageState(EnemyStateType.Idle);
         }
 
+        _chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
+        _attackRange = controller.GetStat(EnemyStatType.AttackRange);
+        _keepDistance = controller.GetStat(EnemyStatType.KeepDistanceRange);
         controller.agent.enabled = true;
         controller.agent.isStopped = false;
         controller.agent.angularSpeed = 1000f;
@@ -47,13 +55,11 @@ public class EnemyChaseState : IEnemyState
 
         //공격 범위 내면 상태 전환용
         float distance = Vector3.Distance(controller.transform.position, _target.position);
-        float chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
-        float attackRange = controller.GetStat(EnemyStatType.AttackRange);
         
         controller.agent.SetDestination(_target.position);
 
         //범위 밖인 상태 시간 누적
-        if (distance > chaseRange )
+        if (distance > _chaseRange)
         {
             outRangeTime += Time.deltaTime;
 
@@ -69,7 +75,7 @@ public class EnemyChaseState : IEnemyState
         }
 
         //플레이어와 거리가 가까워지면 대치 상태로 전환
-        if (distance <= attackRange)
+        if (distance <= _keepDistance)
         {
             controller.ChageState(EnemyStateType.KeepDistance);
             return;
