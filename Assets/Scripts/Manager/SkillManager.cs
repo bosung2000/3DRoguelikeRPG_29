@@ -160,7 +160,7 @@ public class SkillManager : MonoBehaviour
             uiSkill.ClearSkillUI(slotIndex);
         }
         // UI 업데이트
-        uiSkill.ResetSkillUIAll(ActiveSkills);
+        uiSkill.ResetSkillUI(slotIndex);
     }
 
     public Skill GetSkillAtSlot(int slotIndex)
