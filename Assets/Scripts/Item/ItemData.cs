@@ -80,8 +80,8 @@ public class ItemData : ScriptableObject
     [Header("기본 정보")]
     public int id;
     public ItemType itemType;     // 아이템 기본 타입
-    public EquipType equipType;
-    public UseType useType;
+    public EquipType equipType;   // 장비 타입
+    public UseType useType;       //포션 타입
     public string itemName;
     public string description;
     [Range(1, 10)]
@@ -96,7 +96,7 @@ public class ItemData : ScriptableObject
     public List<ConsumableEffect> consumableEffects = new List<ConsumableEffect>();
     public int maxStack = 99;     // 최대 중첩 개수
 
-    [Header("경제")]
+    [Header("재화")]
     public int gold;
     public int enhancementCost = 100;
     public float enhancementCostMultiplier = 1.5f;
