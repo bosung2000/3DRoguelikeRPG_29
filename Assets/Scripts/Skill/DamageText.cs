@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class DamageText : MonoBehaviour
 {
@@ -12,9 +13,9 @@ public class DamageText : MonoBehaviour
 
     private float _elapsedTime = 0f;
     private Color _textColor;
-    private Vector3 _initialPosition;
-    private Transform _canvasTransform;
     
+    private Action _returnToPoolCallback;
+    private Coroutine _animationCoroutine;
 
     private void Awake()
     {
@@ -23,48 +24,74 @@ public class DamageText : MonoBehaviour
             _damageText = GetComponent<TextMeshProUGUI>();
         }
         _textColor = _damageText.color;
-        _canvasTransform = transform.parent;
-        _initialPosition = transform.localPosition;
-    
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        // 로컬 회전 초기화
+        // 오브젝트가 활성화될 때 초기화
+        ResetText();
+        
+        // 애니메이션 코루틴 시작
+        if (_animationCoroutine != null)
+        {
+            StopCoroutine(_animationCoroutine);
+        }
+        _animationCoroutine = StartCoroutine(AnimateText());
+    }
+
+    private void OnDisable()
+    {
+        // 애니메이션 코루틴 중지
+        if (_animationCoroutine != null)
+        {
+            StopCoroutine(_animationCoroutine);
+            _animationCoroutine = null;
+        }
+    }
+
+    // 텍스트 초기화
+    private void ResetText()
+    {
+        _elapsedTime = 0f;
+        transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         
-        // TextMeshProUGUI의 회전도 초기화
-        if (_damageText != null && _damageText.transform != transform)
+        // TextMeshProUGUI 초기화
+        if (_damageText != null)
         {
+            _damageText.color = _textColor;
             _damageText.transform.localRotation = Quaternion.identity;
         }
-        
-        // 지정된 시간 후 자동 삭제
-        Destroy(gameObject, _duration);
     }
 
-    private void Update()
+    // 애니메이션 코루틴
+    private IEnumerator AnimateText()
     {
-        // 위로 이동 (로컬 좌표 기준)
-        transform.localPosition = _initialPosition + Vector3.up * _moveSpeed * _elapsedTime;
+        _elapsedTime = 0f;
         
-        // 로컬 회전 유지
-        transform.localRotation = Quaternion.identity;
-
-        // 항상 카메라를 향하도록 설정 (부모 캔버스가 담당)
-        if (_canvasTransform != null)
+        while (_elapsedTime < _duration)
         {
-            _canvasTransform.forward = Camera.main.transform.forward;
+            // 위로 이동 (로컬 좌표 기준)
+            transform.localPosition = Vector3.up * _moveSpeed * _elapsedTime;
+            
+            // 로컬 회전 유지
+            transform.localRotation = Quaternion.identity;
+
+            // 페이드 아웃
+            float normalizedTime = _elapsedTime / _duration;
+            Color color = _textColor;
+            color.a = Mathf.Lerp(1f, 0f, normalizedTime * _fadeSpeed);
+            _damageText.color = color;
+
+            _elapsedTime += Time.deltaTime;
+            yield return null;
         }
-
-        // 페이드 아웃
-        _elapsedTime += Time.deltaTime;
-        float normalizedTime = _elapsedTime / _duration;
-
-        _textColor.a = Mathf.Lerp(1f, 0f, normalizedTime * _fadeSpeed);
-        _damageText.color = _textColor;
+        
+        // 애니메이션 종료 후 풀에 반환
+        ReturnToPool();
     }
 
+    // 데미지 텍스트 설정
     public void SetDamageText(float damage, bool criticalBool)
     {
         if (_damageText != null)
@@ -78,9 +105,30 @@ public class DamageText : MonoBehaviour
                 _damageText.fontSize *= 1.2f;
                 _textColor = _damageText.color;
             }
+            else
+            {
+                // 일반 데미지는 흰색으로
+                _damageText.color = Color.white;
+                _textColor = _damageText.color;
+            }
             
             // 텍스트 회전 초기화
             _damageText.transform.localRotation = Quaternion.identity;
+        }
+    }
+    
+    // 풀에 반환하기 위한 콜백 설정
+    public void SetReturnCallback(Action callback)
+    {
+        _returnToPoolCallback = callback;
+    }
+    
+    // 풀에 오브젝트 반환
+    private void ReturnToPool()
+    {
+        if (_returnToPoolCallback != null)
+        {
+            _returnToPoolCallback.Invoke();
         }
     }
 }
