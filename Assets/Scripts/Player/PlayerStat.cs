@@ -24,6 +24,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
+    private Coroutine _hpRegenRoutine;
+    private Coroutine _mpRegenRoutine;
 
     private float _lastHitTime = -100f;
 
@@ -66,6 +68,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void Start()
     {
         InitBaseStat(_statData);
+        _hpRegenRoutine = StartCoroutine(HPRegenRoutine());
+        _mpRegenRoutine = StartCoroutine(MPRegenRoutine());
     }
 
     private void Update()
@@ -77,13 +81,70 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         UpdateSkillCooldowns();
 
         // MP 자연 회복 (기존 코드에 없으면 추가)
-        float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
-        if (mpRecovery > 0)
+        //float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
+        //if (mpRecovery > 0)
+        //{
+        //    RegenerateMana(mpRecovery * Time.deltaTime);
+        //}
+    }
+    private IEnumerator HPRegenRoutine()
+    {
+        WaitForSeconds interval = new WaitForSeconds(10f); // 1초 간격
+        while (true)
         {
-            RegenerateMana(mpRecovery * Time.deltaTime);
+            yield return interval;
+
+            float regenAmount = GetStatValue(PlayerStatType.HPRecovery);
+
+            if (regenAmount > 0f)
+            {
+                float currentHP = GetStatValue(PlayerStatType.HP);
+                float maxHP = GetStatValue(PlayerStatType.MaxHP);
+
+                if (currentHP < maxHP)
+                {
+                    float newHP = Mathf.Min(currentHP + regenAmount, maxHP);
+                    SetStatValue(PlayerStatType.HP, newHP);
+                }
+            }
         }
     }
 
+    private IEnumerator MPRegenRoutine()
+    {
+        WaitForSeconds interval = new WaitForSeconds(10f); // 1초 간격
+        while (true)
+        {
+            yield return interval;
+            float regenAmount = GetStatValue(PlayerStatType.MPRecovery);
+            if (regenAmount > 0f)
+            {
+                float currentMP = GetStatValue(PlayerStatType.MP);
+                float maxMP = GetStatValue(PlayerStatType.MaxMP);
+                if (currentMP < maxMP)
+                {
+                    float newMP = Mathf.Min(currentMP + regenAmount, maxMP);
+                    SetStatValue(PlayerStatType.MP, newMP);
+                }
+            }
+        }
+    }
+    public void StopHPRegen()
+    {
+        if (_hpRegenRoutine != null)
+        {
+            StopCoroutine(_hpRegenRoutine);
+            _hpRegenRoutine = null;
+        }
+    }
+    public void StopMPRegen()
+    {
+        if (_mpRegenRoutine != null)
+        {
+            StopCoroutine(_mpRegenRoutine);
+            _mpRegenRoutine = null;
+        }
+    }
     // 스킬 관련 메서드들 //
 
     /// <summary>
@@ -305,6 +366,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         base.OnStatChanged();
         OnStatsChanged?.Invoke(this);
+        _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
     }
     /// <summary>
     /// 장비 보너스 스탯 초기화 
@@ -408,6 +470,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
+            StopHPRegen();
+            StopMPRegen();
             _playerController.SetTrigger("Die");
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
@@ -496,7 +560,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (other.gameObject.CompareTag("Gold"))
         {
-            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
+            int goldAmount = Mathf.RoundToInt(currencyData._amount * GetStatValue(PlayerStatType.GoldAcquisition));
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, goldAmount);
             Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("Soul"))
