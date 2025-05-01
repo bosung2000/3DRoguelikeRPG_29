@@ -9,11 +9,12 @@ public class SkillCondition : MonoBehaviour
     public float currentCooldown; //현재 쿨타임
     public float maximumCooldown; //최대 쿨타임
     public int index;
-    [SerializeField]private Image backGroundKillImage;
+    [SerializeField] private Image backGroundKillImage;
     public Image UICoolDown; // 쿨타임 표시할 이미지
     //[SerializeField] private Image UICoolDown; // 스킬 아이콘
     public Skill skill;
     public FloatingSkillJoystick joystick;
+    private Player player;
 
     // 기본 빈 스킬 아이콘 (옵션)
     [SerializeField] private Sprite defaultEmptyIcon;
@@ -24,6 +25,7 @@ public class SkillCondition : MonoBehaviour
     }
     private void Start()
     {
+        player = FindObjectOfType<Player>();
         UICoolDown.sprite = defaultEmptyIcon;
         backGroundKillImage.sprite = defaultEmptyIcon;
     }
@@ -47,8 +49,9 @@ public class SkillCondition : MonoBehaviour
 
     public float GetPercentage()
     {
-        return maximumCooldown > 0 ? currentCooldown / maximumCooldown : 0;
+        return maximumCooldown > 0 ? currentCooldown / (maximumCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f)) : 0;
     }
+
 
     public void ResetCondition()
     {
@@ -59,7 +62,7 @@ public class SkillCondition : MonoBehaviour
         }
         if (skill != null)
         {
-            maximumCooldown = skill.maxCooldown;
+            maximumCooldown = skill.maxCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f);
             currentCooldown = skill.cooldown;
         }
         else
@@ -80,7 +83,7 @@ public class SkillCondition : MonoBehaviour
         else
         {
             UICoolDown.sprite = defaultEmptyIcon;
-            backGroundKillImage.sprite= defaultEmptyIcon;
+            backGroundKillImage.sprite = defaultEmptyIcon;
             Debug.Log("스킬 아이콘이 없습니다.");
         }
     }
@@ -96,6 +99,7 @@ public class SkillCondition : MonoBehaviour
             if (defaultEmptyIcon != null && UICoolDown != null)
             {
                 UICoolDown.sprite = defaultEmptyIcon;
+                backGroundKillImage.sprite = defaultEmptyIcon;
             }
 
             // 쿨다운 바를 비움

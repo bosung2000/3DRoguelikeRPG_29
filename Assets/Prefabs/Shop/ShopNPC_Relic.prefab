@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df581d161e23f464294ffe4e2dbf8d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shoptype: 0
+  shoptype: 1
   shopTier: 10
   RelicsitemCount: 5
 --- !u!114 &3220859517589303241
@@ -81,7 +81,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -112,7 +112,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &8702590581915717168
 GameObject:

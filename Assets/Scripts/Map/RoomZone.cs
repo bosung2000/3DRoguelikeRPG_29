@@ -1,49 +1,70 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomZone : MonoBehaviour
 {
-    [Header("Room 설정")]
     public string roomName;
-    public GameObject enemyPrefab;
     public List<Transform> spawnPoints;
     public RoomZone nextRoom;
+    public RoomSpawnConfig spawnConfig;
+    public float spawnInterval = 2f; //일반 몬스터 반복 소환 간격
 
     private List<Enemy> spawnedEnemies = new();
 
     public void ActivateRoom()
     {
         Debug.Log($"[RoomZone] {roomName} 시작됨");
-        SpawnEnemies();
+        StartCoroutine(SpawnEnemiesCoroutine());
     }
 
-    private void SpawnEnemies()
+    private IEnumerator SpawnEnemiesCoroutine()
     {
-        foreach (var point in spawnPoints)
+        // 일반 몬스터 순차 생성
+        for (int i = 0; i < spawnConfig.normalCount; i++)
         {
-            GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity);
-            Enemy enemy = enemyGO.GetComponent<Enemy>();
+            Transform point = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            SpawnEnemy(spawnConfig.normalEnemyPrefab, point.position);
+            yield return new WaitForSeconds(spawnInterval);
+        }
 
-            if (enemy != null)
-            {
-                enemy.OnDeath += OnEnemyDeath;
-                spawnedEnemies.Add(enemy);
-            }
-            else
-            {
-                Debug.LogWarning("Enemy 프리팹에 Enemy 스크립트가 없습니다.");
-            }
+        // 엘리트 몬스터
+        if (spawnConfig.spawnElite && spawnConfig.eliteEnemyPrefab != null)
+        {
+            Transform point = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            SpawnEnemy(spawnConfig.eliteEnemyPrefab, point.position);
+        }
+
+        // 보스 몬스터
+        if (spawnConfig.spawnBoss && spawnConfig.bossEnemyPrefab != null)
+        {
+            Transform point = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            SpawnEnemy(spawnConfig.bossEnemyPrefab, point.position);
         }
 
         if (spawnedEnemies.Count == 0 && nextRoom != null)
         {
-            nextRoom.ActivateRoom(); //적이 없을 경우 바로 다음 방으로
+            nextRoom.ActivateRoom();
         }
     }
 
-    private void OnEnemyDeath(Enemy dead)
+    private void SpawnEnemy(GameObject prefab, Vector3 position)
     {
-        spawnedEnemies.Remove(dead);
+        if (prefab == null) return;
+
+        GameObject enemyGO = Instantiate(prefab, position, Quaternion.identity);
+        Enemy enemy = enemyGO.GetComponent<Enemy>();
+
+        if (enemy != null)
+        {
+            enemy.OnDeath += OnEnemyDeath;
+            spawnedEnemies.Add(enemy);
+        }
+    }
+
+    private void OnEnemyDeath(Enemy enemy)
+    {
+        spawnedEnemies.Remove(enemy);
 
         if (spawnedEnemies.Count == 0)
         {

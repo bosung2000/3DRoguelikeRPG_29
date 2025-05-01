@@ -30,7 +30,7 @@ public class UIPopupInventory : PopupUI
     private EquipMananger equipMananger;
     private InventoryManager inventoryMananger;
     private PlayerManager playerManager;
-    
+    private FloatingJoystick[] allFloatingjoystick;
     private UIHUD uIHUD;
     public enum InventoryTabType
     {
@@ -43,6 +43,12 @@ public class UIPopupInventory : PopupUI
     protected void Awake()
     {
         Inittialize();
+    }
+    private void Start()
+    {
+        // 비활성화된 오브젝트 포함 모든 오브젝트 찾기
+        allFloatingjoystick = Resources.FindObjectsOfTypeAll<FloatingJoystick>();
+
     }
 
     private void Inittialize()
@@ -213,7 +219,13 @@ public class UIPopupInventory : PopupUI
         uIHUD.OnMenu();
         base.OnCloseButtonClick();
         UIManager.Instance.CloseAllPopupUI();
+
         // 부모 클래스의 메서드 호출
+        //조이스틱 UI켜기
+        foreach (var item in allFloatingjoystick)
+        {
+            item.gameObject.SetActive(true);
+        }
     }
 
     protected override void Clear()

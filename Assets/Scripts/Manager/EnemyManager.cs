@@ -8,6 +8,7 @@ public class EnemyManager : MonoBehaviour
 
     private int testDamage = 10;
     private KeyCode damageKey = KeyCode.Q;
+    private Player player;
 
     private void Awake()
     {
@@ -16,7 +17,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-
+        player =FindObjectOfType<Player>();
     }
 
     private void Update()
@@ -30,6 +31,6 @@ public class EnemyManager : MonoBehaviour
     public void ReceiveDamage(int damage)
     {
         if (_enemy == null) return;
-        _enemy.TakeDamage(damage);
+        _enemy.TakeDamage(damage,false,player._playerStat);
     }
 }

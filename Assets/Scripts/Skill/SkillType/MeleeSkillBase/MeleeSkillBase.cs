@@ -14,7 +14,7 @@ public class MeleeSkillBase : MonoBehaviour
 
     public virtual void Execute(Player player, Vector3 direction)
     {
-        if (isAttacking || skillData.cooldown > 0) return;
+        if (isAttacking || skillData.cooldown > 0) return ;
 
         StartCoroutine(AttackCoroutine(player, direction));
     }
@@ -35,6 +35,10 @@ public class MeleeSkillBase : MonoBehaviour
         
         foreach (var hitCollider in hitColliders)
         {
+            float SkillRate = (float)((float)skillData.value / (float)100);
+            // 기본 데미지
+            int MeleeDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
             // 공격 각도 내의 적만 처리
             Vector3 dirToTarget = (hitCollider.transform.position - attackStartPos).normalized;
             float angle = Vector3.Angle(direction, dirToTarget);
@@ -45,7 +49,7 @@ public class MeleeSkillBase : MonoBehaviour
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(skillData.value);
+                    enemy.TakeDamage(MeleeDamage, false, player._playerStat);
                     ShowHitEffect(hitCollider.transform.position);
                 }
             }

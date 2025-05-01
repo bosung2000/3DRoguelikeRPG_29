@@ -6,8 +6,7 @@ public class OneArrow : RangeSkillBase
 {
     [SerializeField] private float arrowSpeed = 25f;
     [SerializeField] private float arrowLifetime = 5f;
-    [SerializeField] private float damageMultiplier = 1.2f;
-    [SerializeField] private float criticalChanceBonus = 90f; // 크리티컬 확률 보너스
+    [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
 
     public override void Execute(Player player, Vector3 direction)
@@ -41,13 +40,18 @@ public class OneArrow : RangeSkillBase
             GameObject projectile = Instantiate(skillData.projectilePrefabs, spawnPosition, Quaternion.LookRotation(direction));
             SkillProjectile projectileScript = projectile.GetComponent<SkillProjectile>();
 
+            float SkillRate = (float)((float)skillData.value / (float)100);
+            // 기본 데미지
+            int ArrowDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+            
+
             if (projectileScript != null)
             {
                 // 속성 설정
                 projectileScript.Init(direction, (int)arrowSpeed, player);
                 
                 // 데미지 설정 (크리티컬은 SkillProjectile에서 처리)
-                projectileScript.damage = Mathf.RoundToInt(skillData.value * damageMultiplier);
+                projectileScript.damage = Mathf.RoundToInt(ArrowDamage);
                 
                 // 발사체에 제한 시간 설정
                 Destroy(projectile, arrowLifetime);

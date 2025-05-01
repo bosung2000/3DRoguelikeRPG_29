@@ -23,6 +23,7 @@ public class UIEquipmentEnhance : PopupUI
     private UIHUD uIHUD;
 
     private ItemData currentEquipment;
+    private FloatingJoystick[] allFloatingjoystick;
 
     private void Awake()
     {
@@ -35,6 +36,8 @@ public class UIEquipmentEnhance : PopupUI
     {
         enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
         closeButton.onClick.AddListener(OnClosebtn);
+        // 비활성화된 오브젝트 포함 모든 오브젝트 찾기
+        allFloatingjoystick = Resources.FindObjectsOfTypeAll<FloatingJoystick>();
     }
 
     public void SetEquipment(ItemData equipment)
@@ -47,7 +50,12 @@ public class UIEquipmentEnhance : PopupUI
     {
         uIHUD.OnMenu();
         base.OnCloseButtonClick();
-        
+        //조이스틱 UI켜기
+        foreach (var item in allFloatingjoystick)
+        {
+            item.gameObject.SetActive(true);
+        }
+
     }
 
     private void UpdateUI()

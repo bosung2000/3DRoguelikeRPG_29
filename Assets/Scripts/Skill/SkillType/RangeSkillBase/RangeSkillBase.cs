@@ -36,11 +36,16 @@ public class RangeSkillBase : MonoBehaviour
             GameObject projectile = Instantiate(skillData.projectilePrefabs, spawnPosition, Quaternion.LookRotation(direction));
             SkillProjectile projectileScript = projectile.GetComponent<SkillProjectile>();
 
+            float SkillRate = (float)((float)skillData.value / (float)100);
+            // 기본 데미지
+            int ArrowDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
+
             if (projectileScript != null)
             {
                 // 공통 속성 설정
                 projectileScript.Init(direction, (int)projectileSpeed, player);
-                projectileScript.damage = skillData.value;
+                projectileScript.damage = ArrowDamage;
 
                 // 발사체 타입에 따른 속성 설정
                 ConfigureProjectileByType(projectileScript, skillData.projectileType);
