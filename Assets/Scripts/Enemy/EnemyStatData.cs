@@ -5,8 +5,7 @@ using UnityEngine;
 public enum EnemyType
 {
     Normal,
-    Elite,
-    Boss
+    Elite
 }
 
 public enum EnemyRoleType

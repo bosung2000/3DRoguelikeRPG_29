@@ -21,6 +21,8 @@ public class BossStat : BaseStat<EnemyStatType>
             SetStatValue(EnemyStatType.Soul, _statData.Soul);
             SetStatValue(EnemyStatType.AttackRange, _statData.AttackRange);
             SetStatValue(EnemyStatType.AttackCooldown, _statData.AttackCooldown);
+            SetStatValue(EnemyStatType.KeepDistanceRange, _statData.KeepDistance);
+
         }
     }
 }

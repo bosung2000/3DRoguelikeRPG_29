@@ -16,6 +16,7 @@ public class BossStatData : ScriptableObject
     [Header("공격 정보")]
     [SerializeField] private int _attackRange;
     [SerializeField] private int _attackCooldown;
+    [SerializeField] private int _keepDistance;
 
     [Header("스킬 정보")]
     [SerializeField] private int _skill1Cooldown;
@@ -32,6 +33,7 @@ public class BossStatData : ScriptableObject
     public int Soul => _soul;
     public int AttackRange => _attackRange;
     public int AttackCooldown => _attackCooldown;
+    public int KeepDistance => _keepDistance;
     public int Skill1Cooldown => _skill1Cooldown;
     public int Skill2Cooldown => _skill2Cooldown;
     public float Phase2HpThreshold => _phase2HPThreshold;
