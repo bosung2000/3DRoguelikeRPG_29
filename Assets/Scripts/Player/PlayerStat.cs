@@ -79,17 +79,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         // 스킬 쿨다운 업데이트
         UpdateSkillCooldowns();
-
-        // MP 자연 회복 (기존 코드에 없으면 추가)
-        //float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
-        //if (mpRecovery > 0)
-        //{
-        //    RegenerateMana(mpRecovery * Time.deltaTime);
-        //}
     }
     private IEnumerator HPRegenRoutine()
     {
-        WaitForSeconds interval = new WaitForSeconds(10f); // 1초 간격
+        WaitForSeconds interval = new WaitForSeconds(10f);
         while (true)
         {
             yield return interval;
@@ -112,7 +105,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
     private IEnumerator MPRegenRoutine()
     {
-        WaitForSeconds interval = new WaitForSeconds(10f); // 1초 간격
+        WaitForSeconds interval = new WaitForSeconds(10f);
         while (true)
         {
             yield return interval;
@@ -367,7 +360,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
         base.OnStatChanged();
         OnStatsChanged?.Invoke(this);
-        _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
+        //_playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
     }
     /// <summary>
     /// 장비 보너스 스탯 초기화 
