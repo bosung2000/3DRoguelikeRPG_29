@@ -1001,34 +1001,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1
       objectReference: {fileID: 0}
-    - target: {fileID: 6122484505046112783, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -10.66
-      objectReference: {fileID: 0}
     - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
       propertyPath: nextRoom
       value: 
       objectReference: {fileID: 1067205211}
-    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: spawnConfig.spawnBoss
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: spawnConfig.configName
-      value: Room1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: spawnConfig.spawnElite
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: spawnConfig.normalCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
-      propertyPath: spawnConfig.normalEnemyPrefab
-      value: 
-      objectReference: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1321,7 +1297,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!224 &802058723
 RectTransform:
@@ -1518,26 +1494,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room2
       objectReference: {fileID: 0}
-    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
-      propertyPath: spawnConfig.configName
-      value: Room2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
-      propertyPath: spawnConfig.spawnElite
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
-      propertyPath: spawnConfig.normalCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
-      propertyPath: spawnConfig.eliteEnemyPrefab
-      value: 
-      objectReference: {fileID: 3664294383125131184, guid: 5e252a113469744409d87b85024c4753, type: 3}
-    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
-      propertyPath: spawnConfig.normalEnemyPrefab
-      value: 
-      objectReference: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     - target: {fileID: 8519760636536095978, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -141.2
@@ -1761,6 +1717,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36b3d890e5cbad345a567f0a590a753d, type: 3}
+--- !u!1001 &1370395116
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641843995522218913, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019396697229386500, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
+      propertyPath: m_Name
+      value: DamageTextManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3b86b6d683175ae48b96e59fe4f14b87, type: 3}
 --- !u!1001 &1402332590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2865,6 +2878,7 @@ SceneRoots:
   - {fileID: 342186931692600460}
   - {fileID: 1843590574}
   - {fileID: 3981039239470564612}
+  - {fileID: 1370395116}
   - {fileID: 496009672}
   - {fileID: 92591927}
   - {fileID: 548862327}

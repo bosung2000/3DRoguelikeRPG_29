@@ -14,13 +14,20 @@ public class UIShop : PopupUI
     // 그럼 아아템의 등급이 있어야하겠는데 > tier
     [SerializeField] TextMeshProUGUI goldTxt;
     [SerializeField] private ShopBuyInventory shopBuyInventory; //구매창 
-    
+    private FloatingJoystick[] allFloatingjoystick;
+
     private Shop shop;
     private PlayerManager playerManager;
 
     private void Awake()
     {
         shopBuyInventory =GetComponentInChildren<ShopBuyInventory>();
+    }
+    private void Start()
+    {
+        // 비활성화된 오브젝트 포함 모든 오브젝트 찾기
+        allFloatingjoystick = Resources.FindObjectsOfTypeAll<FloatingJoystick>();
+
     }
 
     public void Initialize(Shop _shop,PlayerManager _playerManager)
@@ -44,6 +51,12 @@ public class UIShop : PopupUI
     {
         UIManager.Instance.CloseAllPopupUI();
         base.OnCloseButtonClick();
+
+        //조이스틱 UI켜기
+        foreach (var item in allFloatingjoystick)
+        {
+            item.gameObject.SetActive(true);
+        }
     }
 
     public void ShowShopGold()

@@ -343,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 2859442836751865393}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.34, y: -11.124979, z: -14.44}
+  m_LocalPosition: {x: 9.34, y: -11.124979, z: -10.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -637,10 +637,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: Room1
-  enemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
   spawnPoints:
   - {fileID: 7735402219049734749}
   nextRoom: {fileID: 0}
+  spawnConfig:
+    configName: Room1
+    normalEnemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
+    normalCount: 10
+    eliteEnemyPrefab: {fileID: 0}
+    spawnElite: 0
+    bossEnemyPrefab: {fileID: 0}
+    spawnBoss: 0
+  spawnInterval: 2
 --- !u!1 &6006430050116132280
 GameObject:
   m_ObjectHideFlags: 0

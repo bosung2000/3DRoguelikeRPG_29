@@ -6,7 +6,6 @@ public class HalfMoon : MeleeSkillBase
 {
     [SerializeField] private float halfMoonRange = 2.5f; // 반달 공격 범위
     [SerializeField] private float halfMoonAngle = 180f; // 반달 공격 각도
-    [SerializeField] private float halfMoonDamageMultiplier = 0.8f; // 데미지 배수 (넓은 범위 대신 데미지 감소)
     [SerializeField] private int maxTargets = 5; // 최대 타겟 수
     [SerializeField] private float sweepSpeed = 8f; // 휩쓸기 속도
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
@@ -31,9 +30,9 @@ public class HalfMoon : MeleeSkillBase
 
         // 반달 공격 범위 내의 적 탐색
         Collider[] hitColliders = Physics.OverlapSphere(center, halfMoonRange, targetLayer);
-        
+
         // 각도 기반으로 적 정렬
-        System.Array.Sort(hitColliders, (a, b) => 
+        System.Array.Sort(hitColliders, (a, b) =>
         {
             float angleA = Vector3.Angle(forward, (a.transform.position - center).normalized);
             float angleB = Vector3.Angle(forward, (b.transform.position - center).normalized);
@@ -47,25 +46,27 @@ public class HalfMoon : MeleeSkillBase
 
             Vector3 dirToTarget = (hitCollider.transform.position - center).normalized;
             float angle = Vector3.Angle(forward, dirToTarget);
-            
+
             if (angle <= halfMoonAngle * 0.5f)
             {
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    // 반달 특성 반영한 데미지 계산
-                    int halfMoonDamage = Mathf.RoundToInt(skillData.value * halfMoonDamageMultiplier);
-                    
+                    float SkillRate = (float)((float)skillData.value / (float)100);
+                    // 기본 데미지
+                    int HalfMoonDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
+
                     // 크리티컬 적용
                     bool isCritical = IsAttackCritical(player);
                     if (isCritical)
                     {
                         float critMultiplier = GetCriticalDamageMultiplier(player);
-                        halfMoonDamage = Mathf.RoundToInt(halfMoonDamage * critMultiplier);
+                        HalfMoonDamage = Mathf.RoundToInt(HalfMoonDamage * critMultiplier);
                         ShowCriticalHitEffect(hitCollider.transform.position);
                     }
-                    
-                    enemy.TakeDamage(halfMoonDamage,isCritical);
+
+                    enemy.TakeDamage(HalfMoonDamage, isCritical);
                     ShowHalfMoonHitEffect(hitCollider.transform.position);
                     targetsHit++;
                 }
@@ -76,38 +77,38 @@ public class HalfMoon : MeleeSkillBase
         ShowHalfMoonEffect(center, forward);
 
         yield return new WaitForSeconds(attackDelay);
-        
+
         // 크리티컬 보너스 제거
         ApplyCriticalBonusToPlayer(player, false);
-        
+
         isAttacking = false;
     }
 
     // 크리티컬 발생 확인
     private bool IsAttackCritical(Player player)
     {
-        if (player == null || player._playerStat == null) 
+        if (player == null || player._playerStat == null)
             return false;
-            
+
         float critChance = player._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f;
         return Random.value <= critChance;
     }
-    
+
     // 크리티컬 데미지 배율 구하기
     private float GetCriticalDamageMultiplier(Player player)
     {
-        if (player == null || player._playerStat == null) 
+        if (player == null || player._playerStat == null)
             return 1.5f; // 기본 배율
-            
+
         float critDamage = player._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f;
         return Mathf.Max(1.5f, critDamage); // 최소 1.5배
     }
-    
+
     // 크리티컬 보너스 적용/제거 메서드
     private void ApplyCriticalBonusToPlayer(Player player, bool apply)
     {
         if (player == null || player._playerStat == null) return;
-        
+
         if (apply)
         {
             // 현재 크리티컬 확률과 데미지에 보너스 적용
@@ -121,7 +122,7 @@ public class HalfMoon : MeleeSkillBase
             player._playerStat.ModifyStat(PlayerStatType.CriticalDamage, -criticalDamageBonus);
         }
     }
-    
+
     // 크리티컬 히트 이펙트
     private void ShowCriticalHitEffect(Vector3 position)
     {
@@ -129,49 +130,49 @@ public class HalfMoon : MeleeSkillBase
         position.y += 0.5f;
         critEffect.transform.position = position;
         critEffect.transform.localScale = Vector3.one * 0.8f;
-        
+
         Destroy(critEffect.GetComponent<Collider>());
-        
+
         Material material = new Material(Shader.Find("Standard"));
         material.color = new Color(1f, 0f, 0f, 1f); // 순수한 빨간색, 완전 불투명
         material.EnableKeyword("_EMISSION");
         material.SetColor("_EmissionColor", new Color(1f, 0f, 0f) * 5f); // 강한 빨간색 발광
         critEffect.GetComponent<Renderer>().material = material;
-        
+
         // 확장 애니메이션
         StartCoroutine(AnimateCriticalEffect(critEffect));
     }
-    
+
     // 크리티컬 이펙트 애니메이션
     private IEnumerator AnimateCriticalEffect(GameObject effect)
     {
         if (effect == null) yield break;
-        
+
         float duration = 0.4f;
         float elapsed = 0f;
         float startScale = 0.8f;
         float endScale = 1.5f;
-        
+
         while (elapsed < duration && effect != null)
         {
             float t = elapsed / duration;
             float scale = Mathf.Lerp(startScale, endScale, t);
-            
+
             if (effect != null)
             {
                 effect.transform.localScale = Vector3.one * scale;
-                
+
                 Renderer renderer = effect.GetComponent<Renderer>();
                 if (renderer != null && renderer.material != null)
                 {
                     renderer.material.color = new Color(1f, 0f, 0f, Mathf.Lerp(1f, 0f, t));
                 }
             }
-            
+
             elapsed += Time.deltaTime;
             yield return null;
         }
-        
+
         if (effect != null)
         {
             Destroy(effect);
@@ -253,7 +254,7 @@ public class HalfMoon : MeleeSkillBase
         {
             float progress = (float)i / sweepCount;
             float currentAngle = -halfMoonAngle * 0.5f + progress * halfMoonAngle;
-            
+
             Vector3 sweepDir = Quaternion.Euler(0, currentAngle, 0) * direction;
             Vector3 sweepPos = center + sweepDir * sweepRadius;
 
