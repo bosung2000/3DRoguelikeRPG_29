@@ -26,4 +26,3 @@ public class CurrencyUI : MonoBehaviour
         _soulText.text = GameManager.Instance.PlayerManager.Currency.currencies[CurrencyType.Soul].ToString("F0");
     }
 }
-
