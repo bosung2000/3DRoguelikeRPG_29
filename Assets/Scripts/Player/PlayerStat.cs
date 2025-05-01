@@ -438,13 +438,13 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
-        float absorp = GetStatValue(PlayerStatType.absorp);
+        //float absorp = GetStatValue(PlayerStatType.absorp);
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage * 0.01f : baseAttack;
-        enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit);
-        absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
-        Healing(absorp);
+        enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit,this);
+        //absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
+        //Healing(absorp);
 
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }

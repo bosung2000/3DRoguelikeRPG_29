@@ -241,6 +241,7 @@ public class SkillManager : MonoBehaviour
                 break;
             }
         }
+        
 
         // 쿨타임 적용
         _skill.cooldown = _skill.maxCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f);
