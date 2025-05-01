@@ -318,6 +318,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 4b6ad2aef778c0b4ea70a9bc793a5ddd, type: 3}
+--- !u!1 &2859442836751865393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6122484505046112783}
+  m_Layer: 0
+  m_Name: Room1SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &6122484505046112783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2859442836751865393}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.34, y: -11.124979, z: -14.44}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1620968118845129759}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3379345438558110258
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +441,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _confiner: {fileID: 0}
   _portalList:
+  - portalID: PortalToRoom
+    targetSpawnPoint: {fileID: 6122484505046112783}
+    targetCollider: {fileID: 3536045815483439210}
   - portalID: PortalToRoom2
     targetSpawnPoint: {fileID: 0}
     targetCollider: {fileID: 0}
@@ -561,6 +595,7 @@ Transform:
   - {fileID: 7204537487061317547}
   - {fileID: 8262210060099944758}
   - {fileID: 8497418039922785420}
+  - {fileID: 6122484505046112783}
   - {fileID: 470874521617218868}
   - {fileID: 249233467085178565}
   - {fileID: 7735402219049734749}

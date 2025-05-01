@@ -388,7 +388,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void TakeDamage(int damage)
     {
         if (Time.time - _lastHitTime < GetStatValue(PlayerStatType.HitCooldown)) return;
-
+        
         float currentHP = GetStatValue(PlayerStatType.HP);
         float damageReduction = GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = GetStatValue(PlayerStatType.DMGIncrease);
@@ -406,6 +406,11 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
+        }
+        AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+        if (currentState.IsName("Idle") || currentState.IsName("Run"))
+        {
+            _playerController.SetTrigger("GetHit");
         }
     }
     private IEnumerator PlayDeathAnimThenPauseGame()

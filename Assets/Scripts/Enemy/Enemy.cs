@@ -181,12 +181,12 @@ public class Enemy : MonoBehaviour
     //트리거접촉 시
     private void OnTriggerEnter(Collider other)
     {
-        if (_weaponCollider == null || !_weaponCollider.enabled)
-            return;
+        if (_weaponCollider == null || !_weaponCollider.enabled) return;
+        if(!other.CompareTag("Player")) return;
 
         if(other.CompareTag("Player"))
         {
-            if(other.TryGetComponent(out PlayerStat playerStat))
+            if (other.TryGetComponent(out PlayerStat playerStat))
             {
                 int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
                 playerStat.TakeDamage(damage);

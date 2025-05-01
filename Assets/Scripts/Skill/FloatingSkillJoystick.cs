@@ -19,10 +19,6 @@ public class FloatingSkillJoystick : Joystick
     {
         skillManager = FindAnyObjectByType<SkillManager>();
 
-        if (skillManager != null )
-        {
-            Debug.Log("스킬 조작 UI에 스킬매니저가 제대로 들어갔습니다.");
-        }
     }
 
     protected override void Start()
@@ -59,15 +55,16 @@ public class FloatingSkillJoystick : Joystick
             inputDir = inputDir.normalized;
             FixedInput = inputDir;
         }
-        
-        _player.transform.rotation = Quaternion.LookRotation(FixedInput);
+        StartCoroutine(SetPlayerSkillDirection(FixedInput));
 
-        var rb = _player.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
+        //_player.transform.rotation = Quaternion.LookRotation(FixedInput);
+
+        //var rb = _player.GetComponent<Rigidbody>();
+        //if (rb != null)
+        //{
+        //    rb.velocity = Vector3.zero;
+        //    rb.angularVelocity = Vector3.zero;
+        //}
 
         // 안전하게 스킬 접근
         Skill currentSkill = skillManager.GetSkillAtSlot(index);
@@ -100,5 +97,28 @@ public class FloatingSkillJoystick : Joystick
         
         background.gameObject.SetActive(false);
         base.OnPointerUp(eventData);
+    }
+    private IEnumerator SetPlayerSkillDirection(Vector3 direction)
+    {
+        yield return new WaitForFixedUpdate(); // FixedUpdate 이후 회전
+
+        if (_player == null || direction == Vector3.zero)
+            yield break;
+
+        direction.y = 0f;
+        _player.transform.rotation = Quaternion.LookRotation(direction);
+
+        var rb = _player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        var controller = _player.GetComponent<PlayerController>();
+        if (controller != null)
+        {
+            controller.LockRotationFor(0.2f); // 0.2초간 DirectionCheck() 회전 막음
+        }
     }
 }

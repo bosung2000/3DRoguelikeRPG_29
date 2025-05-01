@@ -21,7 +21,10 @@ public class Portal : MonoBehaviour
 
     //private Transform _enteredPlayer;
     //private string _enteredPortalID;
-
+    private void Start()
+    {
+        TryUsePortal("PortalToRoom");
+    }
     public void TryUsePortal(string targetPortalID)
     {
         StartCoroutine(TeleportWithConfiner(targetPortalID));
@@ -62,7 +65,7 @@ public class Portal : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
+            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
             //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom3");
             //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom4");
             //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom5");
