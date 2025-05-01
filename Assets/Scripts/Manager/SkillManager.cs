@@ -241,7 +241,7 @@ public class SkillManager : MonoBehaviour
         }
 
         // 쿨타임 적용
-        _skill.cooldown = _skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime);
+        _skill.cooldown = _skill.maxCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f);
 
         // 스킬 사용 이벤트 발생
         //player.GetComponent<PlayerController>().SetTrigger("Skill");
