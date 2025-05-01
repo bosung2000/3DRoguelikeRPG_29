@@ -5,7 +5,28 @@ using UnityEngine.UI;
 
 public class DamageTextManager : MonoBehaviour
 {
-   
+    // 싱글톤 인스턴스
+    private static DamageTextManager _instance;
+    public static DamageTextManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<DamageTextManager>();
+
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("DamageTextManager");
+                    _instance = go.AddComponent<DamageTextManager>();
+                    DontDestroyOnLoad(go);
+                }
+            }
+            return _instance;
+        }
+    }
+
+
     [Header("설정")]
     [SerializeField] private GameObject _damageTextPrefab; // DamageText 프리팹
     [SerializeField] private int _poolSize = 30; // 풀 크기
@@ -13,12 +34,22 @@ public class DamageTextManager : MonoBehaviour
     [SerializeField] private float _canvasScale = 0.01f; // 캔버스 스케일
 
     private Queue<GameObject> _damageTextPool; // 오브젝트 풀
-    
+
+
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+
         InitializePool();
     }
-    
+
     private void Start()
     {
        
