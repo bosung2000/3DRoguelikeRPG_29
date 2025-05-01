@@ -9,6 +9,7 @@ public class DamageText : MonoBehaviour
     [SerializeField] private float _moveSpeed = 1.0f;
     [SerializeField] private float _fadeSpeed = 1.0f;
     [SerializeField] private float _duration = 1.0f;
+    private Player player;
 
     private float _elapsedTime = 0f;
     private Color _textColor;
@@ -19,12 +20,12 @@ public class DamageText : MonoBehaviour
         {
             _damageText = GetComponentInChildren<TextMeshProUGUI>();
         }
-
         _textColor = _damageText.color;
     }
 
     private void Start()
     {
+        player = FindObjectOfType<Player>();
         // 텍스트가 카메라를 향하도록 함
         LookAtCamera();
 
@@ -48,15 +49,14 @@ public class DamageText : MonoBehaviour
         LookAtCamera();
     }
 
-    public void SetDamageText(float damage)
+    public void SetDamageText(float damage,bool CriticalBool)
     {
         if (_damageText != null)
         {
             _damageText.text = damage.ToString("0");
 
             // 크리티컬 여부에 따라 색상 변경 (선택적)
-            bool isCritical = Random.value > 0.7f; // 임시 확률
-
+            bool isCritical = CriticalBool;
             if (isCritical)
             {
                 _damageText.color = Color.red;
