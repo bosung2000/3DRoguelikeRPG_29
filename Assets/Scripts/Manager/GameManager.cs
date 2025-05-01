@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SkillManager _skillManager;
     public SkillManager SkillManager => _skillManager;
 
-    [SerializeField] private DamageTextManager _damageTextManager;
-    public DamageTextManager DamageTextManager => _damageTextManager;
 
     private void Awake()
     {

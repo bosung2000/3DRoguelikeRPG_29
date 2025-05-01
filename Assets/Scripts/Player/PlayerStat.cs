@@ -399,8 +399,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - finalDamage, 0));
 
         // 데미지 텍스트 표시
-        GameManager.Instance.DamageTextManager.ShowDamageText(transform.position, finalDamage, false);
-
+        if (DamageTextManager.Instance != null)
+        {
+            DamageTextManager.Instance.ShowDamageText(transform.position, finalDamage, false);
+        }
 
         _cameraShake.ShakeCamera(2f, 0.3f);
 
