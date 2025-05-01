@@ -948,6 +948,22 @@ PrefabInstance:
       propertyPath: nextRoom
       value: 
       objectReference: {fileID: 1067205211}
+    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
+      propertyPath: spawnConfig.spawnBoss
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
+      propertyPath: spawnConfig.spawnElite
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
+      propertyPath: spawnConfig.normalCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
+      propertyPath: spawnConfig.normalEnemyPrefab
+      value: 
+      objectReference: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1437,6 +1453,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room2
       objectReference: {fileID: 0}
+    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: spawnConfig.spawnElite
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: spawnConfig.normalCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: spawnConfig.eliteEnemyPrefab
+      value: 
+      objectReference: {fileID: 3664294383125131184, guid: 5e252a113469744409d87b85024c4753, type: 3}
+    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: spawnConfig.normalEnemyPrefab
+      value: 
+      objectReference: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     - target: {fileID: 8519760636536095978, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -141.2

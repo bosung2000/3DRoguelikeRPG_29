@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomSpawnConfig : MonoBehaviour
+[System.Serializable]
+public class RoomSpawnConfig
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string configName;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("일반 몬스터 설정")]
+    public GameObject normalEnemyPrefab;
+    public int normalCount;
+
+    [Header("엘리트 몬스터 설정")]
+    public GameObject eliteEnemyPrefab;
+    public bool spawnElite;
+
+    [Header("보스 몬스터 설정")]
+    public GameObject bossEnemyPrefab;
+    public bool spawnBoss;
 }
