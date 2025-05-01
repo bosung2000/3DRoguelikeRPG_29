@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
 using static UnityEngine.GraphicsBuffer;
-
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -32,8 +32,6 @@ public class Enemy : MonoBehaviour
     private Vector3 _cachedTargetPosition;
 
     public event Action<Enemy> OnDeath; //이벤트
-
-
 
     private void Awake()
     {
@@ -69,11 +67,14 @@ public class Enemy : MonoBehaviour
         return PlayerTarget;
     }
     //데미지를 받음
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage,bool CriBool)
     {
         if (_isDead) return;
 
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
+
+        // 데미지 텍스트 생성
+        ShowDamageText(damage, CriBool);
 
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
@@ -94,10 +95,20 @@ public class Enemy : MonoBehaviour
                 Debug.Log("컨트롤러가 널임");
             }
         }
-
     }
 
-    
+    // 데미지 텍스트 표시 메서드
+    private void ShowDamageText(int damage, bool isCritical)
+    {
+        // DamageTextManager를 통해 데미지 텍스트 표시
+
+        if (DamageTextManager.Instance != null)
+        {
+            DamageTextManager.Instance.ShowDamageText(transform.position, damage, isCritical);
+            return;
+        }
+    }
+
     //죽음 - 재화 드랍
     public void Die()
     {
