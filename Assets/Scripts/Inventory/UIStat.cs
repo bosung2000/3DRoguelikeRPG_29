@@ -90,7 +90,7 @@ public class UIStat : MonoBehaviour
             case PlayerStatType.absorp:
                 return "흡혈량";
             case PlayerStatType.DMGIncrease:
-                return "데미지 증가";
+                return "받는데미지증가";
             case PlayerStatType.HPRecovery:
                 return "HP 회복";
             case PlayerStatType.MPRecovery:

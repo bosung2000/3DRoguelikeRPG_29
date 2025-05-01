@@ -223,6 +223,8 @@ public class SkillManager : MonoBehaviour
         // 마나 소모
         player._playerStat.UseMana(_skill.requiredMana);
 
+
+
         // 스킬 실행
         foreach (var skillInstance in ActiveSkills.Values)
         {

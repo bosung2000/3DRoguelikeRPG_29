@@ -566,7 +566,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (other.gameObject.CompareTag("Gold"))
         {
-            int goldAmount = Mathf.RoundToInt(currencyData._amount * GetStatValue(PlayerStatType.GoldAcquisition));
+            int goldAmount = Mathf.RoundToInt(currencyData._amount * (1+GetStatValue(PlayerStatType.GoldAcquisition)*0.01f));
             GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, goldAmount);
             Destroy(other.gameObject);
         }
