@@ -21,20 +21,18 @@ public class UISkill : MonoBehaviour
     /// <summary>
     /// 바뀐 enabledSkills에 맞게 스킬 UI 변경
     /// </summary>
-    public void ResetSkillUI(int index, SkillInstance enabledSkills)
+    public void ResetSkillUI(int index, SkillInstance enabledSkills = null)
     {
-        skillConditions[index].skill = enabledSkills.skill;
-        skillConditions[index].ResetCondition();
-    }
-
-    public void ResetSkillUIAll(Dictionary<int, SkillInstance> _ActiveSkill)
-    {
-        for (int i = 0; i < _ActiveSkill.Count; i++)
+        if (enabledSkills == null)
         {
-            skillConditions[i].skill= _ActiveSkill[i].skill;
-            skillConditions[i].ResetCondition();
+            skillConditions[index].skill =null;
+            skillConditions[index].ResetCondition();
         }
-
+        else
+        {
+            skillConditions[index].skill = enabledSkills.skill;
+            skillConditions[index].ResetCondition();
+        }
     }
 
     /// <summary>
@@ -47,7 +45,7 @@ public class UISkill : MonoBehaviour
             return;
 
         skillConditions[index].ClearSkill();
-        
+
         // UI 갱신
         skillConditions[index].RefreshUI();
     }

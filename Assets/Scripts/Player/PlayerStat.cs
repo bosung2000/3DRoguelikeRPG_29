@@ -303,6 +303,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
     protected override void OnStatChanged()
     {
+        _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
         base.OnStatChanged();
         OnStatsChanged?.Invoke(this);
     }
@@ -493,6 +494,11 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void OnCollisionEnter(Collision other)
     {
         CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
+
+        //foreach (ContactPoint contact in other.contacts)
+        //{
+        //    Debug.Log($"→ 접촉된 콜라이더: {contact.thisCollider.name} vs {contact.otherCollider.name}");
+        //}
 
         if (other.gameObject.CompareTag("Gold"))
         {

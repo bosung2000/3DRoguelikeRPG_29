@@ -28,7 +28,7 @@ public class UIManager : MonoBehaviour
     private List<PopupUI> activePopups = new List<PopupUI>(); // 활성화된 모든 팝업 추적 ->모바일때문에 생겼음 
 
     private Canvas mainCanvas; // 메인 Canvas
-
+    
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        
         // 씬에 있는 모든 UI 찾기 (비활성화된 오브젝트도 포함)
         var allUIs = FindObjectsOfType<BaseUI>(true);
         foreach (var ui in allUIs)
@@ -116,6 +117,7 @@ public class UIManager : MonoBehaviour
                 activePopups.Add(popup);
             }
         }
+
         return popup;
     }
 
@@ -128,6 +130,8 @@ public class UIManager : MonoBehaviour
         PopupUI popup = popupStack.Pop();
         popup.Close();
         activePopups.Remove(popup);
+
+
     }
 
     // 특정 팝업을 직접 지정해서 닫기 (버튼 클릭 등에 사용)
@@ -156,6 +160,8 @@ public class UIManager : MonoBehaviour
         // 팝업 닫기
         popup.Close();
         activePopups.Remove(popup);
+
+
     }
 
     // 특정 타입의 팝업 닫기 (타입으로 지정)
@@ -171,6 +177,8 @@ public class UIManager : MonoBehaviour
                 ClosePopupUI(popup);
             }
         }
+
+
     }
 
     public void CloseAllPopupUI()
@@ -184,6 +192,8 @@ public class UIManager : MonoBehaviour
             popup.Close();
         }
         activePopups.Clear();
+
+        
     }
 
     public void RegisterUI(BaseUI ui)

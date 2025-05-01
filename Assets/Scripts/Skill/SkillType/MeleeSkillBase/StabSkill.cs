@@ -43,9 +43,10 @@ public class StabSkill : MeleeSkillBase
             Enemy enemy = hit.collider.GetComponent<Enemy>();
             if (enemy != null)
             {
+                float SkillRate = (float)((float)skillData.value / (float)100);
                 // 기본 데미지
-                int stabDamage = skillData.value;
-                
+                int stabDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
                 // 크리티컬 적용
                 bool isCritical = IsAttackCritical(player);
                 if (isCritical)
@@ -54,7 +55,7 @@ public class StabSkill : MeleeSkillBase
                     stabDamage = Mathf.RoundToInt(stabDamage * critMultiplier);
                     ShowCriticalHitEffect(hit.transform.position);
                 }
-                
+
                 enemy.TakeDamage(stabDamage, isCritical);
                 ShowStabHitEffect(hit.transform.position);
             }
@@ -64,38 +65,38 @@ public class StabSkill : MeleeSkillBase
         ShowStabEffect(startPos, direction);
 
         yield return new WaitForSeconds(attackDelay);
-        
+
         // 크리티컬 보너스 제거
         ApplyCriticalBonusToPlayer(player, false);
-        
+
         isAttacking = false;
     }
 
     // 크리티컬 발생 확인
     private bool IsAttackCritical(Player player)
     {
-        if (player == null || player._playerStat == null) 
+        if (player == null || player._playerStat == null)
             return false;
-            
+
         float critChance = player._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f;
         return Random.value <= critChance;
     }
-    
+
     // 크리티컬 데미지 배율 구하기
     private float GetCriticalDamageMultiplier(Player player)
     {
-        if (player == null || player._playerStat == null) 
+        if (player == null || player._playerStat == null)
             return 1.5f; // 기본 배율
-            
+
         float critDamage = player._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f;
         return Mathf.Max(1.5f, critDamage); // 최소 1.5배
     }
-    
+
     // 크리티컬 보너스 적용/제거 메서드
     private void ApplyCriticalBonusToPlayer(Player player, bool apply)
     {
         if (player == null || player._playerStat == null) return;
-        
+
         if (apply)
         {
             // 현재 크리티컬 확률과 데미지에 보너스 적용
@@ -109,7 +110,7 @@ public class StabSkill : MeleeSkillBase
             player._playerStat.ModifyStat(PlayerStatType.CriticalDamage, -criticalDamageBonus);
         }
     }
-    
+
     // 크리티컬 히트 이펙트
     private void ShowCriticalHitEffect(Vector3 position)
     {
@@ -117,28 +118,28 @@ public class StabSkill : MeleeSkillBase
         position.y += 0.5f;
         critEffect.transform.position = position;
         critEffect.transform.localScale = Vector3.one * 0.8f;
-        
+
         Destroy(critEffect.GetComponent<Collider>());
-        
+
         Material material = new Material(Shader.Find("Standard"));
         material.color = new Color(1f, 0f, 0f, 1f); // 순수한 빨간색, 완전 불투명
         material.EnableKeyword("_EMISSION");
         material.SetColor("_EmissionColor", new Color(1f, 0f, 0f) * 5f); // 강한 빨간색 발광
         critEffect.GetComponent<Renderer>().material = material;
-        
+
         // 크리티컬 파티클 효과
         StartCoroutine(CreateCriticalParticles(position));
-        
+
         // 이펙트 자동 파괴 추가
         Destroy(critEffect, 0.5f);
     }
-    
+
     private IEnumerator CreateCriticalParticles(Vector3 position)
     {
         int particleCount = 15;
         float speed = 8f;
         float lifetime = 0.4f;
-        
+
         for (int i = 0; i < particleCount; i++)
         {
             Vector3 randomDir = new Vector3(
@@ -146,29 +147,29 @@ public class StabSkill : MeleeSkillBase
                 Random.Range(0.2f, 1f),
                 Random.Range(-1f, 1f)
             ).normalized;
-            
+
             GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            if (particle != null) 
+            if (particle != null)
             {
                 particle.transform.position = position;
                 particle.transform.localScale = Vector3.one * 0.25f;
-                
+
                 Destroy(particle.GetComponent<Collider>());
-                
+
                 Material material = new Material(Shader.Find("Standard"));
                 material.color = new Color(1f, 0f, 0f, 1f);
                 material.EnableKeyword("_EMISSION");
                 material.SetColor("_EmissionColor", new Color(1f, 0f, 0f) * 5f);
-                
+
                 Renderer renderer = particle.GetComponent<Renderer>();
                 if (renderer != null)
                 {
                     renderer.material = material;
                 }
-                
+
                 StartCoroutine(MoveParticle(particle, position, randomDir, speed, lifetime));
             }
-            
+
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -281,7 +282,7 @@ public class StabSkill : MeleeSkillBase
     private IEnumerator MoveParticle(GameObject particle, Vector3 startPos, Vector3 direction, float speed, float lifetime)
     {
         if (particle == null) yield break;
-        
+
         float elapsed = 0f;
 
         while (elapsed < lifetime && particle != null)

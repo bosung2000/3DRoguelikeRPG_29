@@ -14,6 +14,7 @@ public class SkillCondition : MonoBehaviour
     //[SerializeField] private Image UICoolDown; // 스킬 아이콘
     public Skill skill;
     public FloatingSkillJoystick joystick;
+    private Player player;
 
     // 기본 빈 스킬 아이콘 (옵션)
     [SerializeField] private Sprite defaultEmptyIcon;
@@ -24,6 +25,7 @@ public class SkillCondition : MonoBehaviour
     }
     private void Start()
     {
+        player = FindObjectOfType<Player>();
         UICoolDown.sprite = defaultEmptyIcon;
         backGroundKillImage.sprite = defaultEmptyIcon;
     }
@@ -47,9 +49,10 @@ public class SkillCondition : MonoBehaviour
 
     public float GetPercentage()
     {
-        return maximumCooldown > 0 ? currentCooldown / maximumCooldown : 0;
+        return maximumCooldown > 0 ? currentCooldown / (maximumCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime)) : 0;
     }
 
+    
     public void ResetCondition()
     {
         if (skill == null)
@@ -59,7 +62,7 @@ public class SkillCondition : MonoBehaviour
         }
         if (skill != null)
         {
-            maximumCooldown = skill.maxCooldown;
+            maximumCooldown = skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime);
             currentCooldown = skill.cooldown;
         }
         else

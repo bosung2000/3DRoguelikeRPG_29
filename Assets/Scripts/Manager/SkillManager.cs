@@ -88,7 +88,7 @@ public class SkillManager : MonoBehaviour
         {
             int slotIndex = kvp.Key;
             SkillInstance skillInstance = kvp.Value;
-            
+
             if (skillInstance.skill.cooldown > 0)
             {
                 skillInstance.skill.cooldown -= Time.deltaTime;
@@ -160,7 +160,7 @@ public class SkillManager : MonoBehaviour
             uiSkill.ClearSkillUI(slotIndex);
         }
         // UI 업데이트
-        uiSkill.ResetSkillUIAll(ActiveSkills);
+        uiSkill.ResetSkillUI(slotIndex);
     }
 
     public Skill GetSkillAtSlot(int slotIndex)
@@ -241,7 +241,7 @@ public class SkillManager : MonoBehaviour
         }
 
         // 쿨타임 적용
-        _skill.cooldown = _skill.maxCooldown;
+        _skill.cooldown = _skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime);
 
         // 스킬 사용 이벤트 발생
         //player.GetComponent<PlayerController>().SetTrigger("Skill");
