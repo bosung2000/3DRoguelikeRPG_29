@@ -45,7 +45,7 @@ public class MeleeSkillBase : MonoBehaviour
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(skillData.value);
+                    enemy.TakeDamage(skillData.value,false);
                     ShowHitEffect(hitCollider.transform.position);
                 }
             }

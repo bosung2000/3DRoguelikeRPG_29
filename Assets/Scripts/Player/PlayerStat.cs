@@ -32,11 +32,11 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private Dictionary<PlayerStatType, float> _equipmentBonuses = new Dictionary<PlayerStatType, float>();
     private Dictionary<PlayerStatType, float> _relicBonuses = new Dictionary<PlayerStatType, float>();
     private Dictionary<PlayerStatType, float> _buffBonuses = new Dictionary<PlayerStatType, float>();
-    
+
     // 스킬 관련 변수
     private Dictionary<string, float> _skillCooldowns = new Dictionary<string, float>();
     private List<TimedBuff> _activeTimedBuffs = new List<TimedBuff>();
-    
+
     // 버프 지속시간 관리를 위한 클래스
     [System.Serializable]
     private class TimedBuff
@@ -45,7 +45,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         public float value;
         public float duration;
         public float remainingTime;
-        
+
         public TimedBuff(PlayerStatType statType, float value, float duration)
         {
             this.statType = statType;
@@ -54,7 +54,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             this.remainingTime = duration;
         }
     }
-    
+
     private void Awake()
     {
         playerStat = GetComponent<PlayerStat>();
@@ -62,20 +62,20 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _Weapon = GetComponentInChildren<Weapon>();
         InitializeStats();
     }
-    
+
     private void Start()
     {
         InitBaseStat(_statData);
     }
-    
+
     private void Update()
     {
         // 버프 지속시간 업데이트
         UpdateTimedBuffs();
-        
+
         // 스킬 쿨다운 업데이트
         UpdateSkillCooldowns();
-        
+
         // MP 자연 회복 (기존 코드에 없으면 추가)
         float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
         if (mpRecovery > 0)
@@ -83,9 +83,9 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             RegenerateMana(mpRecovery * Time.deltaTime);
         }
     }
-    
+
     // 스킬 관련 메서드들 //
-    
+
     /// <summary>
     /// 마나 사용 메서드
     /// </summary>
@@ -94,14 +94,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public bool UseMana(float amount)
     {
         float currentMP = GetStatValue(PlayerStatType.MP);
-        
+
         if (currentMP < amount)
             return false;
-        
+
         SetStatValue(PlayerStatType.MP, currentMP - amount);
         return true;
     }
-    
+
     /// <summary>
     /// 마나 회복 메서드
     /// </summary>
@@ -110,10 +110,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         float currentMP = GetStatValue(PlayerStatType.MP);
         float maxMP = GetStatValue(PlayerStatType.MaxMP);
-        
+
         SetStatValue(PlayerStatType.MP, Mathf.Min(currentMP + amount, maxMP));
     }
-    
+
     /// <summary>
     /// 특정 스킬의 쿨다운 시작
     /// </summary>
@@ -124,10 +124,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         // 스킬 쿨타임 감소 적용
         float cooldownReduction = GetStatValue(PlayerStatType.SkillColltime) / 100f;
         float finalCooldown = cooldownTime * (1f - cooldownReduction);
-        
+
         _skillCooldowns[skillName] = finalCooldown;
     }
-    
+
     /// <summary>
     /// 특정 스킬의 쿨다운 확인
     /// </summary>
@@ -137,21 +137,21 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         return _skillCooldowns.TryGetValue(skillName, out float value) ? value : 0f;
     }
-    
+
     /// <summary>
     /// 스킬 쿨다운 업데이트
     /// </summary>
     private void UpdateSkillCooldowns()
     {
         List<string> finishedSkills = new List<string>();
-        
+
         foreach (var pair in _skillCooldowns)
         {
             string skillName = pair.Key;
             float cooldown = pair.Value;
-            
+
             cooldown -= Time.deltaTime;
-            
+
             if (cooldown <= 0)
             {
                 finishedSkills.Add(skillName);
@@ -161,14 +161,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
                 _skillCooldowns[skillName] = cooldown;
             }
         }
-        
+
         // 쿨다운이 끝난 스킬 제거
         foreach (var skill in finishedSkills)
         {
             _skillCooldowns.Remove(skill);
         }
     }
-    
+
     /// <summary>
     /// 시간 제한이 있는 버프 추가
     /// </summary>
@@ -179,11 +179,11 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         // 임시 버프 추가
         _activeTimedBuffs.Add(new TimedBuff(statType, value, duration));
-        
+
         // 버프 즉시 적용
         AddBuff(statType, value);
     }
-    
+
     /// <summary>
     /// 시간 제한 버프 업데이트
     /// </summary>
@@ -191,14 +191,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         if (_activeTimedBuffs.Count == 0)
             return;
-            
+
         bool buffRemoved = false;
-        
+
         for (int i = _activeTimedBuffs.Count - 1; i >= 0; i--)
         {
             var buff = _activeTimedBuffs[i];
             buff.remainingTime -= Time.deltaTime;
-            
+
             if (buff.remainingTime <= 0)
             {
                 // 버프 효과 제거
@@ -207,15 +207,15 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
                 buffRemoved = true;
             }
         }
-        
+
         if (buffRemoved)
         {
             OnStatChanged();
         }
     }
-    
+
     // 기존 코드와의 통합을 위한 메서드들 //
-    
+
     /// <summary>
     /// 스탯 0으로 초기화
     /// </summary>
@@ -378,8 +378,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         float absorp = GetStatValue(PlayerStatType.absorp);
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
-        float finalDamage = isCrit ? baseAttack * critDamage*0.01f : baseAttack;
-        enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+        float finalDamage = isCrit ? baseAttack * critDamage * 0.01f : baseAttack;
+        enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit);
         absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
         Healing(absorp);
 
@@ -388,15 +388,21 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void TakeDamage(int damage)
     {
         if (Time.time - _lastHitTime < GetStatValue(PlayerStatType.HitCooldown)) return;
-        
+
         float currentHP = GetStatValue(PlayerStatType.HP);
         float damageReduction = GetStatValue(PlayerStatType.DMGReduction);
         float dmgIncrease = GetStatValue(PlayerStatType.DMGIncrease);
 
-        damage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
+        int finalDamage = damage - Mathf.RoundToInt(damage * (damageReduction - dmgIncrease) / 100);
         _lastHitTime = Time.time;
 
-        SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - damage, 0));
+        SetStatValue(PlayerStatType.HP, Mathf.Max(currentHP - finalDamage, 0));
+
+        // 데미지 텍스트 표시
+        if (DamageTextManager.Instance != null)
+        {
+            DamageTextManager.Instance.ShowDamageText(transform.position, finalDamage, false);
+        }
 
         _cameraShake.ShakeCamera(2f, 0.3f);
 
