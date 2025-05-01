@@ -55,7 +55,7 @@ public class StabSkill : MeleeSkillBase
                     ShowCriticalHitEffect(hit.transform.position);
                 }
                 
-                enemy.TakeDamage(stabDamage);
+                enemy.TakeDamage(stabDamage, isCritical);
                 ShowStabHitEffect(hit.transform.position);
             }
         }

@@ -30,6 +30,6 @@ public class EnemyManager : MonoBehaviour
     public void ReceiveDamage(int damage)
     {
         if (_enemy == null) return;
-        _enemy.TakeDamage(damage);
+        _enemy.TakeDamage(damage,false);
     }
 }

@@ -379,7 +379,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage*0.01f : baseAttack;
-        enemy.TakeDamage(Mathf.RoundToInt(finalDamage));
+        enemy.TakeDamage(Mathf.RoundToInt(finalDamage),isCrit);
         absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
         Healing(absorp);
 

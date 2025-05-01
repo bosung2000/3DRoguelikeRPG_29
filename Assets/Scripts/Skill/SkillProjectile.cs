@@ -150,12 +150,12 @@ public class SkillProjectile : MonoBehaviour
     private void ApplyDamageToEnemy(Enemy enemy)
     {
         int damageAmount = damage;
-
+        bool isCritical =false;
         // 플레이어 정보가 있을 경우 플레이어의 크리티컬 확률과 배율 사용
         if (player != null && player._playerStat != null)
         {
             // 크리티컬 적용
-            bool isCritical = IsAttackCritical(player);
+            isCritical = IsAttackCritical(player);
             if (isCritical)
             {
                 float critMultiplier = GetCriticalDamageMultiplier(player);
@@ -164,9 +164,8 @@ public class SkillProjectile : MonoBehaviour
                 Debug.Log($"크리티컬 히트! 데미지: {damageAmount} (기본 {damage} x {critMultiplier})");
             }
         }
-
         // 데미지 적용
-        enemy.TakeDamage(damageAmount);
+        enemy.TakeDamage(damageAmount, isCritical);
     }
     // 크리티컬 발생 확인
     private bool IsAttackCritical(Player player)
@@ -235,7 +234,7 @@ public class SkillProjectile : MonoBehaviour
                 damageRatio = Mathf.Clamp(damageRatio, 0.1f, 1f) * splashDamageRatio;
 
                 int splashDamage = Mathf.RoundToInt(damage * damageRatio);
-                enemy.TakeDamage(splashDamage);
+                enemy.TakeDamage(splashDamage,false);
             }
         }
     }

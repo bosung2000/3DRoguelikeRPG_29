@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
 using static UnityEngine.GraphicsBuffer;
-
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -32,8 +32,6 @@ public class Enemy : MonoBehaviour
     private Vector3 _cachedTargetPosition;
 
     public event Action<Enemy> OnDeath; //이벤트
-
-
 
     private void Awake()
     {
@@ -69,11 +67,14 @@ public class Enemy : MonoBehaviour
         return PlayerTarget;
     }
     //데미지를 받음
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage,bool CriBool)
     {
         if (_isDead) return;
 
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
+
+        // 데미지 텍스트 생성
+        ShowDamageText(damage, CriBool);
 
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
@@ -94,10 +95,73 @@ public class Enemy : MonoBehaviour
                 Debug.Log("컨트롤러가 널임");
             }
         }
-
     }
 
-    
+    // 데미지 텍스트 표시 메서드
+    private void ShowDamageText(int damage, bool isCritical)
+    {
+        // 데미지 텍스트 프리팹 로드
+        GameObject damageTextPrefab = Resources.Load<GameObject>("UI/DamageText");
+        if (damageTextPrefab == null)
+        {
+            Debug.LogError("DamageText 프리팹을 찾을 수 없습니다. Resources/UI/DamageText 경로를 확인하세요.");
+            return;
+        }
+
+        // 몬스터 위 위치 계산
+        Vector3 position = transform.position + Vector3.up * 1.5f;
+        position += new Vector3(UnityEngine.Random.Range(-0.3f, 0.3f), UnityEngine.Random.Range(0f, 0.3f), 0);
+        
+        // 새로운 GameObject 생성하여 World Space Canvas 추가
+        GameObject canvasObj = new GameObject("DamageTextCanvas");
+        canvasObj.transform.position = position;
+        
+        // 항상 카메라를 바라보도록 설정
+        canvasObj.transform.forward = Camera.main.transform.forward;
+        
+        // Canvas 컴포넌트 추가 및 설정
+        Canvas canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        
+        // 캔버스 스케일러 추가 및 설정
+        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+        scaler.dynamicPixelsPerUnit = 100;
+        
+        // 레이캐스터 추가 (UI 이벤트를 위해)
+        canvasObj.AddComponent<GraphicRaycaster>();
+        
+        // 데미지 텍스트 생성
+        GameObject textObj = Instantiate(damageTextPrefab, Vector3.zero, Quaternion.identity, canvasObj.transform);
+        RectTransform rectTransform = textObj.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            // 로컬 위치 초기화 (캔버스 내에서 중앙에 위치)
+            rectTransform.localPosition = Vector3.zero;
+            // 크기 설정
+            rectTransform.sizeDelta = new Vector2(200, 50);
+            // 회전 초기화 - 중요: 로컬 회전을 초기화하여 텍스트가 정면을 향하도록 함
+            rectTransform.localRotation = Quaternion.identity;
+        }
+        
+        // 텍스트 내의 모든 자식 오브젝트도 로컬 회전 초기화
+        foreach (Transform child in textObj.transform)
+        {
+            child.localRotation = Quaternion.identity;
+        }
+        
+        // Canvas 크기 설정
+        canvas.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        
+        DamageText damageText = textObj.GetComponent<DamageText>();
+        if (damageText != null)
+        {
+            damageText.SetDamageText(damage, isCritical);
+        }
+        
+        // 캔버스와 텍스트 일정 시간 후 제거 (DamageText 스크립트에서 처리하도록 수정)
+        Destroy(canvasObj, 2.0f);
+    }
+
     //죽음 - 재화 드랍
     public void Die()
     {
