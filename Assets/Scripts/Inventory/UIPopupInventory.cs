@@ -214,7 +214,7 @@ public class UIPopupInventory : PopupUI
     protected override void OnCloseButtonClick()
     {
         // 특별한 처리가 필요한 경우 여기에 추가
-        Debug.Log("인벤토리 닫힘");
+        //Debug.Log("인벤토리 닫힘");
         //메뉴창도 닫아주기
         uIHUD.OnMenu();
         base.OnCloseButtonClick();
