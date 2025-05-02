@@ -1005,6 +1005,10 @@ PrefabInstance:
       propertyPath: nextRoom
       value: 
       objectReference: {fileID: 1067205211}
+    - target: {fileID: 6882255420481943818, guid: 02e364ef782d3724c920314ebd2f8324, type: 3}
+      propertyPath: spawnConfig.normalCount
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1490,9 +1494,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1243076524762344058, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 49.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243076524762344058, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 34.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3842363198736480183, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
       propertyPath: m_Name
       value: Room2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6817755332687018051, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
+      propertyPath: spawnConfig.normalCount
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8519760636536095978, guid: aa6144c441eb3284480c2aac43fb201b, type: 3}
       propertyPath: m_LocalPosition.x
