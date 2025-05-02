@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class EquipMananger : MonoBehaviour
 {
-    public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; }
+    public Dictionary<EquipType, ItemData> EquipDicionary { get; private set; } //장비 전용 딕셔너리(장비 부위별 관리)
     public Dictionary<int, ItemData> RelicsDictionary { get; private set; } // 유물 전용 딕셔너리(id를 키로 사용)
 
     // 최대 장착 가능한 유물 개수
