@@ -17,7 +17,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] Slider bgmVolumSlider;
     [SerializeField] Slider sfxVolumSlider;
 
-    [SerializeField] GameObject soundMenu;
+    [SerializeField] GameObject settingMenu;
     bool canContinue;
 
     private void Start()
@@ -40,10 +40,10 @@ public class TitleMenu : MonoBehaviour
     }
     public void OnClickSettingBtn()
     {
-        soundMenu.SetActive(true);
+        settingMenu.SetActive(true);
     }
     public void OnClickCloseSetting()
     {
-        soundMenu.SetActive(false);
+        settingMenu.SetActive(false);
     }
 }
