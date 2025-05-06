@@ -11,21 +11,17 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] Button startBtn;
     [SerializeField] Button endBtn;
     [SerializeField] Button settingBtn;
-    [SerializeField] Button closeSetting;
-
-    [SerializeField] Slider masterVolumSlider;
-    [SerializeField] Slider bgmVolumSlider;
-    [SerializeField] Slider sfxVolumSlider;
+    //[SerializeField] Button closeSetting;
 
     [SerializeField] GameObject settingMenu;
-    bool canContinue;
+    bool active;
 
     private void Start()
     {
         startBtn.onClick.AddListener(OnClickStart);
         endBtn.onClick.AddListener(OnClickEndBtn);
         settingBtn.onClick.AddListener(OnClickSettingBtn);
-        closeSetting.onClick.AddListener(OnClickCloseSetting);
+        //closeSetting.onClick.AddListener(OnClickCloseSetting);
     }
     public void OnClickStart()
     {
@@ -34,16 +30,25 @@ public class TitleMenu : MonoBehaviour
 
     public void OnClickEndBtn()
     {
-        //EditorApplication.isPlaying = false;
+        EditorApplication.isPlaying = false;
 
         Application.Quit();
     }
     public void OnClickSettingBtn()
     {
-        settingMenu.SetActive(true);
+        if (active)
+        {
+            settingMenu.SetActive(false);
+            active = false;
+        }
+        else
+        {
+            settingMenu.SetActive(true);
+            active = true;
+        }
     }
-    public void OnClickCloseSetting()
-    {
-        settingMenu.SetActive(false);
-    }
+    //public void OnClickCloseSetting()
+    //{
+    //    settingMenu.SetActive(false);
+    //}
 }
