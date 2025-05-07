@@ -14,6 +14,7 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] private Transform mapContainer;
 
+    [SerializeField] Portal _portal;
     private List<Room> rooms = new List<Room>();
     private int currentRoomIndex = 0;  // 현재 플레이어가 위치한 방
 
@@ -25,9 +26,12 @@ public class MapManager : MonoBehaviour
     [SerializeField] private int treasureRoomCount = 1;
     // 보스방은 항상 1개이므로 별도 변수 필요 없음
 
+
+
     // 맵 레이아웃 생성
     private void Start()
     {
+        _portal = FindObjectOfType<Portal>();
         InitializeMapLayout();
         AssignRoomTypes();
         CreateMapUI();
@@ -168,7 +172,7 @@ public class MapManager : MonoBehaviour
         }
 
         // 연결선 생성
-        CreateConnectionLines();
+        //CreateConnectionLines();
     }
 
     // 방 타입에 맞는 프리팹 반환
@@ -259,11 +263,11 @@ public class MapManager : MonoBehaviour
         if (rooms[roomIndex].isAccessible)
         {
             // 보스방 입장 전 확인 (필요시)
-            if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
-            {
-                Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
-                return;
-            }
+            //if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
+            //{
+            //    Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
+            //    return;
+            //}
             
             // 이전 방에서 연결된 모든 방 비활성화
             foreach (int connectedRoom in rooms[currentRoomIndex].connectedRooms)
@@ -309,26 +313,38 @@ public class MapManager : MonoBehaviour
         {
             case RoomType.Normal:
                 // 일반 전투 시작
+                _portal.TryUsePortal("potal");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("일반 전투 시작");
                 break;
             case RoomType.Elite:
                 // 엘리트 전투 시작
+                _portal.TryUsePortal("potal(1)");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("엘리트 전투 시작");
                 break;
             case RoomType.WeaponShop:
                 // 무기 상점 UI 표시
+                _portal.TryUsePortal("potal(2)");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("무기 상점 열기");
                 break;
             case RoomType.RelicShop:
                 // 유물 상점 UI 표시
+                _portal.TryUsePortal("potal(3)");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("유물 상점 열기");
                 break;
             case RoomType.Treasure:
                 // 보물 상자 획득
+                _portal.TryUsePortal("potal(4)");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("보물 획득");
                 break;
             case RoomType.Boss:
                 // 보스 전투 시작
+                _portal.TryUsePortal("potal(5)");
+                UIManager.Instance.ClosePopupUI<UIMap>();
                 Debug.Log("보스 전투 시작");
                 StartBossBattle();
                 break;
