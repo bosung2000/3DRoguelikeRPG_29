@@ -13,6 +13,7 @@ public class UIShop : PopupUI
     //sell > uishop(판매list)이중에서 색출해서(뭐 등급이 맞게 높은 등급일수록 좋은아이템이 나와야하잔아)
     // 그럼 아아템의 등급이 있어야하겠는데 > tier
     [SerializeField] TextMeshProUGUI goldTxt;
+    [SerializeField] TextMeshProUGUI SoulTxt;
     [SerializeField] private ShopBuyInventory shopBuyInventory; //구매창 
     private FloatingJoystick[] allFloatingjoystick;
 
@@ -34,8 +35,8 @@ public class UIShop : PopupUI
     {
         shop = _shop;
         playerManager = _playerManager;        
-        shop.ShopitemChange += ShowShopGold;
-        ShowShopGold();
+        shop.ShopitemChange += ShowShopCurrency;
+        ShowShopCurrency();
 
         if (shopBuyInventory !=null)
         {
@@ -59,9 +60,10 @@ public class UIShop : PopupUI
         }
     }
 
-    public void ShowShopGold()
+    public void ShowShopCurrency()
     {
         goldTxt.text = playerManager.Currency.currencies[CurrencyType.Gold].ToString();
+        SoulTxt.text = playerManager.Currency.currencies[CurrencyType.Soul].ToString();
     }
 
 }
