@@ -25,7 +25,7 @@ public class TitleMenu : MonoBehaviour
     }
     public void OnClickStart()
     {
-        SceneManager.LoadScene("Main_02");
+        SceneManager.LoadScene("Main_HB");
     }
 
     public void OnClickEndBtn()
