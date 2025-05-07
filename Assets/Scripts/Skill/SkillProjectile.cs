@@ -165,7 +165,7 @@ public class SkillProjectile : MonoBehaviour
             }
         }
         // 데미지 적용
-        enemy.TakeDamage(damageAmount, isCritical,player._playerStat);
+        enemy.TakeDamage(damageAmount, isCritical);
     }
     // 크리티컬 발생 확인
     private bool IsAttackCritical(Player player)
@@ -234,7 +234,7 @@ public class SkillProjectile : MonoBehaviour
                 damageRatio = Mathf.Clamp(damageRatio, 0.1f, 1f) * splashDamageRatio;
 
                 int splashDamage = Mathf.RoundToInt(damage * damageRatio);
-                enemy.TakeDamage(splashDamage,false, player._playerStat);
+                enemy.TakeDamage(splashDamage,false);
             }
         }
     }

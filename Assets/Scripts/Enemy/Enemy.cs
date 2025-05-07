@@ -1,6 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -47,7 +52,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        if (_weaponCollider != null)
+        if(_weaponCollider != null)
             _weaponCollider.enabled = false;
     }
 
@@ -62,14 +67,9 @@ public class Enemy : MonoBehaviour
         return PlayerTarget;
     }
     //데미지를 받음
-    public void TakeDamage(int damage, bool CriBool, PlayerStat playerStat)
+    public void TakeDamage(int damage,bool CriBool)
     {
         if (_isDead) return;
-
-        float absorp = playerStat.GetStatValue(PlayerStatType.absorp);
-        //흡혈
-        absorp = Mathf.RoundToInt(damage * absorp * 0.01f);
-        playerStat.Healing(absorp);
 
         Stat.ModifyStat(EnemyStatType.HP, -Mathf.Abs(damage));
 
@@ -125,9 +125,9 @@ public class Enemy : MonoBehaviour
 
         //존 내의 적 처치 이벤트
         OnDeath?.Invoke(this);
-
+        
     }
-
+    
     //재화 드랍
     private void DropCurrency()
     {
@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour
         Vector3 randomXZ = new Vector3(circle.x, 0f, circle.y);
         Vector3 dropPos = center + randomXZ;
 
-        if (NavMesh.SamplePosition(dropPos, out NavMeshHit hit, radius, NavMesh.AllAreas))
+        if(NavMesh.SamplePosition(dropPos, out NavMeshHit hit, radius, NavMesh.AllAreas))
         {
             return hit.position + Vector3.up * 0.3f;
         }
@@ -174,12 +174,12 @@ public class Enemy : MonoBehaviour
     {
         return _isDeadAnimationEnd;
     }
-
+        
     //공격 - 콜라이더
     //ON
     public void EnableWeaponCollider()
     {
-        if (_weaponCollider != null)
+        if(_weaponCollider != null)
             _weaponCollider.enabled = true;
     }
     //OFF
@@ -193,9 +193,9 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (_weaponCollider == null || !_weaponCollider.enabled) return;
-        if (!other.CompareTag("Player")) return;
+        if(!other.CompareTag("Player")) return;
 
-        if (other.CompareTag("Player"))
+        if(other.CompareTag("Player"))
         {
             if (other.TryGetComponent(out PlayerStat playerStat))
             {
@@ -210,7 +210,7 @@ public class Enemy : MonoBehaviour
     //공격 끝나는 시간 체크
     public void OnAttackAnimationEnd()
     {
-        if (enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
+        if(enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
         {
             enemyController.ChageState(EnemyStateType.Chase);
         }
@@ -244,7 +244,7 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        if(Input.GetKeyDown(KeyCode.K))
         {
             Debug.Log("적 죽음");
             Die();

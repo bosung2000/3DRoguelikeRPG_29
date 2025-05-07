@@ -9,7 +9,7 @@ public class SkillCondition : MonoBehaviour
     public float currentCooldown; //현재 쿨타임
     public float maximumCooldown; //최대 쿨타임
     public int index;
-    [SerializeField] private Image backGroundKillImage;
+    [SerializeField]private Image backGroundKillImage;
     public Image UICoolDown; // 쿨타임 표시할 이미지
     //[SerializeField] private Image UICoolDown; // 스킬 아이콘
     public Skill skill;
@@ -49,10 +49,10 @@ public class SkillCondition : MonoBehaviour
 
     public float GetPercentage()
     {
-        return maximumCooldown > 0 ? currentCooldown / (maximumCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f)) : 0;
+        return maximumCooldown > 0 ? currentCooldown / (maximumCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime)) : 0;
     }
 
-
+    
     public void ResetCondition()
     {
         if (skill == null)
@@ -62,7 +62,7 @@ public class SkillCondition : MonoBehaviour
         }
         if (skill != null)
         {
-            maximumCooldown = skill.maxCooldown * (1.0f - player._playerStat.GetStatValue(PlayerStatType.SkillColltime) / 100f);
+            maximumCooldown = skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime);
             currentCooldown = skill.cooldown;
         }
         else
@@ -83,7 +83,7 @@ public class SkillCondition : MonoBehaviour
         else
         {
             UICoolDown.sprite = defaultEmptyIcon;
-            backGroundKillImage.sprite = defaultEmptyIcon;
+            backGroundKillImage.sprite= defaultEmptyIcon;
             Debug.Log("스킬 아이콘이 없습니다.");
         }
     }

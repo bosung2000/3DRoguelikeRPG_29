@@ -8,13 +8,17 @@ public class UIMenu : MonoBehaviour
     [SerializeField] private Button btn_inventory;
     [SerializeField] private Button btn_Enhance;
     [SerializeField] private Button btn_Skill;
+    [SerializeField] private Button btn_Menu;
 
     private FloatingJoystick floatingJoystick;
+    private UIHUD uiHUD;
     private void Awake()
     {
+        uiHUD = GetComponentInParent<UIHUD>();
         btn_inventory.onClick.AddListener(OnInventory);
         btn_Enhance.onClick.AddListener(OnEnhance);
         btn_Skill.onClick.AddListener(OnSkill);
+        btn_Menu.onClick.AddListener(OnMenu);
     }
     private void Start()
     {
@@ -24,14 +28,14 @@ public class UIMenu : MonoBehaviour
 
     public void OnInventory()
     {
-        Debug.Log("Is Main Screan");
+        
         UIManager.Instance.ShowPopupUI<UIPopupInventory>();
         //조이스틱 UI끄기
         floatingJoystick.gameObject.SetActive(false);
     }
     public void OnEnhance()
     {
-        Debug.Log("강화창");
+        
         UIManager.Instance.ShowPopupUI<UIEquipmentEnhance>();
         //조이스틱 UI끄기
         floatingJoystick.gameObject.SetActive(false);
@@ -39,10 +43,15 @@ public class UIMenu : MonoBehaviour
 
     public void OnSkill()
     {
-        Debug.Log("스킬창");
+        
         UIManager.Instance.ShowPopupUI<UISkillInventory>();
         //조이스틱 UI끄기
         floatingJoystick.gameObject.SetActive(false);
+    }
+    public void OnMenu()
+    {
+        uiHUD.OnMenu();
+        
     }
 
 }

@@ -66,7 +66,7 @@ public class HalfMoon : MeleeSkillBase
                         ShowCriticalHitEffect(hitCollider.transform.position);
                     }
 
-                    enemy.TakeDamage(HalfMoonDamage, isCritical, player._playerStat);
+                    enemy.TakeDamage(HalfMoonDamage, isCritical);
                     ShowHalfMoonHitEffect(hitCollider.transform.position);
                     targetsHit++;
                 }
