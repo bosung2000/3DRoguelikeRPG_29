@@ -14,7 +14,7 @@ public class MeleeSkillBase : MonoBehaviour
 
     public virtual void Execute(Player player, Vector3 direction)
     {
-        if (isAttacking || skillData.cooldown > 0) return ;
+        if (isAttacking || skillData.cooldown > 0) return;
 
         StartCoroutine(AttackCoroutine(player, direction));
     }
@@ -49,7 +49,7 @@ public class MeleeSkillBase : MonoBehaviour
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(MeleeDamage, false, player._playerStat);
+                    enemy.TakeDamage(MeleeDamage, false);
                     ShowHitEffect(hitCollider.transform.position);
                 }
             }

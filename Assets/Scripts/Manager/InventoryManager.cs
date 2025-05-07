@@ -39,8 +39,8 @@ public class InventoryManager : MonoBehaviour
 
         //데이터 넣어주기(저장된 데이터 읽어와서)
         //text용 
-        //List<ItemData> TestItemData = new List<ItemData>();
-        //AddItemList(TestItemData);
+        List<ItemData> TestItemData = new List<ItemData>();
+        AddItemList(TestItemData);
 
         //ui슬롯도 초기화 해줘야됨 
     }

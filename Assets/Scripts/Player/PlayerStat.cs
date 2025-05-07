@@ -24,8 +24,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
-    private Coroutine _hpRegenRoutine;
-    private Coroutine _mpRegenRoutine;
 
     private float _lastHitTime = -100f;
 
@@ -68,8 +66,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void Start()
     {
         InitBaseStat(_statData);
-        _hpRegenRoutine = StartCoroutine(HPRegenRoutine());
-        _mpRegenRoutine = StartCoroutine(MPRegenRoutine());
     }
 
     private void Update()
@@ -79,65 +75,15 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         // 스킬 쿨다운 업데이트
         UpdateSkillCooldowns();
-    }
-    private IEnumerator HPRegenRoutine()
-    {
-        WaitForSeconds interval = new WaitForSeconds(10f);
-        while (true)
+
+        // MP 자연 회복 (기존 코드에 없으면 추가)
+        float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
+        if (mpRecovery > 0)
         {
-            yield return interval;
-
-            float regenAmount = GetStatValue(PlayerStatType.HPRecovery);
-
-            if (regenAmount > 0f)
-            {
-                float currentHP = GetStatValue(PlayerStatType.HP);
-                float maxHP = GetStatValue(PlayerStatType.MaxHP);
-
-                if (currentHP < maxHP)
-                {
-                    float newHP = Mathf.Min(currentHP + regenAmount, maxHP);
-                    SetStatValue(PlayerStatType.HP, newHP);
-                }
-            }
+            RegenerateMana(mpRecovery * Time.deltaTime);
         }
     }
 
-    private IEnumerator MPRegenRoutine()
-    {
-        WaitForSeconds interval = new WaitForSeconds(10f);
-        while (true)
-        {
-            yield return interval;
-            float regenAmount = GetStatValue(PlayerStatType.MPRecovery);
-            if (regenAmount > 0f)
-            {
-                float currentMP = GetStatValue(PlayerStatType.MP);
-                float maxMP = GetStatValue(PlayerStatType.MaxMP);
-                if (currentMP < maxMP)
-                {
-                    float newMP = Mathf.Min(currentMP + regenAmount, maxMP);
-                    SetStatValue(PlayerStatType.MP, newMP);
-                }
-            }
-        }
-    }
-    public void StopHPRegen()
-    {
-        if (_hpRegenRoutine != null)
-        {
-            StopCoroutine(_hpRegenRoutine);
-            _hpRegenRoutine = null;
-        }
-    }
-    public void StopMPRegen()
-    {
-        if (_mpRegenRoutine != null)
-        {
-            StopCoroutine(_mpRegenRoutine);
-            _mpRegenRoutine = null;
-        }
-    }
     // 스킬 관련 메서드들 //
 
     /// <summary>
@@ -360,7 +306,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
         base.OnStatChanged();
         OnStatsChanged?.Invoke(this);
-        //_playerController.SetFloat("AttackSpeed", GetStatValue(PlayerStatType.AttackSpeed));
     }
     /// <summary>
     /// 장비 보너스 스탯 초기화 
@@ -431,13 +376,13 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
-        //float absorp = GetStatValue(PlayerStatType.absorp);
+        float absorp = GetStatValue(PlayerStatType.absorp);
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage * 0.01f : baseAttack;
-        enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit,this);
-        //absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
-        //Healing(absorp);
+        enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit);
+        absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
+        Healing(absorp);
 
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }
@@ -464,8 +409,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
-            StopHPRegen();
-            StopMPRegen();
             _playerController.SetTrigger("Die");
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
@@ -559,8 +502,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (other.gameObject.CompareTag("Gold"))
         {
-            int goldAmount = Mathf.RoundToInt(currencyData._amount * (1+GetStatValue(PlayerStatType.GoldAcquisition)*0.01f));
-            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, goldAmount);
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
             Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("Soul"))
