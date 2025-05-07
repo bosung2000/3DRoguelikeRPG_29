@@ -62,29 +62,6 @@ public class BossKeepDistanceState : IBossState
         if (_timer >= _decisionInterval)
         {
             _timer = 0f;
-
-            int nextAction;
-            if (boss.IsPhase2)
-            {
-                nextAction = Random.Range(0, 3);
-            }
-            else
-            {
-                nextAction = Random.Range(0, 2);
-            }
-
-            switch (nextAction)
-            {
-                case 0:
-                    controller.ChageState(BossStateType.Attack);
-                    break;
-                case 1:
-                    controller.ChageState(BossStateType.Skill1);
-                    break;
-                case 2:
-                    controller.ChageState(BossStateType.Skill2);
-                    break;
-            }
         }
     }
 

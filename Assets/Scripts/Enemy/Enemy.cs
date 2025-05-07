@@ -212,7 +212,7 @@ public class Enemy : MonoBehaviour
     {
         if (enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
         {
-            enemyController.ChageState(EnemyStateType.KeepDistance);
+            enemyController.ChageState(EnemyStateType.Chase);
         }
     }
 

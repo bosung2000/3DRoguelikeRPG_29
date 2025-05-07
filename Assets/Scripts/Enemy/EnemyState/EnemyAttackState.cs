@@ -74,20 +74,7 @@ public class EnemyAttackState : IEnemyState
     {
         if(_target == null) return;
         
-        float attackRange = controller.GetStat(EnemyStatType.AttackRange);
-        float distance = Vector3.Distance(controller.transform.position, _target.position);
-
-        //공격 범위 밖이라면
-        if(distance >  attackRange)
-        {
-            controller.agent.isStopped = false;
-            controller.agent.SetDestination(_target.position);
-        }
-        //공격 범위 안이라면
-        else
-        {
-            controller.agent.isStopped = true;
-        }
+        controller.agent.isStopped = true;
     }
     private void PerformRangedAttack(EnemyController controller)
     {

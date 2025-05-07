@@ -7,6 +7,7 @@ public enum BossSkillType
     Dash,
     SlamWave
 }
+
 public class BossSkillState : IBossState
 {
     private BossSkillType _skillType;

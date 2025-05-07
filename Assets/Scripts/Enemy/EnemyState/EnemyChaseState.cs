@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
@@ -9,8 +10,8 @@ public class EnemyChaseState : IEnemyState
     private float outRangeTime = 0f;
     private float outRangeTimeHold = 2.0f;
     private float _chaseRange;
-    private float _keepDistance;
     private float _attackRange;
+    private float _distance;
 
 
 
@@ -25,7 +26,6 @@ public class EnemyChaseState : IEnemyState
 
         _chaseRange = controller.GetStat(EnemyStatType.ChaseRange);
         _attackRange = controller.GetStat(EnemyStatType.AttackRange);
-        _keepDistance = controller.GetStat(EnemyStatType.KeepDistanceRange);
         controller.agent.enabled = true;
         controller.agent.isStopped = false;
         controller.agent.angularSpeed = 1000f;
@@ -54,12 +54,26 @@ public class EnemyChaseState : IEnemyState
         }
 
         //공격 범위 내면 상태 전환용
-        float distance = Vector3.Distance(controller.transform.position, _target.position);
-        
-        controller.agent.SetDestination(_target.position);
+        _distance = Vector3.Distance(controller.transform.position, _target.position);
+
+        // 범위 밖이면 목적지 계산해서 추적
+        if (_distance > _attackRange * 0.9f)
+        {
+            Vector3 direction = (_target.position - controller.transform.position).normalized;
+            Vector3 stopPosition = _target.position - direction * (_attackRange * 0.9f);
+            controller.agent.isStopped = false;
+            controller.agent.SetDestination(stopPosition);
+        }
+        else
+        {
+            // 공격 사거리 안이면 완전히 멈추고 공격 상태로 전환
+            controller.agent.isStopped = true;
+            controller.ChageState(EnemyStateType.Attack);
+            return;
+        }
 
         //범위 밖인 상태 시간 누적
-        if (distance > _chaseRange)
+        if (_distance > _chaseRange)
         {
             outRangeTime += Time.deltaTime;
 
@@ -72,13 +86,6 @@ public class EnemyChaseState : IEnemyState
         else
         {
             outRangeTime = 0f; //범위 안이면 초기화
-        }
-
-        //플레이어와 거리가 가까워지면 대치 상태로 전환
-        if (distance <= _keepDistance)
-        {
-            controller.ChageState(EnemyStateType.KeepDistance);
-            return;
         }
 
         //애니메이션 제어

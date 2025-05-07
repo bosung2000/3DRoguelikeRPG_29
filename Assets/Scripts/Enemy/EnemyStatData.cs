@@ -39,8 +39,6 @@ public class EnemyStatData : ScriptableObject
     [Header("탐지 정보")]
     [SerializeField] private float _chaseRange; //탐지 범위
 
-    [Header("대치 범위"), SerializeField] private float _keepDistanceRange;
-
     public int Index => _index;
     public string EnemyName => _enemyName;
     public EnemyType EnemyType => _enemyType;
@@ -54,5 +52,4 @@ public class EnemyStatData : ScriptableObject
     public float AttackRange => _attackRange;
     public float AttackCooldown => _attackCooldown;
     public float ChaseRange => _chaseRange;
-    public float KeepDistanceRange => _keepDistanceRange;
 }

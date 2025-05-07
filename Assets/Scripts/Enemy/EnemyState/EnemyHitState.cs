@@ -37,9 +37,6 @@ public class EnemyHitState : IEnemyState
                     case EnemyStateType.Chase:
                         controller.ChageState(EnemyStateType.Chase);
                         break;
-                    case EnemyStateType.KeepDistance:
-                        controller.ChageState(EnemyStateType.KeepDistance);
-                        break;
                     default:
                         controller.ChageState(EnemyStateType.Idle);
                         break;

@@ -73,7 +73,7 @@ public class BossController : MonoBehaviour
             //상태 추가마다 넣기
             BossStateType.KeepDistance => new BossKeepDistanceState(),
             BossStateType.Attack => new BossAttackState(),
-            BossStateType.Skill => new BossSkillState(),
+            //BossStateType.Skill => new BossSkillState(),
             BossStateType.Phase2 => new BossPhaseState(),
             BossStateType.Dead => new BossDeadState(),
             _ => null
