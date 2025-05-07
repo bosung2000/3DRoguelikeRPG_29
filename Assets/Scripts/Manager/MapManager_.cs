@@ -98,8 +98,8 @@ public class MapManager : MonoBehaviour
         rooms[11].connectedRooms.Add(13);
         rooms[12].connectedRooms.Add(13);
 
-        // 양방향 연결 설정 (선택 사항)
-        SetupBidirectionalConnections();
+        // 양방향 연결 설정 위에서 아래로 갈수 없게 설정 
+        //SetupBidirectionalConnections();
     }
 
     // 양방향 연결 설정
@@ -181,7 +181,7 @@ public class MapManager : MonoBehaviour
             case RoomType.WeaponShop: return weaponShopPrefab;
             case RoomType.RelicShop: return relicShopPrefab;
             case RoomType.Treasure: return treasurePrefab;
-            case RoomType.Boss: return bossRoomPrefab; // 보스방 프리팹 반환 추가
+            case RoomType.Boss: return bossRoomPrefab; 
             default: return normalRoomPrefab;
         }
     }
