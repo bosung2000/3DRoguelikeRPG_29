@@ -185,7 +185,7 @@ public class MapManager : MonoBehaviour
             case RoomType.WeaponShop: return weaponShopPrefab;
             case RoomType.RelicShop: return relicShopPrefab;
             case RoomType.Treasure: return treasurePrefab;
-            case RoomType.Boss: return bossRoomPrefab; 
+            case RoomType.Boss: return bossRoomPrefab;
             default: return normalRoomPrefab;
         }
     }
@@ -268,22 +268,22 @@ public class MapManager : MonoBehaviour
             //    Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
             //    return;
             //}
-            
+
             // 이전 방에서 연결된 모든 방 비활성화
             foreach (int connectedRoom in rooms[currentRoomIndex].connectedRooms)
             {
                 rooms[connectedRoom].isAccessible = false;
                 UpdateRoomUI(connectedRoom);
             }
-            
+
             // 현재 방 업데이트
             currentRoomIndex = roomIndex;
             rooms[currentRoomIndex].isVisited = true;
             UpdateRoomUI(currentRoomIndex);
-            
+
             // 새로운 방에서 접근 가능한 방 활성화
             UpdateAccessibleRooms();
-            
+
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
         }
@@ -298,10 +298,10 @@ public class MapManager : MonoBehaviour
         {
             if (room.isVisited) visitedCount++;
         }
-        
+
         // 예: 최소 7개의 방을 방문해야 보스방 입장 가능
         return visitedCount >= 7;
-        
+
         // 또는 항상 입장 가능하게 설정
         // return true;
     }
@@ -309,46 +309,49 @@ public class MapManager : MonoBehaviour
     // 방 타입에 따른 게임 로직 처리
     private void HandleRoomAction(int roomIndex)
     {
-        switch (rooms[roomIndex].type)
-        {
-            case RoomType.Normal:
-                // 일반 전투 시작
-                _portal.TryUsePortal("potal");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("일반 전투 시작");
-                break;
-            case RoomType.Elite:
-                // 엘리트 전투 시작
-                _portal.TryUsePortal("potal(1)");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("엘리트 전투 시작");
-                break;
-            case RoomType.WeaponShop:
-                // 무기 상점 UI 표시
-                _portal.TryUsePortal("potal(2)");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("무기 상점 열기");
-                break;
-            case RoomType.RelicShop:
-                // 유물 상점 UI 표시
-                _portal.TryUsePortal("potal(3)");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("유물 상점 열기");
-                break;
-            case RoomType.Treasure:
-                // 보물 상자 획득
-                _portal.TryUsePortal("potal(4)");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("보물 획득");
-                break;
-            case RoomType.Boss:
-                // 보스 전투 시작
-                _portal.TryUsePortal("potal(5)");
-                UIManager.Instance.ClosePopupUI<UIMap>();
-                Debug.Log("보스 전투 시작");
-                StartBossBattle();
-                break;
-        }
+        _portal.TryUsePortal($"potal_{roomIndex}");
+        UIManager.Instance.ClosePopupUI<UIMap>();
+        //switch (rooms[roomIndex].type)
+        //{
+        //    case RoomType.Normal:
+        //        // 일반 전투 시작
+        //        _portal.TryUsePortal("potal");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("일반 전투 시작");
+        //        break;
+        //    case RoomType.Elite:
+        //        // 엘리트 전투 시작
+        //        _portal.TryUsePortal("potal(1)");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("엘리트 전투 시작");
+        //        break;
+        //    case RoomType.WeaponShop:
+        //        // 무기 상점 UI 표시
+        //        _portal.TryUsePortal("potal(2)");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("무기 상점 열기");
+        //        break;
+        //    case RoomType.RelicShop:
+        //        // 유물 상점 UI 표시
+        //        _portal.TryUsePortal("potal(3)");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("유물 상점 열기");
+        //        break;
+        //    case RoomType.Treasure:
+        //        // 보물 상자 획득
+        //        _portal.TryUsePortal("potal(4)");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("보물 획득");
+        //        break;
+        //    case RoomType.Boss:
+        //        // 보스 전투 시작
+        //        _portal.TryUsePortal("potal(5)");
+        //        UIManager.Instance.ClosePopupUI<UIMap>();
+        //        Debug.Log("보스 전투 시작");
+        //        StartBossBattle();
+        //        break;
+        //}
+
     }
 
     // 보스 전투 시작 메서드

@@ -8,9 +8,14 @@ public class RoomZone : MonoBehaviour
     public List<Transform> spawnPoints;
     public RoomZone nextRoom;
     public RoomSpawnConfig spawnConfig;
-    public float spawnInterval = 2f; //일반 몬스터 반복 소환 간격
+    public float spawnInterval = 0.1f; //일반 몬스터 반복 소환 간격
 
-    private List<Enemy> spawnedEnemies = new();
+    private List<Enemy> spawnedEnemies;
+
+    private void Start()
+    {
+        spawnedEnemies = new();
+    }
 
     public void ActivateRoom()
     {
@@ -54,6 +59,8 @@ public class RoomZone : MonoBehaviour
 
         GameObject enemyGO = Instantiate(prefab, position, Quaternion.identity);
         Enemy enemy = enemyGO.GetComponent<Enemy>();
+        //stage 별로 능력치 증가 수치 수정 
+
 
         if (enemy != null)
         {
