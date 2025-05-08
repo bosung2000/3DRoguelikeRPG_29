@@ -441,19 +441,19 @@ MonoBehaviour:
   roomName: 
   spawnPoints:
   - {fileID: 3752916372268540770}
-  nextRoom: {fileID: 0}
   spawnConfig:
     configName: Room2
     normalEnemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     spawnnormal: 0
-    normalCount: 5
+    normalCount: 9
     eliteEnemyPrefab: {fileID: 3664294383125131184, guid: 5e252a113469744409d87b85024c4753, type: 3}
-    EliteCount: 0
+    EliteCount: 2
     spawnElite: 0
     bossEnemyPrefab: {fileID: 0}
     BossCount: 0
     spawnBoss: 0
-  spawnInterval: 2
+  spawnInterval: 0.1
+  ClearBool: 0
 --- !u!1 &8001918241037609764
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96fd94fab33141342be13afef1336c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uIMap: {fileID: 0}
+  CurrentroomZone: {fileID: 6293024749735067783}
 --- !u!1001 &22795711029222810
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -377,14 +377,17 @@ public class MapManager : MonoBehaviour
         // 선택한 방 인덱스에 해당하는 RoomZone 찾기
         if(roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
         {
+            
             // 해당 방의 타입에 맞는 처리
             switch (rooms[roomIndex].type)
             {
                 case RoomType.Normal:
+                    targetRoom.spawnConfig.spawnnormal = true;
                     targetRoom.ActivateRoom();
                     break;
                 case RoomType.Elite:
                     // 엘리트용 설정 적용 후 방 활성화
+                    //targetRoom.spawnConfig.spawnnormal = true;
                     targetRoom.spawnConfig.spawnElite = true;
                     targetRoom.ActivateRoom();
                     break;
@@ -392,6 +395,7 @@ public class MapManager : MonoBehaviour
                     // 무기 상점 생성
                     if (Shop_weapon != null)
                     {
+                        targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Shop_weapon, targetRoom);
                         Debug.Log("무기 상점 생성됨");
                     }
@@ -404,6 +408,7 @@ public class MapManager : MonoBehaviour
                     // 유물 상점 생성
                     if (Shop_Relics != null)
                     {
+                        targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Shop_Relics, targetRoom);
                         Debug.Log("유물 상점 생성됨");
                     }
@@ -416,6 +421,7 @@ public class MapManager : MonoBehaviour
                     // 보물 생성
                     if (Treasure != null)
                     {
+                        targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Treasure, targetRoom);
                         Debug.Log("보물 생성됨");
                     }
