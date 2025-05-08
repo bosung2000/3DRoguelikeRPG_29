@@ -14,6 +14,8 @@ public class SoundManager : MonoBehaviour
     private float bgmVolume = 1f;
     private float sfxVolume = 1f;
 
+    private Transform soundPanel;
+
     private void Awake()
     {
         if (instance == null)
@@ -26,6 +28,8 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //soundPanel = transform.root.Find("UI/SoundSettingsPanel");
+        //masterSlider = soundPanel.GetComponentInChildren<Slider>(true);
     }
 
     private void Start()
@@ -34,8 +38,6 @@ public class SoundManager : MonoBehaviour
         {
             LoadVolumeSettings();
         }
-
-
     }
 
     public void SetMasterVolume(float volume)
@@ -96,6 +98,7 @@ public class SoundManager : MonoBehaviour
                 sfx.volume = masterVolume * sfxVolume;
         }
     }
+
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
         if (clip != null)
