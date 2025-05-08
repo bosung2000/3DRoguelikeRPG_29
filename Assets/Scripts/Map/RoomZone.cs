@@ -12,9 +12,20 @@ public class RoomZone : MonoBehaviour
 
     private List<Enemy> spawnedEnemies;
 
-    private void Start()
+    private void Awake()
     {
         spawnedEnemies = new();
+        
+        // 방 이름이 설정되지 않았으면 게임 오브젝트 이름을 사용
+        if (string.IsNullOrEmpty(roomName))
+        {
+            roomName = gameObject.name;
+            Debug.Log($"[RoomZone] 방 이름이 자동 설정됨: {roomName}");
+        }
+    }
+
+    private void Start()
+    {
     }
 
     public void ActivateRoom()
@@ -47,10 +58,10 @@ public class RoomZone : MonoBehaviour
             SpawnEnemy(spawnConfig.bossEnemyPrefab, point.position);
         }
 
-        if (spawnedEnemies.Count == 0 && nextRoom != null)
-        {
-            nextRoom.ActivateRoom();
-        }
+        //if (spawnedEnemies.Count == 0 && nextRoom != null)
+        //{
+        //    nextRoom.ActivateRoom();
+        //}
     }
 
     private void SpawnEnemy(GameObject prefab, Vector3 position)
