@@ -37,7 +37,6 @@ public enum EnemyStatType
     AttackRange,
     AttackCooldown,
     ChaseRange,
-    KeepDistanceRange
 }
 
 public interface IBaseStat<T>
