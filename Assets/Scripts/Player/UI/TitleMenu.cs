@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class TitleMenu : MonoBehaviour
 {
     [SerializeField] Button startBtn;
+    [SerializeField] Button LobbyBtn;
     [SerializeField] Button endBtn;
     [SerializeField] Button soundBtn;
     [SerializeField] Button settingBtn;
@@ -20,6 +21,7 @@ public class TitleMenu : MonoBehaviour
     private void Start()
     {
         if (startBtn != null) startBtn.onClick.AddListener(OnClickStart);
+        if (LobbyBtn != null) LobbyBtn.onClick.AddListener(OnClickLobbyBtn);
         endBtn.onClick.AddListener(OnClickEndBtn);
         settingBtn.onClick.AddListener(OnClickSettingBtn);
         soundBtn.onClick.AddListener(OnClickSoundBtn);
@@ -30,6 +32,11 @@ public class TitleMenu : MonoBehaviour
         SceneManager.LoadScene("Main_HB");
     }
 
+    public void OnClickLobbyBtn()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Lobby_HB");
+    }
     public void OnClickEndBtn()
     {
 #if UNITY_EDITOR
@@ -41,29 +48,33 @@ public class TitleMenu : MonoBehaviour
 
     public void OnClickSoundBtn()
     {
-        if (active)
+        if (!active)
         {
-            soundMenu.SetActive(false);
-            active = false;
+            Time.timeScale = 0;
+            soundMenu.SetActive(true);
+            active = true;
         }
         else
         {
-            soundMenu.SetActive(true);
-            active = true;
+            Time.timeScale = 1;
+            soundMenu.SetActive(false);
+            active = false;
         }
     }
 
     public void OnClickSettingBtn()
     {
-        if (active)
+        if (!active)
         {
-            settingMenu.SetActive(false);
-            active = false;
+            Time.timeScale = 0;
+            settingMenu.SetActive(true);
+            active = true;
         }
         else
         {
-            settingMenu.SetActive(true);
-            active = true;
+            Time.timeScale = 1;
+            settingMenu.SetActive(false);
+            active = false;
         }
     }
 }
