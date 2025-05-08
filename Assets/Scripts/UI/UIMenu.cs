@@ -14,11 +14,11 @@ public class UIMenu : MonoBehaviour
     private UIHUD uiHUD;
     private void Awake()
     {
-        uiHUD = GetComponentInParent<UIHUD>();
-        btn_inventory.onClick.AddListener(OnInventory);
-        btn_Enhance.onClick.AddListener(OnEnhance);
-        btn_Skill.onClick.AddListener(OnSkill);
-        btn_Menu.onClick.AddListener(OnMenu);
+        if (uiHUD!=null)uiHUD = GetComponentInParent<UIHUD>();
+        if (btn_inventory!=null) btn_inventory.onClick.AddListener(OnInventory);
+        if (btn_Enhance!=null) btn_Enhance.onClick.AddListener(OnEnhance);
+        if (btn_Skill!=null) btn_Skill.onClick.AddListener(OnSkill);
+        if (btn_Menu!=null) btn_Menu.onClick.AddListener(OnMenu);
     }
     private void Start()
     {
