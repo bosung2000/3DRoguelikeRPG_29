@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR;
-using static UnityEngine.GraphicsBuffer;
-using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -93,6 +88,7 @@ public class Enemy : MonoBehaviour
             else
             {
                 Debug.Log("컨트롤러가 널임");
+                return;
             }
         }
     }
@@ -225,6 +221,11 @@ public class Enemy : MonoBehaviour
     //원거리 공격
     public void FireProjectile()
     {
+        if (enemyController == null || enemyController.CurrentStateType != EnemyStateType.Attack)
+        {
+            return;  // 공격 상태가 아니면 발사 안 함
+        }
+
         if (ProjectilePrefab == null || _firePoint == null) return;
 
         Transform target = GetPlayerTarget();

@@ -19,8 +19,7 @@ public class EnemyAttackState : IEnemyState
         }
 
         controller.Enemy.CachedTargetPosition(_target.position);
-
-        controller.agent.isStopped = true; // 근접형은 이동 멈추고 공격
+        controller.agent.isStopped = true;
         controller.animator.SetTrigger("Attack");
     }
 
@@ -64,9 +63,6 @@ public class EnemyAttackState : IEnemyState
             case EnemyRoleType.Ranged:
                 PerformRangedAttack(controller);
                 break;
-            case EnemyRoleType.Support:
-                PerformSupportAttack(controller);
-                break;
         }
     }
 
@@ -79,8 +75,5 @@ public class EnemyAttackState : IEnemyState
     private void PerformRangedAttack(EnemyController controller)
     {
         
-    }
-    private void PerformSupportAttack(EnemyController controller)
-    {
     }
 }

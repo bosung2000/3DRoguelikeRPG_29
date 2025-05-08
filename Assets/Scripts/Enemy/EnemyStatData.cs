@@ -12,7 +12,6 @@ public enum EnemyRoleType
 {
     Melee,  //근접
     Ranged, //원거리
-    Support //지원
 }
 
 [CreateAssetMenu(fileName = "EnemyStatData", menuName = "Enemy/EnemyStat")]

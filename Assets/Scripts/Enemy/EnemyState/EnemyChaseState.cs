@@ -56,22 +56,6 @@ public class EnemyChaseState : IEnemyState
         //공격 범위 내면 상태 전환용
         _distance = Vector3.Distance(controller.transform.position, _target.position);
 
-        // 범위 밖이면 목적지 계산해서 추적
-        if (_distance > _attackRange * 0.9f)
-        {
-            Vector3 direction = (_target.position - controller.transform.position).normalized;
-            Vector3 stopPosition = _target.position - direction * (_attackRange * 0.9f);
-            controller.agent.isStopped = false;
-            controller.agent.SetDestination(stopPosition);
-        }
-        else
-        {
-            // 공격 사거리 안이면 완전히 멈추고 공격 상태로 전환
-            controller.agent.isStopped = true;
-            controller.ChageState(EnemyStateType.Attack);
-            return;
-        }
-
         //범위 밖인 상태 시간 누적
         if (_distance > _chaseRange)
         {
@@ -88,9 +72,26 @@ public class EnemyChaseState : IEnemyState
             outRangeTime = 0f; //범위 안이면 초기화
         }
 
-        //애니메이션 제어
-        bool isRun = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
-        controller.animator.SetBool("isRun", isRun);
-        controller.animator.SetBool("isWalk", false);
+        // 범위 밖이면 목적지 계산해서 추적
+        if (_distance > _attackRange)
+        {
+            Vector3 direction = (_target.position - controller.transform.position).normalized;
+            Vector3 stopPosition = _target.position - direction * (_attackRange);
+            controller.agent.isStopped = false;
+            controller.agent.SetDestination(stopPosition);
+
+            //애니메이션 제어
+            bool isRun = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
+            controller.animator.SetBool("isRun", isRun);
+            controller.animator.SetBool("isWalk", false);
+            Debug.Log(controller.agent.remainingDistance);
+        }
+        else
+        {
+            // 공격 사거리 안이면 완전히 멈추고 공격 상태로 전환
+            controller.ChageState(EnemyStateType.Attack);
+            controller.agent.isStopped = true;
+            return;
+        }
     }
 }
