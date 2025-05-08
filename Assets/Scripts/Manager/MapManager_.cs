@@ -11,11 +11,18 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject treasurePrefab;
     [SerializeField] private GameObject bossRoomPrefab; // 보스방 프리팹 추가
     [SerializeField] private GameObject linePrefab;
+    [SerializeField] private GameObject Shop_weapon;
+    [SerializeField] private GameObject Shop_Relics;
+    [SerializeField] private GameObject Treasure;
+
 
     [SerializeField] private Transform mapContainer;
-
     [SerializeField] Portal _portal;
-    private List<Room> rooms = new List<Room>();
+    
+    // 방 인덱스별 RoomZone 참조를 저장할 딕셔너리 추가
+    private Dictionary<int, RoomZone> roomZones = new Dictionary<int, RoomZone>();
+    
+    private List<Room> rooms;
     private int currentRoomIndex = 0;  // 현재 플레이어가 위치한 방
 
     // 방 타입별 개수 설정
@@ -26,12 +33,45 @@ public class MapManager : MonoBehaviour
     [SerializeField] private int treasureRoomCount = 1;
     // 보스방은 항상 1개이므로 별도 변수 필요 없음
 
-
+    private void Awake()
+    {
+        rooms = new List<Room>();
+        // 씬에서 모든 RoomZone을 찾아서 딕셔너리에 저장
+        FindAllRoomZones();
+    }
+    
+    // 모든 RoomZone을 찾아서 이름에 따라 딕셔너리에 저장하는 메서드
+    private void FindAllRoomZones()
+    {
+        RoomZone[] allRoomZones = FindObjectsOfType<RoomZone>();
+        foreach(RoomZone rz in allRoomZones)
+        {
+            string roomName = rz.roomName;
+            // Room_0, Room_1 형식에서 인덱스 추출
+            if(roomName.StartsWith("Room"))
+            {
+                string[] parts = roomName.Split('_');
+                if(parts.Length > 1 && int.TryParse(parts[1], out int roomIndex))
+                {
+                    roomZones[roomIndex] = rz;
+                    Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
+                }
+            }
+        }
+    }
 
     // 맵 레이아웃 생성
     private void Start()
     {
         _portal = FindObjectOfType<Portal>();
+        
+        // Awake에서 모든 방이 발견되지 않았을 수 있으므로 한 번 더 확인
+        if (roomZones.Count == 0)
+        {
+            Debug.LogWarning("Start에서 RoomZone 재검색 실행...");
+            FindAllRoomZones();
+        }
+        
         InitializeMapLayout();
         AssignRoomTypes();
         CreateMapUI();
@@ -79,6 +119,8 @@ public class MapManager : MonoBehaviour
     // 방 사이의 연결 관계 설정
     private void SetupConnections()
     {
+        //첫번째 방은 시작 방으로 비활성화
+        rooms[0].isAccessible = false;
         // 시작 방(0)은 첫 번째 층(1,2,3)과 연결
         rooms[0].connectedRooms.AddRange(new List<int> { 1, 2, 3 });
 
@@ -102,7 +144,7 @@ public class MapManager : MonoBehaviour
         rooms[11].connectedRooms.Add(13);
         rooms[12].connectedRooms.Add(13);
 
-        // 양방향 연결 설정 위에서 아래로 갈수 없게 설정 
+        // 양방향 연결 설정 (선택 사항)
         //SetupBidirectionalConnections();
     }
 
@@ -171,8 +213,7 @@ public class MapManager : MonoBehaviour
             UpdateRoomUI(i);
         }
 
-        // 연결선 생성
-        //CreateConnectionLines();
+        
     }
 
     // 방 타입에 맞는 프리팹 반환
@@ -185,7 +226,7 @@ public class MapManager : MonoBehaviour
             case RoomType.WeaponShop: return weaponShopPrefab;
             case RoomType.RelicShop: return relicShopPrefab;
             case RoomType.Treasure: return treasurePrefab;
-            case RoomType.Boss: return bossRoomPrefab;
+            case RoomType.Boss: return bossRoomPrefab; // 보스방 프리팹 반환 추가
             default: return normalRoomPrefab;
         }
     }
@@ -222,6 +263,7 @@ public class MapManager : MonoBehaviour
     // 접근 가능한 방 업데이트
     private void UpdateAccessibleRooms()
     {
+        
         // 현재 방에서 연결된 방들을 접근 가능하게 설정
         foreach (int connectedRoomIndex in rooms[currentRoomIndex].connectedRooms)
         {
@@ -268,22 +310,30 @@ public class MapManager : MonoBehaviour
             //    Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
             //    return;
             //}
-
+            
             // 이전 방에서 연결된 모든 방 비활성화
             foreach (int connectedRoom in rooms[currentRoomIndex].connectedRooms)
             {
                 rooms[connectedRoom].isAccessible = false;
                 UpdateRoomUI(connectedRoom);
             }
-
+            
+            // 시작 방(0번째 방) 추가 처리 - 첫 번째 층(1,2,3)에 도달했을 때 0번 방 비활성화
+            if (roomIndex == 1 || roomIndex == 2 || roomIndex == 3)
+            {
+                rooms[0].isAccessible = false;
+                UpdateRoomUI(0);
+                Debug.Log("시작 방 접근 비활성화");
+            }
+            
             // 현재 방 업데이트
             currentRoomIndex = roomIndex;
             rooms[currentRoomIndex].isVisited = true;
             UpdateRoomUI(currentRoomIndex);
-
+            
             // 새로운 방에서 접근 가능한 방 활성화
             UpdateAccessibleRooms();
-
+            
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
         }
@@ -298,60 +348,61 @@ public class MapManager : MonoBehaviour
         {
             if (room.isVisited) visitedCount++;
         }
-
+        
         // 예: 최소 7개의 방을 방문해야 보스방 입장 가능
         return visitedCount >= 7;
-
+        
         // 또는 항상 입장 가능하게 설정
         // return true;
     }
-
+        
     // 방 타입에 따른 게임 로직 처리
     private void HandleRoomAction(int roomIndex)
     {
         _portal.TryUsePortal($"potal_{roomIndex}");
         UIManager.Instance.ClosePopupUI<UIMap>();
-        //switch (rooms[roomIndex].type)
-        //{
-        //    case RoomType.Normal:
-        //        // 일반 전투 시작
-        //        _portal.TryUsePortal("potal");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("일반 전투 시작");
-        //        break;
-        //    case RoomType.Elite:
-        //        // 엘리트 전투 시작
-        //        _portal.TryUsePortal("potal(1)");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("엘리트 전투 시작");
-        //        break;
-        //    case RoomType.WeaponShop:
-        //        // 무기 상점 UI 표시
-        //        _portal.TryUsePortal("potal(2)");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("무기 상점 열기");
-        //        break;
-        //    case RoomType.RelicShop:
-        //        // 유물 상점 UI 표시
-        //        _portal.TryUsePortal("potal(3)");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("유물 상점 열기");
-        //        break;
-        //    case RoomType.Treasure:
-        //        // 보물 상자 획득
-        //        _portal.TryUsePortal("potal(4)");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("보물 획득");
-        //        break;
-        //    case RoomType.Boss:
-        //        // 보스 전투 시작
-        //        _portal.TryUsePortal("potal(5)");
-        //        UIManager.Instance.ClosePopupUI<UIMap>();
-        //        Debug.Log("보스 전투 시작");
-        //        StartBossBattle();
-        //        break;
-        //}
-
+        
+        // 선택한 방 인덱스에 해당하는 RoomZone 찾기
+        if(roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
+        {
+            // 해당 방의 타입에 맞는 처리
+            switch (rooms[roomIndex].type)
+            {
+                case RoomType.Normal:
+                    targetRoom.ActivateRoom();
+                    break;
+                case RoomType.Elite:
+                    // 엘리트용 설정 적용 후 방 활성화
+                    targetRoom.spawnConfig.spawnElite = true;
+                    targetRoom.ActivateRoom();
+                    break;
+                case RoomType.WeaponShop:
+                    // 무기 상점 활성화
+                    Debug.Log("무기 상점 열기");
+                    // 상점 UI 열기 코드
+                    break;
+                case RoomType.RelicShop:
+                    // 유물 상점 활성화
+                    Debug.Log("유물 상점 열기");
+                    // 상점 UI 열기 코드
+                    break;
+                case RoomType.Treasure:
+                    // 보물 방 활성화
+                    Debug.Log("보물 방 열기");
+                    break;
+                case RoomType.Boss:
+                    // 보스 방 활성화
+                    targetRoom.spawnConfig.spawnBoss = true;
+                    targetRoom.ActivateRoom();
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            Debug.LogError($"Room_{roomIndex}에 해당하는 RoomZone을 찾을 수 없습니다!");
+        }
     }
 
     // 보스 전투 시작 메서드

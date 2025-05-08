@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4019353492861063486}
   - component: {fileID: 6506880413866025197}
+  - component: {fileID: 2832222212684190036}
   m_Layer: 0
   m_Name: PortalManager
   m_TagString: Untagged
@@ -44,3 +45,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 064e0275fb72b044fabaeb2d93bb1565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2832222212684190036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4365919357427089169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea32bf6f87c01074697d8b8e621dc57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _confiner: {fileID: 0}
+  _portalList:
+  - portalID: potal_0
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_1
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_2
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_3
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_4
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_5
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_6
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_7
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_8
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_9
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_10
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_11
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_12
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  - portalID: potal_13
+    targetSpawnPoint: {fileID: 0}
+    targetCollider: {fileID: 0}
+  _player: {fileID: 0}

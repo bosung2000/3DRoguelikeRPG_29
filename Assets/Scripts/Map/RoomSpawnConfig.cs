@@ -7,13 +7,16 @@ public class RoomSpawnConfig
 
     [Header("일반 몬스터 설정")]
     public GameObject normalEnemyPrefab;
+    public bool spawnnormal;
     public int normalCount;
 
     [Header("엘리트 몬스터 설정")]
     public GameObject eliteEnemyPrefab;
+    public int EliteCount;
     public bool spawnElite;
 
     [Header("보스 몬스터 설정")]
     public GameObject bossEnemyPrefab;
+    public int BossCount;
     public bool spawnBoss;
 }
