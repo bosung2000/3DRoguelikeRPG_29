@@ -22,6 +22,9 @@ public class MapManager : MonoBehaviour
     // 방 인덱스별 RoomZone 참조를 저장할 딕셔너리 추가
     private Dictionary<int, RoomZone> roomZones = new Dictionary<int, RoomZone>();
     
+    // 현재 활성화된 특수 오브젝트(상점, 보물 등)
+    private GameObject currentActiveObject;
+    
     private List<Room> rooms;
     private int currentRoomIndex = 0;  // 현재 플레이어가 위치한 방
 
@@ -362,6 +365,9 @@ public class MapManager : MonoBehaviour
         _portal.TryUsePortal($"potal_{roomIndex}");
         UIManager.Instance.ClosePopupUI<UIMap>();
         
+        // 이전에 생성된 특수 오브젝트가 있으면 파괴
+        CleanupCurrentActiveObject();
+        
         // 선택한 방 인덱스에 해당하는 RoomZone 찾기
         if(roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
         {
@@ -377,18 +383,40 @@ public class MapManager : MonoBehaviour
                     targetRoom.ActivateRoom();
                     break;
                 case RoomType.WeaponShop:
-                    // 무기 상점 활성화
-                    Debug.Log("무기 상점 열기");
-                    // 상점 UI 열기 코드
+                    // 무기 상점 생성
+                    if (Shop_weapon != null)
+                    {
+                        currentActiveObject = SpawnPrefabAtRandomPoint(Shop_weapon, targetRoom);
+                        Debug.Log("무기 상점 생성됨");
+                    }
+                    else
+                    {
+                        Debug.LogError("무기 상점 프리팹이 설정되지 않았습니다!");
+                    }
                     break;
                 case RoomType.RelicShop:
-                    // 유물 상점 활성화
-                    Debug.Log("유물 상점 열기");
-                    // 상점 UI 열기 코드
+                    // 유물 상점 생성
+                    if (Shop_Relics != null)
+                    {
+                        currentActiveObject = SpawnPrefabAtRandomPoint(Shop_Relics, targetRoom);
+                        Debug.Log("유물 상점 생성됨");
+                    }
+                    else
+                    {
+                        Debug.LogError("유물 상점 프리팹이 설정되지 않았습니다!");
+                    }
                     break;
                 case RoomType.Treasure:
-                    // 보물 방 활성화
-                    Debug.Log("보물 방 열기");
+                    // 보물 생성
+                    if (Treasure != null)
+                    {
+                        currentActiveObject = SpawnPrefabAtRandomPoint(Treasure, targetRoom);
+                        Debug.Log("보물 생성됨");
+                    }
+                    else
+                    {
+                        Debug.LogError("보물 프리팹이 설정되지 않았습니다!");
+                    }
                     break;
                 case RoomType.Boss:
                     // 보스 방 활성화
@@ -403,6 +431,42 @@ public class MapManager : MonoBehaviour
         {
             Debug.LogError($"Room_{roomIndex}에 해당하는 RoomZone을 찾을 수 없습니다!");
         }
+    }
+
+    // RoomZone의 spawnPoints 중에서 랜덤으로 하나 선택하여 프리팹 생성
+    private GameObject SpawnPrefabAtRandomPoint(GameObject prefab, RoomZone targetRoom)
+    {
+        if (targetRoom == null)
+        {
+            Debug.LogError("타겟 룸이 null입니다!");
+            return null;
+        }
+
+        if (targetRoom.spawnPoints == null || targetRoom.spawnPoints.Count == 0)
+        {
+            Debug.LogError($"방 '{targetRoom.roomName}'에 spawnPoints가 없습니다!");
+            return null;
+        }
+
+        // spawnPoints 중에서 랜덤으로 하나 선택
+        int randomIndex = Random.Range(0, targetRoom.spawnPoints.Count);
+        Transform spawnPoint = targetRoom.spawnPoints[randomIndex];
+        
+        if (spawnPoint == null)
+        {
+            Debug.LogError("선택된 스폰 포인트가 null입니다!");
+            return null;
+        }
+
+        // 선택된 위치에 프리팹 생성
+        Vector3 spawnPosition = spawnPoint.position;
+        // y축으로 -12만큼 내림
+        spawnPosition.y -= 3f;
+        GameObject spawnedObject = Instantiate(prefab, spawnPosition, spawnPoint.rotation);
+        
+        Debug.Log($"프리팹 '{prefab.name}' 생성됨 - 위치: {spawnPosition}, 방: {targetRoom.roomName}, 스폰 포인트 인덱스: {randomIndex}");
+        
+        return spawnedObject;
     }
 
     // 보스 전투 시작 메서드
@@ -424,5 +488,16 @@ public class MapManager : MonoBehaviour
     {
         Debug.Log("보스 처치! 게임 클리어 또는 다음 단계로 진행");
         // 게임 클리어 UI 표시 또는 다음 레벨 진행
+    }
+
+    // 현재 활성화된 특수 오브젝트 정리
+    private void CleanupCurrentActiveObject()
+    {
+        if (currentActiveObject != null)
+        {
+            Debug.Log($"이전 오브젝트 파괴: {currentActiveObject.name}");
+            Destroy(currentActiveObject);
+            currentActiveObject = null;
+        }
     }
 }
