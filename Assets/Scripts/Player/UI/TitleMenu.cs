@@ -32,7 +32,7 @@ public class TitleMenu : MonoBehaviour
 
     public void OnClickStart()
     {
-        SceneManager.LoadScene("Main_HB");
+        SceneManager.LoadScene("Bosung_02");
     }
 
     public void OnClickLobbyBtn()

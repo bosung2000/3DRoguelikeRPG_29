@@ -16,7 +16,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject Treasure;
 
 
-    [SerializeField] private Transform mapContainer;
+    [SerializeField] private GameObject mapui;
     [SerializeField] Portal _portal;
     
     // 방 인덱스별 RoomZone 참조를 저장할 딕셔너리 추가
@@ -75,6 +75,12 @@ public class MapManager : MonoBehaviour
             FindAllRoomZones();
         }
         
+        
+    }
+
+    public void initStart(GameObject _mapui)
+    {
+        mapui = _mapui;
         InitializeMapLayout();
         AssignRoomTypes();
         CreateMapUI();
@@ -201,7 +207,7 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < rooms.Count; i++)
         {
             GameObject prefab = GetRoomPrefab(rooms[i].type);
-            GameObject roomObj = Instantiate(prefab, mapContainer);
+            GameObject roomObj = Instantiate(prefab, mapui.transform);
             roomObj.transform.localPosition = new Vector3(rooms[i].position.x * 150, rooms[i].position.y * 150, 0);
 
             // 버튼 컴포넌트 설정
@@ -248,7 +254,7 @@ public class MapManager : MonoBehaviour
                 // 중복 선 방지 (i < connectedRoomIndex인 경우만 선 그리기)
                 if (i < connectedRoomIndex)
                 {
-                    GameObject line = Instantiate(linePrefab, mapContainer);
+                    GameObject line = Instantiate(linePrefab, mapui.transform);
                     LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
 
                     Vector3 startPos = new Vector3(rooms[i].position.x * 150, rooms[i].position.y * 150, 0);

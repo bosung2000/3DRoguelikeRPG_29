@@ -9,14 +9,19 @@ public class MapShow : MonoBehaviour
 
     void Start()
     {
-        uIMap =FindObjectOfType<UIMap>();
+        
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
+            //if (uIMap ==null)
+            //{
+            //    uIMap = FindObjectOfType<UIMap>();
+            //}
             UIManager.Instance.ShowPopupUI<UIMap>();
+            //uIMap.gameObject.SetActive(true);
         }
     }
 
