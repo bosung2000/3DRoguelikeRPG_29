@@ -23,7 +23,9 @@ public class Portal : MonoBehaviour
     //private string _enteredPortalID;
     private void Start()
     {
-        TryUsePortal("PortalToRoom");
+        _player = FindObjectOfType<Player>();
+        TryUsePortal("potal_0");
+
     }
     public void TryUsePortal(string targetPortalID)
     {

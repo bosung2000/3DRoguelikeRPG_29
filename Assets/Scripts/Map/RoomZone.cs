@@ -8,9 +8,25 @@ public class RoomZone : MonoBehaviour
     public List<Transform> spawnPoints;
     public RoomZone nextRoom;
     public RoomSpawnConfig spawnConfig;
-    public float spawnInterval = 2f; //일반 몬스터 반복 소환 간격
+    public float spawnInterval = 0.1f; //일반 몬스터 반복 소환 간격
 
-    private List<Enemy> spawnedEnemies = new();
+    private List<Enemy> spawnedEnemies;
+
+    private void Awake()
+    {
+        spawnedEnemies = new();
+        
+        // 방 이름이 설정되지 않았으면 게임 오브젝트 이름을 사용
+        if (string.IsNullOrEmpty(roomName))
+        {
+            roomName = gameObject.name;
+            Debug.Log($"[RoomZone] 방 이름이 자동 설정됨: {roomName}");
+        }
+    }
+
+    private void Start()
+    {
+    }
 
     public void ActivateRoom()
     {
@@ -42,10 +58,10 @@ public class RoomZone : MonoBehaviour
             SpawnEnemy(spawnConfig.bossEnemyPrefab, point.position);
         }
 
-        if (spawnedEnemies.Count == 0 && nextRoom != null)
-        {
-            nextRoom.ActivateRoom();
-        }
+        //if (spawnedEnemies.Count == 0 && nextRoom != null)
+        //{
+        //    nextRoom.ActivateRoom();
+        //}
     }
 
     private void SpawnEnemy(GameObject prefab, Vector3 position)
@@ -54,6 +70,8 @@ public class RoomZone : MonoBehaviour
 
         GameObject enemyGO = Instantiate(prefab, position, Quaternion.identity);
         Enemy enemy = enemyGO.GetComponent<Enemy>();
+        //stage 별로 능력치 증가 수치 수정 
+
 
         if (enemy != null)
         {
