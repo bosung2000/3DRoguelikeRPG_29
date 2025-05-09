@@ -246,64 +246,7 @@ public class SkillManager : MonoBehaviour
         // 스킬 사용 이벤트 발생
         //player.GetComponent<PlayerController>().SetTrigger("Skill");
     }
-    //public void OnSkillClick(Skill skill, Vector3 direction)
-    //{
-    //    if (skill == null)
-    //    {
-    //        Debug.LogError("스킬이 없습니다. 스킬을 장착했는지 확인하세요.");
-    //        return;
-    //    }
-
-    //    // 쿨다운 체크
-    //    if (skill.cooldown > 0)
-    //    {
-    //        Debug.Log($"스킬 {skill._name}이(가) 쿨다운 중입니다. 남은 시간: {skill.cooldown:F1}초");
-    //        return;
-    //    }
-
-    //    // 마나 체크
-    //    if (player._playerStat.GetStatValue(PlayerStatType.MP) < skill.requiredMana)
-    //    {
-    //        Debug.Log($"마나가 부족합니다. 필요: {skill.requiredMana}, 현재: {player._playerStat.GetStatValue(PlayerStatType.MP)}");
-    //        return;
-    //    }
-
-    //    // 방향 벡터 검증
-    //    if (direction == Vector3.zero)
-    //    {
-    //        direction = player.transform.forward;
-    //        if (direction == Vector3.zero)
-    //        {
-    //            direction = Vector3.forward;
-    //        }
-    //    }
-
-    //    // 마나 소모
-    //    player._playerStat.UseMana(skill.requiredMana);
-
-    //    // 스킬 실행
-    //    foreach (var skillInstance in ActiveSkills.Values)
-    //    {
-    //        if (skillInstance.skill == skill)
-    //        {
-    //            if (skillInstance.skillComponent is MeleeSkillBase meleeSkill)
-    //            {
-    //                meleeSkill.Execute(player, direction);
-    //            }
-    //            else if (skillInstance.skillComponent is RangeSkillBase rangeSkill)
-    //            {
-    //                rangeSkill.Execute(player, direction);
-    //            }
-    //            break;
-    //        }
-    //    }
-
-    //    // 쿨타임 적용
-    //    skill.cooldown = skill.maxCooldown;
-
-    //    // 스킬 사용 이벤트 발생
-    // //player.GetComponent<PlayerController>().SetTrigger("Skill");
-    //}
+   
 
     internal int ReturnTotalSlotCount()
     {

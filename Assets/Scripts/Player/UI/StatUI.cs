@@ -11,12 +11,6 @@ public class StatUI : MonoBehaviour
 
     [SerializeField] Button _dashBtn;
     [SerializeField] Button _attackBtn;
-    [SerializeField] Button _healingBtn;
-    [SerializeField] Button _moveSpeedUpBtn;
-    [SerializeField] Button _attackUpBtn;
-    [SerializeField] Button _reductionUpBtn;
-    [SerializeField] Button _criticalUpBtn;
-    [SerializeField] Button _attackSpeedUpBtn;
 
     [SerializeField] TextMeshProUGUI _hpTxt;
     [SerializeField] TextMeshProUGUI _mpTxt;
@@ -37,12 +31,6 @@ public class StatUI : MonoBehaviour
         _playerStat = _player._playerStat;
         _dashBtn.onClick.AddListener(() => _player.Dash());
         _attackBtn.onClick.AddListener(() => _player.Attack());
-        _healingBtn.onClick.AddListener(() => _player.Healing());
-        _moveSpeedUpBtn.onClick.AddListener(() => _player.SpeedUp());
-        _attackUpBtn.onClick.AddListener(() => _player.AttackUp());
-        _reductionUpBtn.onClick.AddListener(() => _player.DMGReductionUp());
-        _criticalUpBtn.onClick.AddListener(() => _player.CriticalChanceUp());
-        _attackSpeedUpBtn.onClick.AddListener(() => _player.AttackSpeedUp());
 
         _playerStat.OnStatsChanged += UpdateStats;
     }

@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class HalfMoon : MeleeSkillBase
 {
-    [SerializeField] private float halfMoonRange = 2.5f; // 반달 공격 범위
+    [SerializeField] private float halfMoonRange = 3f; // 반달 공격 범위
     [SerializeField] private float halfMoonAngle = 180f; // 반달 공격 각도
-    [SerializeField] private int maxTargets = 5; // 최대 타겟 수
-    [SerializeField] private float sweepSpeed = 8f; // 휩쓸기 속도
+    [SerializeField] private int maxTargets = 10; // 최대 타겟 수
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 50f; // 크리티컬 데미지 보너스
 

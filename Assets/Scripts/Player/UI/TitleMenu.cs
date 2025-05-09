@@ -3,52 +3,71 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// <summary>
-/// 타이틀 메뉴 및 씬 전환
-/// </summary>
+/// <summary>  
+/// 타이틀 메뉴 및 씬 전환  
+/// </summary>  
 public class TitleMenu : MonoBehaviour
 {
     [SerializeField] Button startBtn;
+    [SerializeField] Button LobbyBtn;
     [SerializeField] Button endBtn;
+    [SerializeField] Button soundBtn;
     [SerializeField] Button settingBtn;
-    //[SerializeField] Button closeSetting;
+    [SerializeField] Button settingCloseBtn;
+    [SerializeField] Button soundCloseBtn;
 
+    [SerializeField] GameObject soundMenu;
     [SerializeField] GameObject settingMenu;
-    bool active;
 
     private void Start()
     {
-        startBtn.onClick.AddListener(OnClickStart);
-        endBtn.onClick.AddListener(OnClickEndBtn);
+        if (startBtn != null) startBtn.onClick.AddListener(OnClickStart);
+        if (LobbyBtn != null) LobbyBtn.onClick.AddListener(OnClickLobbyBtn);
+        if (endBtn != null) endBtn.onClick.AddListener(OnClickEndBtn);
         settingBtn.onClick.AddListener(OnClickSettingBtn);
-        //closeSetting.onClick.AddListener(OnClickCloseSetting);
+        if (settingCloseBtn != null) settingCloseBtn.onClick.AddListener(OnClickSettingCloseBtn);
+        soundBtn.onClick.AddListener(OnClickSoundBtn);
+        if (soundCloseBtn != null) soundCloseBtn.onClick.AddListener(OnClickSoundCloseBtn);
     }
+
     public void OnClickStart()
     {
-        SceneManager.LoadScene("Main_02");
+        SceneManager.LoadScene("Bosung_02");
     }
 
+    public void OnClickLobbyBtn()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Lobby_HB");
+    }
     public void OnClickEndBtn()
     {
+#if UNITY_EDITOR
         EditorApplication.isPlaying = false;
+#else
+       Application.Quit();  
+#endif
+    }
 
-        Application.Quit();
+    public void OnClickSoundBtn()
+    {
+         Time.timeScale = 0;
+         soundMenu.SetActive(true);
+    }
+
+    public void OnClickSoundCloseBtn()
+    {
+        Time.timeScale = 1;
+        soundMenu.SetActive(false);
     }
     public void OnClickSettingBtn()
     {
-        if (active)
-        {
-            settingMenu.SetActive(false);
-            active = false;
-        }
-        else
-        {
-            settingMenu.SetActive(true);
-            active = true;
-        }
+         Time.timeScale = 0;
+         settingMenu.SetActive(true);
     }
-    //public void OnClickCloseSetting()
-    //{
-    //    settingMenu.SetActive(false);
-    //}
+    public void OnClickSettingCloseBtn()
+    {
+        Time.timeScale = 1;
+        settingMenu.SetActive(false);
+    }
 }

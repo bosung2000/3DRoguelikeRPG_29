@@ -17,7 +17,7 @@ public class Shop : MonoBehaviour
     private PlayerManager playerManager;
 
     public event Action ShopitemChange;
-    [SerializeField]private int RelicsitemCount =5;
+    [SerializeField] private int RelicsitemCount = 5;
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class Shop : MonoBehaviour
                 availableItems.Add(slotItemData);
             }
         }
-        else if (shoptype ==ShopType.Relic)
+        else if (shoptype == ShopType.Relic)
         {
             //유물 
             List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(RelicsitemCount);
@@ -81,11 +81,28 @@ public class Shop : MonoBehaviour
     /// <returns></returns>
     public bool TryPurchaseItem(ItemData item)
     {
-        if (playerManager.Currency.CanAfford(CurrencyType.Gold, item.gold))
+        //골드 아이템이지 아닌지 확인
+
+        if (item.itemType == ItemType.Equipment)
         {
-            playerManager.Currency.AddCurrency(CurrencyType.Gold, -item.gold);
-            return true;
+            if (playerManager.Currency.CanAfford(CurrencyType.Gold, item.gold))
+            {
+                playerManager.Currency.AddCurrency(CurrencyType.Gold, -item.gold);
+                return true;
+            }
         }
+        else if (item.itemType == ItemType.Relics)
+        {
+            if (playerManager.Currency.CanAfford(CurrencyType.Soul, item.gold))
+            {
+                playerManager.Currency.AddCurrency(CurrencyType.Soul, -item.gold);
+                return true;
+            }
+        }
+
+
+
+
         return false;
     }
 

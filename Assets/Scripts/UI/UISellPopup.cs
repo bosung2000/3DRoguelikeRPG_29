@@ -84,7 +84,7 @@ public class UISellPopup : PopupUI
                 //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
                 inventoryManager.RemoveInventoryitme(currentSlotItem.item);
                 //골드 UI 변경  
-                uIShop.ShowShopGold();
+                uIShop.ShowShopCurrency();
                 UIManager.Instance.ClosePopupUI(this);
             }
             else

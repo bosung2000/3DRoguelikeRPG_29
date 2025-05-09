@@ -36,8 +36,8 @@ public class PlayerManager : MonoBehaviour
             {
                 currency.init();  //딕셔너리 강제 초기화
             }
-            currency.AddCurrency(CurrencyType.Gold, 9000);  //초기골드추가
-            currency.AddCurrency(CurrencyType.Soul, 0);  //초기소울추가
+            currency.AddCurrency(CurrencyType.Gold, 1000);  //초기골드추가
+            currency.AddCurrency(CurrencyType.Soul, 100);  //초기소울추가
         }
     }
 
