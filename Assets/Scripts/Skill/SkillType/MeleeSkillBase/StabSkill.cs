@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class StabSkill : MeleeSkillBase
 {
-    [SerializeField] private float stabRange = 3f; // 찌르기 사거리
-    [SerializeField] private float stabWidth = 0.5f; // 찌르기 폭
-    [SerializeField] private float stabSpeed = 15f; // 찌르기 속도
+    [SerializeField] private float stabRange = 3.5f; // 찌르기 사거리
+    [SerializeField] private float stabWidth = 1f; // 찌르기 폭
     [SerializeField] private float criticalChanceBonus = 20f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 30f; // 크리티컬 데미지 보너스
     [SerializeField] private PlayerController _playerController;
