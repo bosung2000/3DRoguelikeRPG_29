@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     public GameObject ProjectilePrefab => _projectilePrefab;
     public Transform FirePoint => _firePoint;
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
+    public bool IsBoss => Stat?.StatData.EnemyType == EnemyType.Boss;
+    public EnemySkillType skillType => Stat?.StatData.SkillType ?? EnemySkillType.None;
 
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;

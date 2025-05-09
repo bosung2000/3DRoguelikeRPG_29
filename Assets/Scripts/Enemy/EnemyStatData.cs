@@ -5,13 +5,22 @@ using UnityEngine;
 public enum EnemyType
 {
     Normal,
-    Elite
+    Elite,
+    Boss
 }
 
 public enum EnemyRoleType
 {
     Melee,  //근접
     Ranged, //원거리
+}
+
+public enum EnemySkillType
+{
+    None,
+    Skill1,
+    Skill2,
+    Skill3
 }
 
 [CreateAssetMenu(fileName = "EnemyStatData", menuName = "Enemy/EnemyStat")]
@@ -38,6 +47,9 @@ public class EnemyStatData : ScriptableObject
     [Header("탐지 정보")]
     [SerializeField] private float _chaseRange; //탐지 범위
 
+    [Header("스킬 정보")]
+    [SerializeField] private EnemySkillType _skillType = EnemySkillType.None;
+
     public int Index => _index;
     public string EnemyName => _enemyName;
     public EnemyType EnemyType => _enemyType;
@@ -51,4 +63,5 @@ public class EnemyStatData : ScriptableObject
     public float AttackRange => _attackRange;
     public float AttackCooldown => _attackCooldown;
     public float ChaseRange => _chaseRange;
+    public EnemySkillType SkillType => _skillType;
 }
