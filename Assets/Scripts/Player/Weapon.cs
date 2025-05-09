@@ -44,9 +44,5 @@ public class Weapon : MonoBehaviour
             _playerStat.Attack(enemy);
             _hitEnemies.Add(enemy);
         }
-        else
-        {
-            SoundManager.instance.PlayEffect(SoundEffectType.Attack);
-        }
     }
 }

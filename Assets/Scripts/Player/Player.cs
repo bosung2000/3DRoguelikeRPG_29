@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
-    private float _lastHitTime = -100f;
+    private float _lastHitTime = 0f;
     [SerializeField] private PlayerSkillController playerSkillController;
 
     private void Awake()
@@ -29,7 +29,9 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
-        if (Time.time - _lastHitTime < 1 / attackSpeed) return;
+        float attackCooldown = 1 / attackSpeed;
+        if (Time.time < _lastHitTime+attackCooldown) return;
+        SoundManager.instance.PlayEffect(SoundEffectType.Attack);
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
         playerSkillController.UseSlashSkill(3);
