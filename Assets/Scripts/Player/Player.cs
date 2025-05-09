@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
         if (Time.time - _lastHitTime < 1 / attackSpeed) return;
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
-        playerSkillController.UseSlashSkill(0);
+        playerSkillController.UseSlashSkill(3);
         _lastHitTime = Time.time;
     }
 
