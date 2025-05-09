@@ -407,6 +407,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         _cameraShake.ShakeCamera(2f, 0.3f);
 
+        SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
+
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             _playerController.SetTrigger("Die");

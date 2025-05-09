@@ -136,6 +136,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 802058723}
     m_Modifications:
+    - target: {fileID: 267350889318213231, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 468304548643532939, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -260,6 +264,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1685303263789462263, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2174506335203081259, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -308,6 +316,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4692622777693565580, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5550919124626051784, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7215999760122166100, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539963600668364805, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7827519150116017447, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -330,6 +354,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7827519150116017447, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253057807559271749, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8575930779809781088, guid: feb42eb7274754c4eb71827c4c2dd762, type: 3}
@@ -773,6 +801,7 @@ GameObject:
   m_Component:
   - component: {fileID: 229742868}
   - component: {fileID: 229742867}
+  - component: {fileID: 229742869}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -857,6 +886,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &229742869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229742866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &233297072
 GameObject:
   m_ObjectHideFlags: 0

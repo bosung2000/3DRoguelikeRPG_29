@@ -41,12 +41,12 @@ AudioSource:
   m_GameObject: {fileID: 2611248448873026086}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -1696383052995010410, guid: 1228d3c617c6ea24ea924da6e3505478, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8987440ead97cc94db286bb523692f05, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -174,8 +174,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmSource: {fileID: 2953935029883586457}
-  sfxSources:
-  - {fileID: 0}
+  sfxPool: []
+  audioMixer: {fileID: 24100000, guid: 1228d3c617c6ea24ea924da6e3505478, type: 2}
+  effectEntries:
+  - type: 0
+    clip: {fileID: 8300000, guid: dd79e7ed27e550f48856ca7a94c283e0, type: 3}
+  - type: 1
+    clip: {fileID: 8300000, guid: d12ff39ce00d3a94dab35533b76957af, type: 3}
+  - type: 2
+    clip: {fileID: 8300000, guid: e8732566b41e1f249a8225d205a1b5c1, type: 3}
+  - type: 3
+    clip: {fileID: 8300000, guid: 441dcae3533fb8548aad1f2dce5ad4aa, type: 3}
   masterSlider: {fileID: 0}
   bgmSlider: {fileID: 0}
   sfxSlider: {fileID: 0}
