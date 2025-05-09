@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 public interface BaseEntity
 {
-    void MaxHPUp(float maxHP);
     void Healing(float heal);
     void MaxMPUp(float maxMP);
     void BaseMPUp(float currentMP);
@@ -24,6 +23,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
+    [SerializeField] private GameObject settingMenu;
 
     private float _lastHitTime = -100f;
 
@@ -430,6 +430,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
+        settingMenu.SetActive(true);
     }
 
     public void AttackUp(float attack)
