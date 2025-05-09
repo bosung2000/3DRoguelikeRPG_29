@@ -10,11 +10,13 @@ public class Player : MonoBehaviour
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     private float _lastHitTime = -100f;
+    [SerializeField] private PlayerSkillController playerSkillController;
 
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
         _playerController = GetComponent<PlayerController>();
+        playerSkillController= GetComponent<PlayerSkillController>();
     }
     private void Start()
     {
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
         if (Time.time - _lastHitTime < 1 / attackSpeed) return;
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
+        playerSkillController.UseSlashSkill(0);
         _lastHitTime = Time.time;
     }
 
