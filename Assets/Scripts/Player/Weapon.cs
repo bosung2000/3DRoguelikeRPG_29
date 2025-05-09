@@ -39,10 +39,14 @@ public class Weapon : MonoBehaviour
     {
         Enemy enemy = other.GetComponent<Enemy>();
 
-        if (other.CompareTag("Enemy")&& !_hitEnemies.Contains(enemy))
+        if (other.CompareTag("Enemy") && !_hitEnemies.Contains(enemy))
         {
             _playerStat.Attack(enemy);
             _hitEnemies.Add(enemy);
+        }
+        else
+        {
+            SoundManager.instance.PlayEffect(SoundEffectType.Attack);
         }
     }
 }
