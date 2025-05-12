@@ -38,7 +38,7 @@ public class PlayerSkillController : MonoBehaviour
         if (effectIndex < 0 || effectIndex >= slashEffects.Length) return;
 
         // 애니메이션 재생
-        animator.SetTrigger("Attack");
+        //animator.SetTrigger("Attack");
 
         // 기존 이펙트 모두 제거
         CleanupActiveEffects();
