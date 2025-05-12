@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class MapShow : MonoBehaviour
 {
-    [SerializeField] private UIMap uIMap;
 
+    [SerializeField] private RoomZone CurrentroomZone;
 
     void Start()
     {
-        uIMap =FindObjectOfType<UIMap>();
+        
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+
+        if (Input.GetKeyDown(KeyCode.E) && CurrentroomZone.ClearOK())
         {
             UIManager.Instance.ShowPopupUI<UIMap>();
         }

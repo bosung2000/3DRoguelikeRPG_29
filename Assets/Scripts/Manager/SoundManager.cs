@@ -1,20 +1,45 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
+
+public enum SoundEffectType
+{
+    Attack,
+    Hit,
+    CriticalHit,
+    TakeDamage
+}
+
+[System.Serializable]
+public class SoundEffectEntry
+{
+    public SoundEffectType type;
+    public AudioClip clip;
+}
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
+    [Header("Audio Sources")]
     public AudioSource bgmSource;
-    public AudioSource[] sfxSources;
+    public AudioSource[] sfxPool;
 
+    [Header("Audio Mixer")]
+    public AudioMixer audioMixer;
+
+    [Header("Effect Clips")]
+    public List<SoundEffectEntry> effectEntries;
+
+    [Header("UI Sliders")]
     public Slider masterSlider, bgmSlider, sfxSlider;
+
+    private Dictionary<SoundEffectType, AudioClip> effectDict = new();
 
     private float masterVolume = 1f;
     private float bgmVolume = 1f;
     private float sfxVolume = 1f;
-
-    private Transform soundPanel;
 
     private void Awake()
     {
@@ -28,40 +53,20 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //soundPanel = transform.root.Find("UI/SoundSettingsPanel");
-        //masterSlider = soundPanel.GetComponentInChildren<Slider>(true);
+        foreach (var entry in effectEntries)
+        {
+            if (!effectDict.ContainsKey(entry.type))
+                effectDict.Add(entry.type, entry.clip);
+        }
     }
 
     private void Start()
     {
-        if (masterSlider != null && bgmSlider != null && sfxSlider != null)
-        {
-            LoadVolumeSettings();
-        }
+        LoadVolumeSettings();
+        BindSliderEvents();
     }
 
-    public void SetMasterVolume(float volume)
-    {
-        masterVolume = volume;
-        UpdateVolumes();
-        PlayerPrefs.SetFloat("MasterVolume", volume);
-    }
-
-    public void SetBGMVolume(float volume)
-    {
-        bgmVolume = volume;
-        UpdateVolumes();
-        PlayerPrefs.SetFloat("BGMVolume", volume);
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        sfxVolume = volume;
-        UpdateVolumes();
-        PlayerPrefs.SetFloat("SFXVolume", volume);
-    }
-
-    public void LoadVolumeSettings()
+    private void LoadVolumeSettings()
     {
         masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1f);
@@ -71,47 +76,76 @@ public class SoundManager : MonoBehaviour
         bgmSlider.value = bgmVolume;
         sfxSlider.value = sfxVolume;
 
-        UpdateVolumes();
+        UpdateAllVolumes();
+    }
 
+    private void BindSliderEvents()
+    {
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         bgmSlider.onValueChanged.AddListener(SetBGMVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
-    private void UpdateVolumes()
+    public void SetMasterVolume(float volume)
     {
-        UpdateBGM();
-        UpdateSFX();
+        masterVolume = volume;
+        audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", volume);
     }
 
-    private void UpdateBGM()
+    public void SetBGMVolume(float volume)
     {
-        if (bgmSource != null)
-            bgmSource.volume = masterVolume * bgmVolume;
+        bgmVolume = volume;
+        audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("BGMVolume", volume);
     }
 
-    private void UpdateSFX()
+    public void SetSFXVolume(float volume)
     {
-        foreach (AudioSource sfx in sfxSources)
+        sfxVolume = volume;
+        audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+    }
+
+    private void UpdateAllVolumes()
+    {
+        SetMasterVolume(masterVolume);
+        SetBGMVolume(bgmVolume);
+        SetSFXVolume(sfxVolume);
+    }
+
+    public void PlayEffect(SoundEffectType type, float volume = 1f)
+    {
+        if (effectDict.TryGetValue(type, out var clip))
         {
-            if (sfx != null)
-                sfx.volume = masterVolume * sfxVolume;
+            PlayClip(clip, volume);
         }
     }
 
-    public void PlaySFX(AudioClip clip, float volume = 1f)
+    public void PlayClip(AudioClip clip, float volume = 1f)
     {
-        if (clip != null)
+        if (clip == null) return;
+
+        foreach (var source in sfxPool)
         {
-            foreach (AudioSource sfx in sfxSources)
+            if (!source.isPlaying)
             {
-                if (!sfx.isPlaying)
-                {
-                    sfx.PlayOneShot(clip, volume * sfxVolume * masterVolume);
-                    return;
-                }
+                source.PlayOneShot(clip, volume * sfxVolume * masterVolume);
+                return;
             }
-            sfxSources[0].PlayOneShot(clip, volume * sfxVolume * masterVolume);
         }
+
+        sfxPool[0].PlayOneShot(clip, volume * sfxVolume * masterVolume);
+    }
+
+    public void PlayBGM(AudioClip bgm, bool loop = true)
+    {
+        if (bgmSource.isPlaying)
+            bgmSource.Stop();
+
+        bgmSource.clip = bgm;
+        bgmSource.loop = loop;
+        bgmSource.volume = bgmVolume * masterVolume;
+        bgmSource.Play();
     }
 }

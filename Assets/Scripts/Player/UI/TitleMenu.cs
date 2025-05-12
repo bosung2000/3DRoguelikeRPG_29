@@ -23,16 +23,16 @@ public class TitleMenu : MonoBehaviour
     {
         if (startBtn != null) startBtn.onClick.AddListener(OnClickStart);
         if (LobbyBtn != null) LobbyBtn.onClick.AddListener(OnClickLobbyBtn);
-        endBtn.onClick.AddListener(OnClickEndBtn);
+        if (endBtn != null) endBtn.onClick.AddListener(OnClickEndBtn);
         settingBtn.onClick.AddListener(OnClickSettingBtn);
-        settingCloseBtn.onClick.AddListener(OnClickSettingCloseBtn);
+        if (settingCloseBtn != null) settingCloseBtn.onClick.AddListener(OnClickSettingCloseBtn);
         soundBtn.onClick.AddListener(OnClickSoundBtn);
-        soundCloseBtn.onClick.AddListener(OnClickSoundCloseBtn);
+        if (soundCloseBtn != null) soundCloseBtn.onClick.AddListener(OnClickSoundCloseBtn);
     }
 
     public void OnClickStart()
     {
-        SceneManager.LoadScene("Main_HB");
+        SceneManager.LoadScene("Bosung_02");
     }
 
     public void OnClickLobbyBtn()

@@ -49,6 +49,8 @@ public class UIPopupInventory : PopupUI
         // 비활성화된 오브젝트 포함 모든 오브젝트 찾기
         allFloatingjoystick = Resources.FindObjectsOfTypeAll<FloatingJoystick>();
 
+        //처음에 한번 초기화 
+        ResetSprite();
     }
 
     private void Inittialize()
@@ -308,26 +310,17 @@ public class UIPopupInventory : PopupUI
     {
         if (equipMananger != null)
         {
-            // 모든 장비 슬롯 초기화
-            slotEquipWeapon.sprite = null;
-            slotEquipCoat.sprite = null;
-            slotEquipShoes.sprite = null;
-            slotEquipGlove.sprite = null;
+            ResetSprite();
 
-            // 유물 슬롯 초기화
-            Slot_Equip_Relics_01.sprite = null;
-            Slot_Equip_Relics_02.sprite = null;
-            Slot_Equip_Relics_03.sprite = null;
-            
             // 슬롯별 기본 색상 설정 - 비어있을 때는 약간 투명하게
-            Color slotEmptyColor = new Color(1f, 1f, 1f, 1f);
-            slotEquipWeapon.color = slotEmptyColor;
-            slotEquipCoat.color = slotEmptyColor;
-            slotEquipShoes.color = slotEmptyColor;
-            slotEquipGlove.color = slotEmptyColor;
-            Slot_Equip_Relics_01.color = slotEmptyColor;
-            Slot_Equip_Relics_02.color = slotEmptyColor;
-            Slot_Equip_Relics_03.color = slotEmptyColor;
+            //Color slotEmptyColor = new Color(1f, 1f, 1f, 1f);
+            //slotEquipWeapon.color = slotEmptyColor;
+            //slotEquipCoat.color = slotEmptyColor;
+            //slotEquipShoes.color = slotEmptyColor;
+            //slotEquipGlove.color = slotEmptyColor;
+            //Slot_Equip_Relics_01.color = slotEmptyColor;
+            //Slot_Equip_Relics_02.color = slotEmptyColor;
+            //Slot_Equip_Relics_03.color = slotEmptyColor;
 
             // 일반 장비 아이템 슬롯 업데이트
             foreach (var item in equipMananger.EquipDicionary.Values)
@@ -338,11 +331,11 @@ public class UIPopupInventory : PopupUI
                         break;
                     case EquipType.Weapon:
                         slotEquipWeapon.sprite = item.Icon;
-                        slotEquipWeapon.color = Color.white; 
+                        slotEquipWeapon.color = Color.white;
                         break;
                     case EquipType.Coat:
                         slotEquipCoat.sprite = item.Icon;
-                        slotEquipCoat.color = Color.white; 
+                        slotEquipCoat.color = Color.white;
                         break;
                     case EquipType.Shoes:
                         slotEquipShoes.sprite = item.Icon;
@@ -359,7 +352,7 @@ public class UIPopupInventory : PopupUI
 
             // 유물 아이템 슬롯 업데이트
             List<ItemData> equippedRelics = equipMananger.GetAllEquippedRelics();
-            
+
             // 장착된 유물 개수에 따라 슬롯에 아이콘 표시
             for (int i = 0; i < equippedRelics.Count; i++)
             {
@@ -367,11 +360,11 @@ public class UIPopupInventory : PopupUI
                 {
                     case 0:
                         Slot_Equip_Relics_01.sprite = equippedRelics[i].Icon;
-                        Slot_Equip_Relics_01.color = Color.white; 
+                        Slot_Equip_Relics_01.color = Color.white;
                         break;
                     case 1:
                         Slot_Equip_Relics_02.sprite = equippedRelics[i].Icon;
-                        Slot_Equip_Relics_02.color = Color.white; 
+                        Slot_Equip_Relics_02.color = Color.white;
                         break;
                     case 2:
                         Slot_Equip_Relics_03.sprite = equippedRelics[i].Icon;
@@ -380,6 +373,31 @@ public class UIPopupInventory : PopupUI
                 }
             }
         }
+    }
+
+    private void ResetSprite()
+    {
+        Color slotEmptyColor = new Color(1f, 1f, 1f, 0f);
+        // 모든 장비 슬롯 초기화
+        slotEquipWeapon.sprite = null;
+        slotEquipCoat.sprite = null;
+        slotEquipShoes.sprite = null;
+        slotEquipGlove.sprite = null;
+
+        // 유물 슬롯 초기화
+        Slot_Equip_Relics_01.sprite = null;
+        Slot_Equip_Relics_02.sprite = null;
+        Slot_Equip_Relics_03.sprite = null;
+
+        slotEquipWeapon.color = slotEmptyColor;
+        slotEquipCoat.color = slotEmptyColor;
+        slotEquipShoes.color= slotEmptyColor;
+        slotEquipGlove.color= slotEmptyColor;
+
+        Slot_Equip_Relics_01.color= slotEmptyColor;
+        Slot_Equip_Relics_02.color= slotEmptyColor;
+        Slot_Equip_Relics_03.color= slotEmptyColor;
+        
     }
 
     // OnRelicsChanged 이벤트 핸들러 추가 (유물 장착/해제 시 호출됨)

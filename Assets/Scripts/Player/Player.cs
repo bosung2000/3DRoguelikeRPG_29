@@ -10,42 +10,21 @@ public class Player : MonoBehaviour
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
     private float _lastHitTime = -100f;
+    [SerializeField] private PlayerSkillController playerSkillController;
 
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();
         _playerController = GetComponent<PlayerController>();
+        playerSkillController= GetComponent<PlayerSkillController>();
     }
     private void Start()
     {
         _playerStat.InitBaseStat(statData);
     }
-    public void FixedUpdate()
+    public void Update()
     {
         _playerController.DirectionCheck();
-    }
-
-
-    public void MaxHPUp()
-    {
-        _playerStat.MaxHPUp(100);
-    }
-    public void Healing()
-    {
-        _playerStat.Healing(Mathf.RoundToInt(_playerStat.GetStatValue(PlayerStatType.MaxHP) * 0.2f));
-        //최대체력의 20%  
-    }
-    public void MaxMPUp()
-    {
-        _playerStat.MaxMPUp(100);
-    }
-    public void BaseMPUp()
-    {
-        _playerStat.BaseMPUp(20);
-    }
-    public void SpeedUp()
-    {
-        _playerStat.MoveSpeedUp(5);
     }
     public void Attack()
     {
@@ -53,63 +32,10 @@ public class Player : MonoBehaviour
         if (Time.time - _lastHitTime < 1 / attackSpeed) return;
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
+        playerSkillController.UseSlashSkill(3);
         _lastHitTime = Time.time;
     }
-    public void AttackUp()
-    {
-        _playerStat.AttackUp(10);
-    }
 
-    public void DMGReductionUp()
-    {
-        _playerStat.DMGReductionUp(10);
-    }
-
-    public void CriticalChanceUp()
-    {
-        _playerStat.CriticalChanceUp(5);
-        Debug.Log("CriticalChanceUp");
-    }
-    public void CriticalDamageUp()
-    {
-        _playerStat.CriticalDamageUp(0.25f);
-    }
-    public void DashDistanceUp()
-    {
-        _playerStat.DashDistanceUp(5);
-    }
-    public void DashCooldownUp()
-    {
-        _playerStat.DashCooldownUp(1);
-    }
-    public void HitCooldownUp()
-    {
-        _playerStat.HitCooldownUp(1);
-    }
-    public void DMGIncreaseUp()
-    {
-        _playerStat.DMGIncreaseUp(10);
-    }
-    public void HPRecoveryUp()
-    {
-        _playerStat.HPRecoveryUp(5);
-    }
-    public void MPRecoveryUp()
-    {
-        _playerStat.MPRecoveryUp(5);
-    }
-    public void GoldAcquisitionUp()
-    {
-        _playerStat.GoldAcquisitionUp(5);
-    }
-    public void SkillCooldownUp()
-    {
-        _playerStat.SkillCooldownUp(1);
-    }
-    public void AttackSpeedUp()
-    {
-        _playerStat.AttackSpeedUp(1f);
-    }
     public void Dash()
     {
         _playerController.Dash();

@@ -13,6 +13,7 @@ public enum CurrencyType
 public class CurrencyManager : MonoBehaviour
 {
     public Dictionary<CurrencyType, int> currencies;
+    public  Dictionary<CurrencyType, Action<int>> currenciesAction;
     public event Action<int> OnGoldChange;
     public event Action<int> OnSoulChange;
 
@@ -23,7 +24,7 @@ public class CurrencyManager : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     public void init()
@@ -33,6 +34,18 @@ public class CurrencyManager : MonoBehaviour
             { CurrencyType.Gold, 0 },
             { CurrencyType.Soul,0}
         };
+
+    }
+
+    // 이벤트 액션 가져오기 (필요할 때마다 최신 이벤트 참조 반환)
+    private Action<int> GetCurrencyAction(CurrencyType type)
+    {
+        switch (type)
+        {
+            case CurrencyType.Gold: return OnGoldChange;
+            case CurrencyType.Soul: return OnSoulChange;
+            default: return null;
+        }
     }
     public bool AddCurrency(CurrencyType currencyType, int amount)
     {
@@ -44,20 +57,14 @@ public class CurrencyManager : MonoBehaviour
                 Debug.Log($"{currencyType}의 값이 0보다 작습니다");
                 return false;
             }
-            else
-            {
-                currencies[currencyType] = AddCurrency;
-                if (currencyType == CurrencyType.Gold)
-                {
-                    OnGoldChange?.Invoke(currencies[currencyType]);
-                }
-                else if (currencyType == CurrencyType.Soul)
-                {
-                    OnSoulChange?.Invoke(currencies[currencyType]);
-                }
-                return true;
-            }
 
+            currencies[currencyType] = AddCurrency;
+
+            // 현재 이벤트 참조 가져와서 호출
+            Action<int> action = GetCurrencyAction(currencyType);
+            action?.Invoke(AddCurrency);
+
+            return true;
         }
         else
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OneArrow : RangeSkillBase
 {
-    [SerializeField] private float arrowSpeed = 25f;
+    [SerializeField] private float arrowSpeed = 15f;
     [SerializeField] private float arrowLifetime = 5f;
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
