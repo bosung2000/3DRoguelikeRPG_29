@@ -25,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         currency = GetComponent<CurrencyManager>();
+        _player = FindObjectOfType<Player>();
     }
 
     private void Start()
