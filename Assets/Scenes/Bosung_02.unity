@@ -719,6 +719,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3315973488287823297, guid: fa67d5c7f2f36324d84657e87e0817c8, type: 3}
   m_PrefabInstance: {fileID: 241116278}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &241116280 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 133309958110064925, guid: fa67d5c7f2f36324d84657e87e0817c8, type: 3}
+  m_PrefabInstance: {fileID: 241116278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3eb10f4ace8054e82609ed28e712d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &417316158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3262,6 +3273,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1843590574}
     m_Modifications:
+    - target: {fileID: 2992346152856390205, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
+      propertyPath: saveManager
+      value: 
+      objectReference: {fileID: 241116280}
     - target: {fileID: 3443717085342584873, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
       propertyPath: m_Name
       value: PlayerMananger
