@@ -19,6 +19,8 @@ public class CurrencyManager : MonoBehaviour
     
     public SaveManager saveManager;
 
+    public static CurrencyManager Instance { get; private set; }
+
     private void Awake()
     {
         init();
@@ -93,7 +95,7 @@ public class CurrencyManager : MonoBehaviour
 
     }
 
-    private void SaveCurrency()
+    public void SaveCurrency()
     {
         GameData data = new GameData
         {
