@@ -16,6 +16,8 @@ public class CurrencyManager : MonoBehaviour
     public  Dictionary<CurrencyType, Action<int>> currenciesAction;
     public event Action<int> OnGoldChange;
     public event Action<int> OnSoulChange;
+    
+    public SaveManager saveManager;
 
     private void Awake()
     {
@@ -24,6 +26,13 @@ public class CurrencyManager : MonoBehaviour
 
     private void Start()
     {
+        GameData data = saveManager.LoadData();
+
+        currencies[CurrencyType.Gold] = data.gold;
+        currencies[CurrencyType.Soul] = data.soul;
+
+        OnGoldChange?.Invoke(data.gold);
+        OnGoldChange?.Invoke(data.soul);
 
     }
 
@@ -82,5 +91,22 @@ public class CurrencyManager : MonoBehaviour
         Debug.Log($"{currencies[_currencyType]}가 부족합니다");
         return false;
 
+    }
+
+    private void SaveCurrency()
+    {
+        GameData data = new GameData
+        {
+            gold = currencies[CurrencyType.Gold],
+            soul = currencies[CurrencyType.Soul]
+
+        };
+
+        saveManager.SaveData(data);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveCurrency();
     }
 }
