@@ -27,7 +27,7 @@ public class SaveManager : MonoBehaviour
         else
         {
             Debug.Log("저장 파일 없음. 새로 생성");
-            return new GameData();
+            return new GameData();        
         }
     }
 }
