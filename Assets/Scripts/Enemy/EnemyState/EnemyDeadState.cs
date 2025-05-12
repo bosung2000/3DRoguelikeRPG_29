@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class EnemyDeadState : IEnemyState
 {
-    private float _deadDuration = 1.5f;
-    private bool _animationEnded = false;
+    Enemy enemy;
 
     public void EnterState(EnemyController controller)
     {
-        controller.agent.isStopped = true; ;
-
+        enemy = controller.Enemy;
+        controller.agent.isStopped = true;
         controller.animator.SetTrigger("DIe");
     }
 
@@ -21,7 +21,6 @@ public class EnemyDeadState : IEnemyState
 
     public void UpdateState(EnemyController controller)
     {
-        Enemy enemy = controller.Enemy;
 
         if (enemy == null) return;
 
