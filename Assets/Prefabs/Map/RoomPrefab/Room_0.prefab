@@ -202,7 +202,6 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 4839666639176174843}
   spawnConfig:
-    configName: Room1
     normalEnemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
     spawnnormal: 0
     normalCount: 5
@@ -265,8 +264,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 18.683563, y: 1, z: 25.459106}
-  m_Center: {x: 1.3221741, y: 0, z: 1.0080605}
+  m_Size: {x: 18.683563, y: 8.764672, z: 25.459106}
+  m_Center: {x: 1.3221741, y: -3.8823361, z: 1.0080605}
 --- !u!1 &1922903599077344518
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +608,7 @@ Transform:
   m_GameObject: {fileID: 4635113968810159245}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.66, y: -10.96, z: -10.71}
+  m_LocalPosition: {x: 4.43, y: -11.6, z: 43.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -934,7 +933,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
