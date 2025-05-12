@@ -31,7 +31,9 @@ v2f vert(appdata v)
 	return o;
 }
 
-half4 frag(v2f i) : SV_TARGET{
+
+
+4 frag(v2f i) : SV_TARGET{
 	float alpha = tex2D(_MainTex, i.uv).a;
 	clip(alpha - 0.1);
 	return 0;
