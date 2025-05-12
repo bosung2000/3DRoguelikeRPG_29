@@ -384,6 +384,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
         Healing(absorp);
 
+        if (isCrit)
+            SoundManager.instance.PlayEffect(SoundEffectType.CriticalHit);
+        else
+            SoundManager.instance.PlayEffect(SoundEffectType.Hit);
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }
     public void TakeDamage(int damage)
@@ -406,6 +410,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         }
 
         _cameraShake.ShakeCamera(2f, 0.3f);
+
+        SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
