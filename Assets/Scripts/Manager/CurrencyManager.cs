@@ -39,12 +39,12 @@ public class CurrencyManager : MonoBehaviour
         else
         {
             currencies[CurrencyType.Gold] = data.gold;
-            currencies[CurrencyType.Gold] = data.soul;
+            currencies[CurrencyType.Soul] = data.soul;
 
         }
 
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
-        OnGoldChange?.Invoke(currencies[CurrencyType.Soul]);
+        OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
 
     }
 
