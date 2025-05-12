@@ -1,20 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationEventEffects : MonoBehaviour {
-    //public GameObject EffectPrefab;
-    //public Transform EffectStartPosition;
-    //public float DestroyAfter = 10;
-    //[Space]
-    //public GameObject EffectPrefabWorldSpace;
-    //public Transform EffectStartPositionWorld;
-    //public float DestroyAfterWorld = 10;
-
+public class AnimationEventEffects : MonoBehaviour
+{
     public EffectInfo[] Effects;
 
     [System.Serializable]
-
     public class EffectInfo
     {
         public GameObject Effect;
@@ -23,27 +15,23 @@ public class AnimationEventEffects : MonoBehaviour {
         public bool UseLocalPosition = true;
     }
 
-    //   // Update is called once per frame
-    //   void CreateEffect () {
-    //       var effectOBJ = Instantiate(EffectPrefab, EffectStartPosition);
-    //       effectOBJ.transform.localPosition = Vector3.zero;
-    //       Destroy(effectOBJ, DestroyAfter);        		
-    //}
-
-    //   void CreateEffectWorldSpace()
-    //   {
-    //       var effectOBJ = Instantiate(EffectPrefabWorldSpace, EffectStartPositionWorld.transform.position, EffectStartPositionWorld.transform.rotation);
-
-    //       Destroy(effectOBJ, DestroyAfterWorld);
-    //   }
-    void Start() {
+    void Start()
+    {
+        foreach (var effect in Effects)
+        {
+            if (effect.StartPositionRotation == null)
+            {
+                effect.StartPositionRotation = GameObject.Find("Player").transform;
+            }
+        }
     }
-            
+
     void InstantiateEffect(int EffectNumber)
     {
-        if(Effects == null || Effects.Length <= EffectNumber)
+        if (Effects == null || Effects.Length <= EffectNumber)
         {
             Debug.LogError("Incorrect effect number or effect is null");
+            return;
         }
 
         var instance = Instantiate(Effects[EffectNumber].Effect, Effects[EffectNumber].StartPositionRotation.position, Effects[EffectNumber].StartPositionRotation.rotation);

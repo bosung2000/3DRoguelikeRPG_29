@@ -549,7 +549,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 360 Attack 1 1
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 1
   m_Transitions:
   - {fileID: 2931696073253082024}
@@ -789,55 +789,55 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Run
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Die
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: AttackSpeed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: GreenSlash
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Lighting
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: FireCombo
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: GetHit
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1410,7 +1410,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 7cb68524fd5a5a4418223c27bfbabab8, type: 2}
+  m_Motion: {fileID: 7400000, guid: 776c8457974802b4b95df97ea6292c7b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1571,19 +1571,19 @@ AnimatorStateMachine:
     m_Position: {x: 10, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6596320492784983372}
-    m_Position: {x: 900, y: -120, z: 0}
+    m_Position: {x: 900, y: -180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7187283794482322304}
-    m_Position: {x: 900, y: -80, z: 0}
+    m_Position: {x: 900, y: -150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1615664218002041386}
-    m_Position: {x: 900, y: -80, z: 0}
+    m_Position: {x: 900, y: -140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1902790195142032147}
-    m_Position: {x: 900, y: -80, z: 0}
+    m_Position: {x: 900, y: -120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1984153314726424832}
-    m_Position: {x: 900, y: -40, z: 0}
+    m_Position: {x: 900, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3062153432412342207}
     m_Position: {x: 1100, y: 0, z: 0}
@@ -1601,16 +1601,16 @@ AnimatorStateMachine:
     m_Position: {x: 1090, y: 240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2776030918167435392}
-    m_Position: {x: 1090, y: 320, z: 0}
+    m_Position: {x: 1090, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -568767925358903360}
     m_Position: {x: 1090, y: 200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -987530944654374492}
-    m_Position: {x: 1090, y: 400, z: 0}
+    m_Position: {x: 1090, y: 320, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2316458081901859656}
-    m_Position: {x: 1090, y: 440, z: 0}
+    m_Position: {x: 1090, y: 360, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 8769467163659796647}
