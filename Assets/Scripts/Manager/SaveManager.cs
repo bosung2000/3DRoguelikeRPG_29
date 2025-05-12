@@ -8,6 +8,8 @@ public class SaveManager : MonoBehaviour
     private void Awake()
     {
         savePath = Path.Combine(Application.persistentDataPath, "save.json");
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void SaveData(GameData data)
@@ -27,7 +29,7 @@ public class SaveManager : MonoBehaviour
         else
         {
             Debug.Log("저장 파일 없음. 새로 생성");
-            return new GameData();
+            return new GameData();        
         }
     }
 }
