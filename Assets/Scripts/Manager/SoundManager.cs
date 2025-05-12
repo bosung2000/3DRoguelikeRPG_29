@@ -7,6 +7,7 @@ public enum SoundEffectType
 {
     Attack,
     Hit,
+    CriticalHit,
     TakeDamage
 }
 
