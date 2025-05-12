@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,8 +22,11 @@ public class Enemy : MonoBehaviour
     public Transform FirePoint => _firePoint;
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
     public bool IsBoss => Stat?.StatData.EnemyType == EnemyType.Boss;
-    public EnemySkillType skillType => Stat?.StatData.SkillType ?? EnemySkillType.None;
+    public EnemySkillType skillA => Stat?.StatData.SkillA ?? EnemySkillType.None;
+    public EnemySkillType skillB => Stat?.StatData.SkillB ?? EnemySkillType.None;
 
+    public int CurrentPhase { get; private set; } = 1; //페이즈 전환
+    private float lastSkillTime;
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
     private bool _isDead = false;
@@ -91,6 +95,18 @@ public class Enemy : MonoBehaviour
             {
                 Debug.Log("컨트롤러가 널임");
                 return;
+            }
+        }
+
+        // 보스만 페이즈 전환 체크
+        if (IsBoss && CurrentPhase == 1)
+        {
+            float hpRatio = Stat.GetStatValue(EnemyStatType.HP) / Stat.GetStatValue(EnemyStatType.MaxHP);
+            if (hpRatio <= 0.5f)
+            {
+                CurrentPhase = 2;
+                Debug.Log("보스 2페이즈 진입!");
+                // 2페이즈 진입 연출 필요시 여기에 trigger
             }
         }
     }
@@ -220,6 +236,7 @@ public class Enemy : MonoBehaviour
         position.y += 1.0f;
         _cachedTargetPosition = position;
     }
+
     //원거리 공격
     public void FireProjectile()
     {
@@ -245,6 +262,131 @@ public class Enemy : MonoBehaviour
             proj.Intialize(dir, damage);
         }
     }
+
+    //스킬
+
+    //쿨타임관리
+    public bool CanUseSkill()
+    {
+        float cooldown = Stat?.StatData.SkillCooldown ?? 8f;
+
+        // 보스
+        if (IsBoss)
+        {
+            return (skillA != EnemySkillType.None || skillB != EnemySkillType.None)
+                && Time.time >= lastSkillTime + cooldown;
+        }
+
+        // 엘리트
+        return skillB != EnemySkillType.None && Time.time >= lastSkillTime + cooldown;
+    }
+
+    public void ResetSkillCooldown()
+    {
+        lastSkillTime = Time.time;
+    }
+
+    //근거리
+    //dash
+    public void SkillDash()
+    {
+        StartCoroutine(DashCoroutine());
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        float dashTime = 0.5f;
+        float dashSpeed = 15f;
+
+        Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
+        dir.y = 0f;
+        Quaternion initialRotation = Quaternion.LookRotation(dir);
+
+        transform.rotation = initialRotation;
+        float timer = 0f;
+
+        //agent 비활성
+        enemyController.agent.enabled = false;
+        
+        while(timer < dashTime)
+        {
+            transform.position += dir * dashSpeed * Time.deltaTime;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        //돌진 후 회전
+        Vector3 toTarget = GetPlayerTarget().position - transform.position;
+        toTarget.y = 0;
+        if (toTarget != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(toTarget);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 1f); // 즉시 회전
+        }
+
+        enemyController.agent.enabled = true;
+        enemyController.agent.Warp(transform.position);
+    }
+    //충격파
+    public void SkillJumpStomp()
+    {
+        float stompRadius = 4f;
+        Vector3 stompCenter = transform.position;
+
+        Collider[] hits = Physics.OverlapSphere(stompCenter, stompRadius, LayerMask.GetMask("Player"));
+        foreach(var hit in hits)
+        {
+            if (hit.TryGetComponent(out PlayerStat player))
+            {
+                int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
+                player.TakeDamage(damage);
+            }
+        }
+    }
+
+    //원거리
+    //SpreadShot
+    public void SkillSpreadShot()
+    {
+        if (ProjectilePrefab == null || FirePoint == null) return;
+
+        int count = 5; // 발사 갯수
+        float angleSpread = 30f; //퍼지는 각도
+        float angleStep = angleSpread / (count - 1);
+        float startAngle = -angleSpread / 2f;
+
+        Vector3 spawnBase = FirePoint.position;
+        Vector3 baseDir = (GetPlayerTarget().position - spawnBase).normalized;
+        Quaternion baseRot = Quaternion.LookRotation(baseDir);
+
+        for (int i = 0; i < count; i++)
+        {
+            float angle = startAngle + i * angleStep;
+            Quaternion spreadRot = Quaternion.Euler(0, angle, 0) * baseRot;
+            Vector3 dir = spreadRot * Vector3.forward;
+
+            Vector3 spawnPos = FirePoint.position + Vector3.up * 1.2f + dir * 1.0f;
+
+            GameObject projectile = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(dir));
+            if (projectile.TryGetComponent(out Projectile proj))
+            {
+                int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
+                proj.Intialize(dir, damage);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //임시 몬스터 제거 키 추후 삭제
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.K))
@@ -253,6 +395,4 @@ public class Enemy : MonoBehaviour
             Die();
         }
     }
-
-
 }

@@ -7,7 +7,7 @@ public enum SkillType
 {
     Melee,
     Ranged,
-    Buff,
+    Buff
 }
 
 public enum BuffType

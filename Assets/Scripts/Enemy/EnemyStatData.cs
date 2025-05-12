@@ -18,9 +18,9 @@ public enum EnemyRoleType
 public enum EnemySkillType
 {
     None,
-    Skill1,
-    Skill2,
-    Skill3
+    Dash,       //돌진
+    SpreadShot, //투사체 다중 발사
+
 }
 
 [CreateAssetMenu(fileName = "EnemyStatData", menuName = "Enemy/EnemyStat")]
@@ -31,6 +31,11 @@ public class EnemyStatData : ScriptableObject
     [SerializeField] private string _enemyName;
     [SerializeField] private EnemyType _enemyType;
     [SerializeField] private EnemyRoleType _enemyRole;
+
+    [Header("스킬 정보")]
+    [SerializeField] private float _skillCooldown;
+    [SerializeField] private EnemySkillType _skillA = EnemySkillType.None;
+    [SerializeField] private EnemySkillType _skillB = EnemySkillType.None;
 
     [Header("스탯 정보")]
     [SerializeField] private int _maxHP;
@@ -47,8 +52,6 @@ public class EnemyStatData : ScriptableObject
     [Header("탐지 정보")]
     [SerializeField] private float _chaseRange; //탐지 범위
 
-    [Header("스킬 정보")]
-    [SerializeField] private EnemySkillType _skillType = EnemySkillType.None;
 
     public int Index => _index;
     public string EnemyName => _enemyName;
@@ -63,5 +66,7 @@ public class EnemyStatData : ScriptableObject
     public float AttackRange => _attackRange;
     public float AttackCooldown => _attackCooldown;
     public float ChaseRange => _chaseRange;
-    public EnemySkillType SkillType => _skillType;
+    public float SkillCooldown => _skillCooldown;
+    public EnemySkillType SkillA => _skillA;
+    public EnemySkillType SkillB => _skillB;
 }

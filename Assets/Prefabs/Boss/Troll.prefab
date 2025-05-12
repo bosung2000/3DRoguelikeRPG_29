@@ -3759,9 +3759,9 @@ GameObject:
   - component: {fileID: 3479671850096868115}
   - component: {fileID: 388768153862998855}
   - component: {fileID: 1625349041570980687}
-  - component: {fileID: 9121960029420624428}
-  - component: {fileID: 2616657440944536810}
-  - component: {fileID: 8180685135316744495}
+  - component: {fileID: 7398843674345285294}
+  - component: {fileID: 1442304989099050141}
+  - component: {fileID: 8964896828934272351}
   - component: {fileID: 4879169491399759253}
   m_Layer: 8
   m_Name: Troll
@@ -3863,7 +3863,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &9121960029420624428
+--- !u!114 &7398843674345285294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3872,10 +3872,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7557973133602465326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d76deb1f97e8b1843a279350c50e5d7e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e678d8b891678e418b2236674f2cdbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2616657440944536810
+  _goldPrefab: {fileID: 5607812118361291365, guid: f087d0246a56ba649a04174a42087e82, type: 3}
+  _soulPrefab: {fileID: 2218287214163529481, guid: 90e04c482f5ba1344b98dd366c5aa44b, type: 3}
+  _firePoint: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
+  _weaponCollider: {fileID: 0}
+--- !u!114 &1442304989099050141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3884,11 +3889,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7557973133602465326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc1f2296dcedad848b893af11beef093, type: 3}
+  m_Script: {fileID: 11500000, guid: fce238e373242964b949b014492e0645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roleType: 0
---- !u!114 &8180685135316744495
+--- !u!114 &8964896828934272351
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3897,10 +3901,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7557973133602465326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e8c1d2fcb8376342ae7ce1b5ff685d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9133b9cb5389fe64bb59720d0f6ffe36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statData: {fileID: 11400000, guid: a67469b4536d53b40934a4a0ecf341c8, type: 2}
+  statData: {fileID: 0}
 --- !u!95 &4879169491399759253
 Animator:
   serializedVersion: 5
@@ -3911,7 +3915,7 @@ Animator:
   m_GameObject: {fileID: 7557973133602465326}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d7f2c7c485b7f4e43aea0288494f229f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4124768f31afdda43b322839173050da, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
