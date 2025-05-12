@@ -30,11 +30,21 @@ public class CurrencyManager : MonoBehaviour
     {
         GameData data = saveManager.LoadData();
 
-        currencies[CurrencyType.Gold] = data.gold;
-        currencies[CurrencyType.Soul] = data.soul;
+        if (data.gold == 0 && data.soul == 0)
+        {
+            currencies[CurrencyType.Gold] = 1000;
+            currencies[CurrencyType.Soul] = 100;
 
-        OnGoldChange?.Invoke(data.gold);
-        OnGoldChange?.Invoke(data.soul);
+        }
+        else
+        {
+            currencies[CurrencyType.Gold] = data.gold;
+            currencies[CurrencyType.Gold] = data.soul;
+
+        }
+
+        OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
+        OnGoldChange?.Invoke(currencies[CurrencyType.Soul]);
 
     }
 
