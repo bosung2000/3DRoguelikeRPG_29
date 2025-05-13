@@ -32,11 +32,17 @@ public class TitleMenu : MonoBehaviour
 
     public void OnClickStart()
     {
+        //씬 시작 시 저장
+        GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
+
         SceneManager.LoadScene("Bosung_02");
     }
 
     public void OnClickLobbyBtn()
     {
+        //씬 이동 시 저장
+        GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
+
         Time.timeScale = 1;
         SceneManager.LoadScene("Lobby_HB");
     }

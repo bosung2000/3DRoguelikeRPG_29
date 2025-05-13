@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private bool _isTumbling = false;
     private StatUI _statUI;
     private bool _isAttacking = false;
+    private bool _isSkill = false;
     private Vector3 _lastMoveDirection;
     Vector3 inputDir;
     private float _rotationLockEndTime = 0f;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
-        if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown)
+        if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown||_isSkill)
         {
             Debug.Log("쿨타임입니다");
             return;
@@ -169,5 +170,13 @@ public class PlayerController : MonoBehaviour
     public void NotAttacking()
     {
         _isAttacking = false;
+    }
+    public void IsSkill()
+    {
+        _isSkill = true;
+    }
+    public void NotSkill()
+    {
+        _isSkill = false;
     }
 }
