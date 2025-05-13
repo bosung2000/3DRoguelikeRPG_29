@@ -100,11 +100,6 @@ public class RoomZone : MonoBehaviour
             Debug.Log($"[RoomZone] {roomName} 클리어!");
             ClearBool = true;
             //nextRoom?.ActivateRoom();
-
-            if (CurrencyManager.Instance != null)
-            {
-                CurrencyManager.Instance.SaveCurrency();
-            }
         }
     }
 }

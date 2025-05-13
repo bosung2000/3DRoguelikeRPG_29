@@ -370,6 +370,9 @@ public class MapManager : MonoBehaviour
     {
         _portal.TryUsePortal($"potal_{roomIndex}");
         UIManager.Instance.ClosePopupUI<UIMap>();
+
+        //다음 방 입장 직후에 저장
+        GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
         
         // 이전에 생성된 특수 오브젝트가 있으면 파괴
         CleanupCurrentActiveObject();

@@ -415,6 +415,9 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
+            //죽었을 때 저장
+            GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
+
             _playerController.SetTrigger("Die");
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());

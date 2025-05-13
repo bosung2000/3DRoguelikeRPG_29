@@ -8,7 +8,10 @@ public enum SoundEffectType
     Attack,
     Hit,
     CriticalHit,
-    TakeDamage
+    TakeDamage,
+    FireCombo,
+    Lighting,
+    GreenSlash
 }
 
 [System.Serializable]
