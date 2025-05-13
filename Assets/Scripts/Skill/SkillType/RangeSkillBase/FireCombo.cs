@@ -13,14 +13,7 @@ public class FireCombo : MeleeSkillBase
     [SerializeField] private int comboCount = 5; // 참격 횟수
     [SerializeField] private float comboDamageRate = 40f; // 참격 데미지 %
 
-    public override void Execute(Player player, Vector3 direction)
-    {
-        if (isAttacking || skillData.cooldown > 0) 
-            return;
-        StartCoroutine(FireComboCoroutine(player, direction));
-    }
-
-    private IEnumerator FireComboCoroutine(Player player, Vector3 direction)
+    protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
@@ -41,10 +34,11 @@ public class FireCombo : MeleeSkillBase
             var collider = hitBox.GetComponent<Collider>();
             if (collider != null) collider.isTrigger = true;
             var renderer = hitBox.GetComponent<Renderer>();
-            if (renderer != null) Destroy(renderer);
+            //if (renderer != null) Destroy(renderer);
 
             // 데미지 계산
-            float SkillRate = comboDamageRate / 100f;
+            float SkillRate = (float)((float)skillData.value / (float)100);
+            
             int comboDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
 
             // 크리티컬 적용
@@ -65,12 +59,12 @@ public class FireCombo : MeleeSkillBase
         }
         isAttacking = false;
     }
-    
+
     // 크리티컬 보너스 적용/제거 메서드
     private void ApplyCriticalBonusToPlayer(Player player, bool apply)
     {
         if (player == null || player._playerStat == null) return;
-        
+
         if (apply)
         {
             // 현재 크리티컬 확률과 데미지에 보너스 적용
