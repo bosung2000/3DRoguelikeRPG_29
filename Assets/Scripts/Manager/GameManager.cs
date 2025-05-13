@@ -55,6 +55,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapManager _mapManager;
     public MapManager MapManager => _mapManager;
 
+    [SerializeField] private SaveManager _saveManager;
+    public SaveManager SaveManager => _saveManager;
+
     private void Awake()
     {
         //인스턴스가 존재하는지 확인 + 인스턴스가 다른지 확인 
