@@ -12,7 +12,7 @@ public class PlayerSkillController : MonoBehaviour
     
     [Header("애니메이션")]
     private Animator animator;
-    [SerializeField] private float effectDuration = 2f; // 이펙트 지속 시간
+    [SerializeField] private float effectDuration = 6f; // 이펙트 지속 시간
 
     private void Start()
     {

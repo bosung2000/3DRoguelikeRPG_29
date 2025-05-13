@@ -14,6 +14,11 @@ public class SaveManager : MonoBehaviour
 
     public void SaveData(GameData data)
     {
+        if (string.IsNullOrEmpty(savePath))
+        {
+            savePath = Path.Combine(Application.persistentDataPath, "save.json");
+        }
+
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
         Debug.Log($"저장 완료: {savePath}");

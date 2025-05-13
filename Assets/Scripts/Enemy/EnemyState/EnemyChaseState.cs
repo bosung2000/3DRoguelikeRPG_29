@@ -8,12 +8,10 @@ public class EnemyChaseState : IEnemyState
 {
     private Transform _target;
     private float outRangeTime = 0f;
-    private float outRangeTimeHold = 2.0f;
-    private float _chaseRange;
-    private float _attackRange;
-    private float _distance;
-
-
+    private float outRangeTimeHold = 2.0f; //범위 이탈 시간
+    private float _chaseRange;             //추적범위
+    private float _attackRange;            //공격 범위
+    private float _distance;               //플레이어와의 거리
 
     public void EnterState(EnemyController controller)
     {
@@ -53,27 +51,11 @@ public class EnemyChaseState : IEnemyState
             return;
         }
 
-        //공격 범위 내면 상태 전환용
+        //플레이어와 거리 차이
         _distance = Vector3.Distance(controller.transform.position, _target.position);
 
-        //범위 밖인 상태 시간 누적
-        if (_distance > _chaseRange)
-        {
-            outRangeTime += Time.deltaTime;
-
-            if(outRangeTime > outRangeTimeHold)
-            {
-                controller.ChageState(EnemyStateType.Idle);
-                return;
-            }
-        }
-        else
-        {
-            outRangeTime = 0f; //범위 안이면 초기화
-        }
-
         // 범위 밖이면 목적지 계산해서 추적
-        if (_distance > _attackRange)
+        if (_distance > _attackRange + 1f)
         {
             Vector3 direction = (_target.position - controller.transform.position).normalized;
             Vector3 stopPosition = _target.position - direction * (_attackRange);
@@ -84,14 +66,35 @@ public class EnemyChaseState : IEnemyState
             bool isRun = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
             controller.animator.SetBool("isRun", isRun);
             controller.animator.SetBool("isWalk", false);
-            Debug.Log(controller.agent.remainingDistance);
         }
         else
         {
-            // 공격 사거리 안이면 완전히 멈추고 공격 상태로 전환
+            if(controller.Enemy.CanUseSkill())
+            {
+                controller.ChageState(EnemyStateType.Skill);
+                return;
+            }
+
+            //스킬이 없거나 쿨타임이 안 됐으면
             controller.ChageState(EnemyStateType.Attack);
             controller.agent.isStopped = true;
             return;
+        }
+
+        //범위 밖인 상태 시간 누적
+        if (_distance > _chaseRange)
+        {
+            outRangeTime += Time.deltaTime;
+
+            if (outRangeTime > outRangeTimeHold)
+            {
+                controller.ChageState(EnemyStateType.Idle);
+                return;
+            }
+        }
+        else
+        {
+            outRangeTime = 0f; //범위 안이면 초기화
         }
     }
 }

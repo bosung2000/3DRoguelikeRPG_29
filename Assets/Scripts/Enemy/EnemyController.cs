@@ -16,6 +16,7 @@ public enum EnemyStateType
     Chase,
     Attack,
     Hit,
+    Skill,
     Dead
 }
 public class EnemyController : MonoBehaviour
@@ -96,6 +97,7 @@ public class EnemyController : MonoBehaviour
             EnemyStateType.Attack => new EnemyAttackState(),
             EnemyStateType.Dead => new EnemyDeadState(),
             EnemyStateType.Hit => new EnemyHitState(),
+            EnemyStateType.Skill => new EnemySkillState(),
             _ => null
         };
     }

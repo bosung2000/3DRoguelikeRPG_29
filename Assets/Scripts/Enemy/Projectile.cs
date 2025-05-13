@@ -38,6 +38,7 @@ public class Projectile : MonoBehaviour
         }
         
         Destroy(gameObject);
+        Debug.Log("제거됨");
         return;
     }
 }
