@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class RoomSpawnConfig
 {
-    public string configName;
+    //public string configName;
 
     [Header("일반 몬스터 설정")]
     public GameObject normalEnemyPrefab;

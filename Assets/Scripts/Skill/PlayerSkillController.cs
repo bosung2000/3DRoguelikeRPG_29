@@ -12,7 +12,7 @@ public class PlayerSkillController : MonoBehaviour
     
     [Header("애니메이션")]
     private Animator animator;
-    [SerializeField] private float effectDuration = 2f; // 이펙트 지속 시간
+    [SerializeField] private float effectDuration = 6f; // 이펙트 지속 시간
 
     private void Start()
     {
@@ -38,7 +38,7 @@ public class PlayerSkillController : MonoBehaviour
         if (effectIndex < 0 || effectIndex >= slashEffects.Length) return;
 
         // 애니메이션 재생
-        animator.SetTrigger("Attack");
+        //animator.SetTrigger("Attack");
 
         // 기존 이펙트 모두 제거
         CleanupActiveEffects();

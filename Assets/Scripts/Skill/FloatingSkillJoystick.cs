@@ -82,15 +82,15 @@ public class FloatingSkillJoystick : Joystick
             {
                 if (currentSkill._name == "HalfMoon")
                 {
-                    _player.GetComponent<PlayerController>().SetTrigger("HalfMoon");
-                }
-                else if (currentSkill._name == "OneArrow")
-                {
-                    _player.GetComponent<PlayerController>().SetTrigger("OneArrow");
+                    _player.GetComponent<PlayerController>().SetTrigger("Lighting");
                 }
                 else if (currentSkill._name == "Stab")
                 {
-                    _player.GetComponent<PlayerController>().SetTrigger("StabSkill");
+                    _player.GetComponent<PlayerController>().SetTrigger("GreenSlash");
+                }
+                else if (currentSkill._name == "OneArrow")
+                {
+                    _player.GetComponent<PlayerController>().SetTrigger("FireCombo");
                 }
             }
         }

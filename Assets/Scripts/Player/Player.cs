@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerStatData statData;
     public PlayerStat _playerStat;
     [SerializeField] PlayerController _playerController;
-    private float _lastHitTime = -100f;
+    private float _lastHitTime = 0f;
     [SerializeField] private PlayerSkillController playerSkillController;
 
     private void Awake()
@@ -29,7 +29,8 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
-        if (Time.time - _lastHitTime < 1 / attackSpeed) return;
+        float attackCooldown = 1 / attackSpeed;
+        if (Time.time < _lastHitTime+attackCooldown) return;
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
         playerSkillController.UseSlashSkill(3);
@@ -52,33 +53,8 @@ public class Player : MonoBehaviour
     {
          GameManager.Instance.SkillManager.SetActiveSkillfalse();
     }
-    //public void Flash()
-    //{
-    //    if (Time.time >= lastFlashTime + 5)
-    //    {
-    //        Vector3 inputJoystick = Vector3.forward * _floatingJoystick.Vertical + Vector3.right * _floatingJoystick.Horizontal;
-    //        Vector3 keyboardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-    //        Vector3 dashDir = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : inputJoystick;
-
-    //        if (dashDir.sqrMagnitude < 0.01f)
-    //        {
-    //            dashDir = transform.forward; // 입력 없을 시 정면
-    //        }
-
-    //        dashDir = dashDir.normalized;
-
-    //        Vector3 origin = transform.position + Vector3.up * 0.5f;
-    //        Vector3 targetPos = transform.position + dashDir * 5;
-
-    //        if (!Physics.CapsuleCast(origin, origin, 0.3f, dashDir, out RaycastHit hit, 5f, _obstacleLayer))
-    //        {
-    //            _rb.MovePosition(targetPos);
-    //            lastFlashTime = Time.time;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("대쉬가 쿨타임입니다.");
-    //    }
-    //}
+    public void AttackSound()
+    {
+        SoundManager.instance.PlayEffect(SoundEffectType.Attack);
+    }
 }
