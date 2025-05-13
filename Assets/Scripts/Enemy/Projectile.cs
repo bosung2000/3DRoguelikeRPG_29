@@ -33,12 +33,10 @@ public class Projectile : MonoBehaviour
             if(player != null)
             {
                 player.TakeDamage(_damage);
-                Debug.Log(_damage);
             }
         }
         
         Destroy(gameObject);
-        Debug.Log("제거됨");
         return;
     }
 }
