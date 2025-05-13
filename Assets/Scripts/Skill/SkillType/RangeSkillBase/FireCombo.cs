@@ -2,84 +2,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireCombo : RangeSkillBase
+public class FireCombo : MeleeSkillBase
 {
-    [SerializeField] private float arrowSpeed = 15f;
-    [SerializeField] private float arrowLifetime = 5f;
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
+    [SerializeField] private float comboInterval = 0.2f; // 참격 간격
+    [SerializeField] private float hitBoxLength = 2.0f; // 콜라이더 길이(검의 2배)
+    [SerializeField] private float hitBoxWidth = 0.3f; // 콜라이더 폭
+    [SerializeField] private float hitBoxHeight = 0.3f; // 콜라이더 높이
+    [SerializeField] private int comboCount = 5; // 참격 횟수
+    [SerializeField] private float comboDamageRate = 40f; // 참격 데미지 %
 
     public override void Execute(Player player, Vector3 direction)
     {
         if (isAttacking || skillData.cooldown > 0) 
             return;
-
-        StartCoroutine(FireArrowCoroutine(player, direction));
+        StartCoroutine(FireComboCoroutine(player, direction));
     }
 
-    protected virtual IEnumerator FireArrowCoroutine(Player player, Vector3 direction)
+    private IEnumerator FireComboCoroutine(Player player, Vector3 direction)
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
-        //player.GetComponent<PlayerController>().SetTrigger("OneArrow");
-        //yield return new WaitForSeconds(0.8f);
 
-        // 크리티컬 보너스 적용
-        ApplyCriticalBonusToPlayer(player, true);
-
-        // 방향 정규화
-        direction = direction.normalized;
-
-        // 발사 위치 계산 (플레이어 위치에서 약간 앞으로, 약간 위로)
-        Vector3 spawnPosition = player.transform.position + direction * 1.2f;
-        spawnPosition.y += 1.2f; // 바닥보다 높게 발사
-
-        // 발사체 생성
-        if (skillData.projectilePrefabs != null)
+        for (int i = 0; i < comboCount; i++)
         {
-            GameObject projectile = Instantiate(skillData.projectilePrefabs, spawnPosition, Quaternion.LookRotation(direction));
-            SkillProjectile projectileScript = projectile.GetComponent<SkillProjectile>();
+            // 방향 정규화
+            direction = direction.normalized;
+            // 콜라이더 위치/회전 계산
+            Vector3 hitBoxPos = player.transform.position + direction * 1.2f + Vector3.up * 1.2f;
+            Quaternion hitBoxRot = Quaternion.LookRotation(direction);
 
-            float SkillRate = (float)((float)skillData.value / (float)100);
-            // 기본 데미지
-            int ArrowDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
-            
+            // 콜라이더 생성
+            GameObject hitBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            hitBox.transform.position = hitBoxPos;
+            hitBox.transform.rotation = hitBoxRot;
+            hitBox.transform.localScale = new Vector3(hitBoxWidth, hitBoxHeight, hitBoxLength);
+            var collider = hitBox.GetComponent<Collider>();
+            if (collider != null) collider.isTrigger = true;
+            var renderer = hitBox.GetComponent<Renderer>();
+            if (renderer != null) Destroy(renderer);
 
-            if (projectileScript != null)
+            // 데미지 계산
+            float SkillRate = comboDamageRate / 100f;
+            int comboDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
+            // 크리티컬 적용
+            bool isCritical = false;
+            if (Random.value <= (player._playerStat.GetStatValue(PlayerStatType.CriticalChance) / 100f))
             {
-                // 속성 설정
-                projectileScript.Init(direction, (int)arrowSpeed, player);
-                
-                // 데미지 설정 (크리티컬은 SkillProjectile에서 처리)
-                projectileScript.damage = Mathf.RoundToInt(ArrowDamage);
-                
-                // 발사체에 제한 시간 설정
-                Destroy(projectile, arrowLifetime);
-                
-                // 발사체 타입에 따른 설정
-                ConfigureProjectileByType(projectileScript, skillData.projectileType);
+                float critMultiplier = Mathf.Max(1.5f, player._playerStat.GetStatValue(PlayerStatType.CriticalDamage) / 100f);
+                comboDamage = Mathf.RoundToInt(comboDamage * critMultiplier);
+                isCritical = true;
             }
-        }
 
-        // 발사 효과음 재생
-        if (skillData.soundEffectPrefab != null)
-        {
-            AudioSource.PlayClipAtPoint(skillData.soundEffectPrefab, spawnPosition);
-        }
+            // 각 참격마다 HashSet 새로 생성
+            HashSet<Enemy> alreadyHit = new HashSet<Enemy>();
+            hitBox.AddComponent<FireComboHitBox>().Init(comboDamage, isCritical, alreadyHit);
 
-        // 발사 이펙트 생성
-        if (skillData.effectPrefab != null)
-        {
-            GameObject effect = Instantiate(skillData.effectPrefab, spawnPosition, Quaternion.LookRotation(direction));
-            Destroy(effect, 2f);
+            Destroy(hitBox, 0.1f);
+            yield return new WaitForSeconds(comboInterval);
         }
-
-        // 공격 딜레이
-        yield return new WaitForSeconds(attackDelay);
-        
-        // 크리티컬 보너스 제거
-        ApplyCriticalBonusToPlayer(player, false);
-        
         isAttacking = false;
     }
     
