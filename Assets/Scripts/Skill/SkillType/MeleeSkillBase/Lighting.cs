@@ -4,83 +4,72 @@ using UnityEngine;
 
 public class Lighting : MeleeSkillBase
 {
-    [SerializeField] private float halfMoonRange = 3f; // 반달 공격 범위
-    [SerializeField] private float halfMoonAngle = 180f; // 반달 공격 각도
+    
     [SerializeField] private int maxTargets = 10; // 최대 타겟 수
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 50f; // 크리티컬 데미지 보너스
+    [SerializeField] private float spinDuration = 1.5f; // 회전 지속 시간
+    [SerializeField] private float spinInterval = 0.2f; // 회전 데미지 간격
+    [SerializeField] private float spinRange = 3f; // 회전 공격 범위
+    [SerializeField] private float spinDamageRate = 20; // 회전 데미지 %
+    [SerializeField] private float slashRange = 4f; // 참격 범위
+    [SerializeField] private float slashAngle = 130f; // 참격 각도
+    [SerializeField] private float FinishslashDamageRate = 100; // 참격 데미지 %
 
     protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
-        //player.GetComponent<PlayerController>().SetTrigger("HalfMoon");
-        //yield return new WaitForSeconds(1);
 
-        // 크리티컬 보너스 적용
-        ApplyCriticalBonusToPlayer(player, true);
 
-        // 방향 정규화
-        direction = direction.normalized;
-
-        // 반달 공격 시작 위치 (플레이어 앞, 약간 위로)
-        Vector3 center = player.transform.position + Vector3.up * 0.5f;
-        Vector3 forward = direction;
-
-        // 반달 공격 범위 내의 적 탐색
-        Collider[] hitColliders = Physics.OverlapSphere(center, halfMoonRange, targetLayer);
-
-        // 각도 기반으로 적 정렬
-        System.Array.Sort(hitColliders, (a, b) =>
+        // 1. 스핀 어택 단계
+        float elapsed = 0f;
+        while (elapsed < spinDuration)
         {
-            float angleA = Vector3.Angle(forward, (a.transform.position - center).normalized);
-            float angleB = Vector3.Angle(forward, (b.transform.position - center).normalized);
-            return angleA.CompareTo(angleB);
-        });
-
-        int targetsHit = 0;
-        foreach (var hitCollider in hitColliders)
-        {
-            if (targetsHit >= maxTargets) break;
-
-            Vector3 dirToTarget = (hitCollider.transform.position - center).normalized;
-            float angle = Vector3.Angle(forward, dirToTarget);
-
-            if (angle <= halfMoonAngle * 0.5f)
-            {
-                Enemy enemy = hitCollider.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    float SkillRate = (float)((float)skillData.value / (float)100);
-                    // 기본 데미지
-                    int HalfMoonDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
-
-
-                    // 크리티컬 적용
-                    bool isCritical = IsAttackCritical(player);
-                    if (isCritical)
-                    {
-                        float critMultiplier = GetCriticalDamageMultiplier(player);
-                        HalfMoonDamage = Mathf.RoundToInt(HalfMoonDamage * critMultiplier);
-                        ShowCriticalHitEffect(hitCollider.transform.position);
-                    }
-
-                    enemy.TakeDamage(HalfMoonDamage, isCritical);
-                    ShowHalfMoonHitEffect(hitCollider.transform.position);
-                    targetsHit++;
-                }
-            }
+            // 플레이어 회전 애니메이션 트리거 (필요시 구현)
+            DealSpinDamage(player);
+            //ShowSpinEffect(player.transform.position);
+            yield return new WaitForSeconds(spinInterval);
+            elapsed += spinInterval;
         }
+        yield return new WaitForSeconds(0.5f);
 
-        // 반달 공격 이펙트 표시
-        ShowHalfMoonEffect(center, forward);
+        // 2. 피니시 슬래시 단계
+        FinishSlash(player, direction);
+        
 
         yield return new WaitForSeconds(attackDelay);
-
-        // 크리티컬 보너스 제거
-        ApplyCriticalBonusToPlayer(player, false);
-
         isAttacking = false;
+    }
+
+    private void FinishSlash(Player player, Vector3 direction)
+    {
+        //float SkillRate = (float)((float)skillData.value / (float)100);
+        float SkillRate = FinishslashDamageRate/100f;
+        // 기본 데미지
+        int FinishSlashDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
+        // 크리티컬 적용
+        bool isCritical = IsAttackCritical(player);
+        if (isCritical)
+        {
+            float critMultiplier = GetCriticalDamageMultiplier(player);
+            FinishSlashDamage = Mathf.RoundToInt(FinishSlashDamage * critMultiplier);
+        }
+
+        HashSet<Enemy> alreadyHitEnemies = new HashSet<Enemy>();
+        Vector3 dir = direction.normalized;
+        GameObject projObj = GameObject.CreatePrimitive(PrimitiveType.Capsule); // 임시 프리팹
+        projObj.transform.position = player.transform.position + Vector3.up * 0.5f;
+        projObj.transform.localScale = new Vector3(slashRange, 0.3f, slashRange * 0.5f); // 반달 느낌의 크기
+        projObj.transform.rotation = Quaternion.LookRotation(dir);
+        var collider = projObj.GetComponent<Collider>();
+        if (collider != null) collider.isTrigger = true;
+        // Renderer만 삭제 (이렇게 하면 화면에 안 보임)
+        var renderer = projObj.GetComponent<Renderer>();
+        if (renderer != null) Destroy(renderer);
+        var proj = projObj.AddComponent<LightingSlashProjectile>();
+        proj.Init(dir, FinishSlashDamage, 20f, 0.5f, alreadyHitEnemies);
     }
 
     // 크리티컬 발생 확인
@@ -178,123 +167,6 @@ public class Lighting : MeleeSkillBase
         }
     }
 
-    private void ShowHalfMoonEffect(Vector3 center, Vector3 direction)
-    {
-        // 반달 형태의 공격 범위 표시
-        GameObject halfMoonEffect = new GameObject("HalfMoonEffect");
-        halfMoonEffect.transform.position = center;
-        halfMoonEffect.transform.rotation = Quaternion.LookRotation(direction);
-
-        MeshFilter meshFilter = halfMoonEffect.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = halfMoonEffect.AddComponent<MeshRenderer>();
-
-        // 반투명 재질 설정
-        Material material = new Material(Shader.Find("Standard"));
-        material.color = new Color(1f, 0.5f, 0f, 0.3f);
-        material.EnableKeyword("_EMISSION");
-        material.SetColor("_EmissionColor", new Color(1f, 0.5f, 0f) * 2f);
-        meshRenderer.material = material;
-        meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        meshRenderer.receiveShadows = false;
-
-        // 반달 메시 생성
-        meshFilter.mesh = CreateHalfMoonMesh(halfMoonRange, halfMoonAngle);
-
-        // 휩쓸기 이펙트
-        StartCoroutine(CreateSweepEffect(center, direction));
-
-        Destroy(halfMoonEffect, 0.5f);
-    }
-
-    private Mesh CreateHalfMoonMesh(float radius, float angle)
-    {
-        Mesh mesh = new Mesh();
-
-        int segments = 30;
-        float halfAngle = angle * 0.5f * Mathf.Deg2Rad;
-
-        Vector3[] vertices = new Vector3[segments + 2];
-        int[] triangles = new int[segments * 3];
-
-        // 중앙 정점
-        vertices[0] = Vector3.zero;
-
-        // 반달 정점들
-        for (int i = 0; i <= segments; i++)
-        {
-            float segmentAngle = -halfAngle + ((float)i / segments) * 2 * halfAngle;
-            float x = Mathf.Sin(segmentAngle) * radius;
-            float z = Mathf.Cos(segmentAngle) * radius;
-            vertices[i + 1] = new Vector3(x, 0, z);
-        }
-
-        // 삼각형 인덱스
-        for (int i = 0; i < segments; i++)
-        {
-            triangles[i * 3] = 0;
-            triangles[i * 3 + 1] = i + 1;
-            triangles[i * 3 + 2] = i + 2;
-        }
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.RecalculateNormals();
-
-        return mesh;
-    }
-
-    private IEnumerator CreateSweepEffect(Vector3 center, Vector3 direction)
-    {
-        int sweepCount = 10;
-        float interval = 0.05f;
-        float sweepRadius = halfMoonRange * 0.8f;
-
-        for (int i = 0; i < sweepCount; i++)
-        {
-            float progress = (float)i / sweepCount;
-            float currentAngle = -halfMoonAngle * 0.5f + progress * halfMoonAngle;
-
-            Vector3 sweepDir = Quaternion.Euler(0, currentAngle, 0) * direction;
-            Vector3 sweepPos = center + sweepDir * sweepRadius;
-
-            GameObject sweepEffect = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sweepEffect.transform.position = sweepPos;
-            sweepEffect.transform.localScale = Vector3.one * 0.3f;
-
-            Destroy(sweepEffect.GetComponent<Collider>());
-
-            Material material = new Material(Shader.Find("Standard"));
-            float alpha = 0.8f - (progress * 0.4f);
-            material.color = new Color(1f, 0.5f, 0f, alpha);
-            material.EnableKeyword("_EMISSION");
-            material.SetColor("_EmissionColor", new Color(1f, 0.5f, 0f) * 2f);
-            sweepEffect.GetComponent<Renderer>().material = material;
-
-            Destroy(sweepEffect, 0.2f);
-            yield return new WaitForSeconds(interval);
-        }
-    }
-
-    private void ShowHalfMoonHitEffect(Vector3 position)
-    {
-        // 반달 특유의 넓은 범위 히트 이펙트
-        GameObject hitEffect = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        hitEffect.transform.position = position;
-        hitEffect.transform.localScale = Vector3.one * 0.5f;
-
-        Destroy(hitEffect.GetComponent<Collider>());
-
-        Material material = new Material(Shader.Find("Standard"));
-        material.color = new Color(1f, 0.5f, 0f, 0.8f);
-        material.EnableKeyword("_EMISSION");
-        material.SetColor("_EmissionColor", new Color(1f, 0.5f, 0f) * 3f);
-        hitEffect.GetComponent<Renderer>().material = material;
-
-        // 넓은 범위 파티클 효과
-        StartCoroutine(CreateWideHitParticles(position));
-
-        Destroy(hitEffect, 0.3f);
-    }
 
     private IEnumerator CreateWideHitParticles(Vector3 position)
     {
@@ -343,5 +215,68 @@ public class Lighting : MeleeSkillBase
         {
             Destroy(particle);
         }
+    }
+
+    // 회전 어택 데미지 함수
+    private void DealSpinDamage(Player player)
+    {
+        //float SkillRate = (float)((float)skillData.value / (float)100);
+        float SkillRate = spinDamageRate/ 100f;
+        // 기본 데미지
+        int SpinDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+
+        // 크리티컬 적용
+        bool isCritical = IsAttackCritical(player);
+        if (isCritical)
+        {
+            float critMultiplier = GetCriticalDamageMultiplier(player);
+            SpinDamage = Mathf.RoundToInt(SpinDamage * critMultiplier);
+        }
+
+        Collider[] hitColliders = Physics.OverlapSphere(player.transform.position, spinRange, targetLayer);
+        foreach (var hitCollider in hitColliders)
+        {
+            Enemy enemy = hitCollider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(SpinDamage, false);
+            }
+        }
+    }
+
+    
+
+    // 회전 이펙트 함수 (간단한 예시)
+    private void ShowSpinEffect(Vector3 position)
+    {
+        GameObject spinEffect = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        spinEffect.transform.position = position + Vector3.up * 0.1f;
+        spinEffect.transform.localScale = new Vector3(spinRange * 2f, 0.05f, spinRange * 2f);
+        Destroy(spinEffect.GetComponent<Collider>());
+        Material mat = new Material(Shader.Find("Standard"));
+        mat.color = new Color(0.5f, 0.7f, 1f, 0.3f);
+        mat.EnableKeyword("_EMISSION");
+        mat.SetColor("_EmissionColor", new Color(0.5f, 0.7f, 1f) * 2f);
+        spinEffect.GetComponent<Renderer>().material = mat;
+        Destroy(spinEffect, 0.2f);
+    }
+
+    // 참격 이펙트 함수 (간단한 예시)
+    private void ShowSlashEffect(Vector3 position, Vector3 direction)
+    {
+        GameObject slashEffect = new GameObject("SlashEffect");
+        slashEffect.transform.position = position + Vector3.up * 0.2f;
+        slashEffect.transform.rotation = Quaternion.LookRotation(direction);
+        MeshFilter meshFilter = slashEffect.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = slashEffect.AddComponent<MeshRenderer>();
+        Material mat = new Material(Shader.Find("Standard"));
+        mat.color = new Color(1f, 1f, 0.3f, 0.4f);
+        mat.EnableKeyword("_EMISSION");
+        mat.SetColor("_EmissionColor", new Color(1f, 1f, 0.3f) * 3f);
+        meshRenderer.material = mat;
+        meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        meshRenderer.receiveShadows = false;
+        //meshFilter.mesh = CreateHalfMoonMesh(slashRange, slashAngle);
+        Destroy(slashEffect, 0.5f);
     }
 }

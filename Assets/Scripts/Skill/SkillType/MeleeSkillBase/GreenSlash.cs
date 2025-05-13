@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GreenSlash : MeleeSkillBase
 {
-    [SerializeField] private float stabRange = 3.5f; // 찌르기 사거리
-    [SerializeField] private float stabWidth = 1f; // 찌르기 폭
+    [SerializeField] private float aoeRange = 4f; // 범위 반경
     [SerializeField] private float criticalChanceBonus = 20f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 30f; // 크리티컬 데미지 보너스
     [SerializeField] private PlayerController _playerController;
@@ -15,59 +14,36 @@ public class GreenSlash : MeleeSkillBase
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
-        //player.GetComponent<PlayerController>().SetTrigger("StabSkill");
-        //yield return new WaitForSeconds(1);
-        // 크리티컬 보너스 적용
-        ApplyCriticalBonusToPlayer(player, true);
+        //ApplyCriticalBonusToPlayer(player, true);
 
-        // 방향 정규화
-        direction = direction.normalized;
+        Vector3 center = player.transform.position + Vector3.up * 0.5f;
+        Collider[] hitColliders = Physics.OverlapSphere(center, aoeRange, targetLayer);
 
-        // 찌르기 시작 위치 (플레이어 앞, 약간 위로)
-        Vector3 startPos = player.transform.position + Vector3.up * 0.5f;
-        Vector3 endPos = startPos + direction * stabRange;
-
-        // 캡슐 캐스트로 적 탐색
-        RaycastHit[] hits = Physics.CapsuleCastAll(
-            startPos,
-            endPos,
-            stabWidth * 0.5f,
-            direction,
-            stabRange,
-            targetLayer
-        );
-
-        foreach (var hit in hits)
+        foreach (var hitCollider in hitColliders)
         {
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            Enemy enemy = hitCollider.GetComponent<Enemy>();
             if (enemy != null)
             {
                 float SkillRate = (float)((float)skillData.value / (float)100);
-                // 기본 데미지
-                int stabDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
+                int aoeDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
 
-                // 크리티컬 적용
                 bool isCritical = IsAttackCritical(player);
                 if (isCritical)
                 {
                     float critMultiplier = GetCriticalDamageMultiplier(player);
-                    stabDamage = Mathf.RoundToInt(stabDamage * critMultiplier);
-                    ShowCriticalHitEffect(hit.transform.position);
+                    aoeDamage = Mathf.RoundToInt(aoeDamage * critMultiplier);
+                    //ShowCriticalHitEffect(enemy.transform.position);
                 }
 
-                enemy.TakeDamage(stabDamage, isCritical);
-                ShowStabHitEffect(hit.transform.position);
+                enemy.TakeDamage(aoeDamage, isCritical);
+                //ShowAoeHitEffect(enemy.transform.position);
             }
         }
 
-        // 찌르기 이펙트 표시
-        ShowStabEffect(startPos, direction);
+        //ShowAoeEffect(center, aoeRange);
 
         yield return new WaitForSeconds(attackDelay);
-
-        // 크리티컬 보너스 제거
-        ApplyCriticalBonusToPlayer(player, false);
-
+        //ApplyCriticalBonusToPlayer(player, false);
         isAttacking = false;
     }
 
@@ -173,109 +149,32 @@ public class GreenSlash : MeleeSkillBase
         }
     }
 
-    private void ShowStabEffect(Vector3 startPos, Vector3 direction)
+    private void ShowAoeEffect(Vector3 center, float range)
     {
-        // 찌르기 궤적 이펙트
-        GameObject stabEffect = new GameObject("StabEffect");
-        stabEffect.transform.position = startPos;
-        stabEffect.transform.rotation = Quaternion.LookRotation(direction);
-
-        LineRenderer line = stabEffect.AddComponent<LineRenderer>();
-        line.startWidth = stabWidth;
-        line.endWidth = stabWidth;
-        line.material = new Material(Shader.Find("Standard"));
-        line.material.color = new Color(1f, 0.2f, 0.2f, 0.8f);
-        line.material.EnableKeyword("_EMISSION");
-        line.material.SetColor("_EmissionColor", Color.red * 2f);
-
-        Vector3[] positions = new Vector3[2];
-        positions[0] = startPos;
-        positions[1] = startPos + direction * stabRange;
-        line.positionCount = positions.Length;
-        line.SetPositions(positions);
-
-        // 찌르기 잔상 이펙트
-        StartCoroutine(CreateStabAfterimage(startPos, direction));
-
-        Destroy(stabEffect, 0.3f);
+        GameObject aoeEffect = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        aoeEffect.transform.position = center;
+        aoeEffect.transform.localScale = new Vector3(range * 2f, 0.05f, range * 2f);
+        Destroy(aoeEffect.GetComponent<Collider>());
+        Material mat = new Material(Shader.Find("Standard"));
+        mat.color = new Color(0.2f, 1f, 0.2f, 0.3f);
+        mat.EnableKeyword("_EMISSION");
+        mat.SetColor("_EmissionColor", new Color(0.2f, 1f, 0.2f) * 2f);
+        aoeEffect.GetComponent<Renderer>().material = mat;
+        Destroy(aoeEffect, 0.3f);
     }
 
-    private void ShowStabHitEffect(Vector3 position)
+    private void ShowAoeHitEffect(Vector3 position)
     {
-        // 찌르기 특유의 관통 이펙트
         GameObject hitEffect = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         hitEffect.transform.position = position;
-        hitEffect.transform.localScale = Vector3.one * 0.4f;
-
+        hitEffect.transform.localScale = Vector3.one * 0.5f;
         Destroy(hitEffect.GetComponent<Collider>());
-
-        Material material = new Material(Shader.Find("Standard"));
-        material.color = new Color(1f, 0.2f, 0.2f, 0.9f);
-        material.EnableKeyword("_EMISSION");
-        material.SetColor("_EmissionColor", new Color(1f, 0.5f, 0f) * 2f);
-        hitEffect.GetComponent<Renderer>().material = material;
-
-        // 관통 파티클 효과
-        StartCoroutine(StabHitParticles(position));
-
-        Destroy(hitEffect, 0.3f);
-    }
-
-    private IEnumerator StabHitParticles(Vector3 position)
-    {
-        int particleCount = 8;
-        float speed = 5f;
-        float lifetime = 0.3f;
-
-        for (int i = 0; i < particleCount; i++)
-        {
-            Vector3 randomDir = new Vector3(
-                Random.Range(-1f, 1f),
-                Random.Range(0.1f, 0.5f),
-                Random.Range(-1f, 1f)
-            ).normalized;
-
-            GameObject particle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            particle.transform.position = position;
-            particle.transform.localScale = Vector3.one * 0.15f;
-
-            Destroy(particle.GetComponent<Collider>());
-
-            Material material = new Material(Shader.Find("Standard"));
-            material.color = new Color(1f, 0.1f, 0.1f, 0.8f);
-            material.EnableKeyword("_EMISSION");
-            material.SetColor("_EmissionColor", Color.yellow * 2f);
-            particle.GetComponent<Renderer>().material = material;
-
-            StartCoroutine(MoveParticle(particle, position, randomDir, speed, lifetime));
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
-
-    private IEnumerator CreateStabAfterimage(Vector3 startPos, Vector3 direction)
-    {
-        int afterimageCount = 5;
-        float interval = 0.05f;
-
-        for (int i = 0; i < afterimageCount; i++)
-        {
-            GameObject afterimage = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            afterimage.transform.position = startPos + direction * (stabRange * (i + 1) / afterimageCount);
-            afterimage.transform.rotation = Quaternion.LookRotation(direction);
-            afterimage.transform.localScale = new Vector3(stabWidth, stabWidth, 0.2f);
-
-            Destroy(afterimage.GetComponent<Collider>());
-
-            Material material = new Material(Shader.Find("Standard"));
-            float alpha = 0.7f - (i * 0.1f);
-            material.color = new Color(1f, 0.3f, 0.3f, alpha);
-            material.EnableKeyword("_EMISSION");
-            material.SetColor("_EmissionColor", Color.red * (1.0f - i * 0.15f));
-            afterimage.GetComponent<Renderer>().material = material;
-
-            Destroy(afterimage, 0.2f);
-            yield return new WaitForSeconds(interval);
-        }
+        Material mat = new Material(Shader.Find("Standard"));
+        mat.color = new Color(0.2f, 1f, 0.2f, 0.7f);
+        mat.EnableKeyword("_EMISSION");
+        mat.SetColor("_EmissionColor", new Color(0.2f, 1f, 0.2f) * 2f);
+        hitEffect.GetComponent<Renderer>().material = mat;
+        Destroy(hitEffect, 0.2f);
     }
 
     private IEnumerator MoveParticle(GameObject particle, Vector3 startPos, Vector3 direction, float speed, float lifetime)
