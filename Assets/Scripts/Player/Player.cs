@@ -57,4 +57,16 @@ public class Player : MonoBehaviour
     {
         SoundManager.instance.PlayEffect(SoundEffectType.Attack);
     }
+    public void FireComboSound()
+    {
+        SoundManager.instance.PlayEffect(SoundEffectType.FireCombo);
+    }
+    public void LightingSound()
+    {
+        SoundManager.instance.PlayEffect(SoundEffectType.Lighting);
+    }
+    public void GreenSlashSound()
+    {
+        SoundManager.instance.PlayEffect(SoundEffectType.GreenSlash);
+    }
 }
