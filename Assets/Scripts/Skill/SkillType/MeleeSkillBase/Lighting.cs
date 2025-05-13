@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HalfMoon : MeleeSkillBase
+public class Lighting : MeleeSkillBase
 {
     [SerializeField] private float halfMoonRange = 3f; // 반달 공격 범위
     [SerializeField] private float halfMoonAngle = 180f; // 반달 공격 각도

@@ -80,15 +80,15 @@ public class FloatingSkillJoystick : Joystick
             skillManager.InitSkillData(currentSkill, FixedInput);
             if (skillManager.IsCkSkill())
             {
-                if (currentSkill._name == "HalfMoon")
+                if (currentSkill._name == "Lighting")
                 {
                     _player.GetComponent<PlayerController>().SetTrigger("Lighting");
                 }
-                else if (currentSkill._name == "Stab")
+                else if (currentSkill._name == "GreenSlash")
                 {
                     _player.GetComponent<PlayerController>().SetTrigger("GreenSlash");
                 }
-                else if (currentSkill._name == "OneArrow")
+                else if (currentSkill._name == "FireCombo")
                 {
                     _player.GetComponent<PlayerController>().SetTrigger("FireCombo");
                 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OneArrow : RangeSkillBase
+public class FireCombo : RangeSkillBase
 {
     [SerializeField] private float arrowSpeed = 15f;
     [SerializeField] private float arrowLifetime = 5f;

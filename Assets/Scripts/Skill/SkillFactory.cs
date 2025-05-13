@@ -24,9 +24,9 @@ public class SkillFactory : MonoBehaviour
     {
         skillTypes = new Dictionary<string, System.Type>();
         // 스킬 타입 등록
-        RegisterSkillType("Stab", typeof(StabSkill));
-        RegisterSkillType("HalfMoon", typeof(HalfMoon));
-        RegisterSkillType("OneArrow", typeof(OneArrow));
+        RegisterSkillType("GreenSlash", typeof(GreenSlash));
+        RegisterSkillType("Lighting", typeof(Lighting));
+        RegisterSkillType("FireCombo", typeof(FireCombo));
         
         // 여기에 다른 스킬들도 등록
     }

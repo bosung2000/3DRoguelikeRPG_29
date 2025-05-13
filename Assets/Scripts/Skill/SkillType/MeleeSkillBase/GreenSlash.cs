@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StabSkill : MeleeSkillBase
+public class GreenSlash : MeleeSkillBase
 {
     [SerializeField] private float stabRange = 3.5f; // 찌르기 사거리
     [SerializeField] private float stabWidth = 1f; // 찌르기 폭
