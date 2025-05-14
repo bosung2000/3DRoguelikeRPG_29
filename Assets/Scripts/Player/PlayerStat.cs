@@ -414,7 +414,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _cameraShake.ShakeCamera(2f, 0.3f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-
+        BloodEffect();
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
