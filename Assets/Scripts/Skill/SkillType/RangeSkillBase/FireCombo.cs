@@ -6,18 +6,13 @@ public class FireCombo : MeleeSkillBase
 {
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
-    [SerializeField] private float comboInterval = 0.2f; // 참격 간격
+    [SerializeField] private float comboInterval = 0.5f; // 참격 간격
     [SerializeField] private int comboCount = 5; // 참격 횟수
     [SerializeField] private float comboDamageRate = 40f; // 참격 데미지 %
 
     private BoxCollider swordCollider;
     private Vector3 originalColliderSize;
     private Vector3 originalColliderCenter;
-
-    protected void Start()
-    {
-
-    }
 
     protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
@@ -39,7 +34,7 @@ public class FireCombo : MeleeSkillBase
         if (swordCollider != null)
         {
             Vector3 newSize = originalColliderSize;
-            newSize.z *= 2f;
+            newSize.z *= 2.5f;
             swordCollider.size = newSize;
             swordCollider.center = originalColliderCenter; // center는 그대로 두는 것이 일반적입니다
         }
