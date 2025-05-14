@@ -189,7 +189,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -349,6 +349,8 @@ MonoBehaviour:
   _Weapon: {fileID: 0}
   _cameraShake: {fileID: 0}
   settingMenu: {fileID: 0}
+  _bloodEffect: {fileID: 5339717533955316857, guid: b8036ffa8a5e9fa4bbdca839db897fdb, type: 3}
+  _bloodSpawnPoint: {fileID: 8323404404663867941}
 --- !u!114 &2229224489775328595
 MonoBehaviour:
   m_ObjectHideFlags: 0
