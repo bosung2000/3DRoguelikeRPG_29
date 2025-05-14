@@ -22,6 +22,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
+    [SerializeField] private GameObject BloodEffects;
 
     private float _lastHitTime = -100f;
 
@@ -34,6 +35,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     // 스킬 관련 변수
     private Dictionary<string, float> _skillCooldowns = new Dictionary<string, float>();
     private List<TimedBuff> _activeTimedBuffs = new List<TimedBuff>();
+    private List<GameObject> activeEffects = new List<GameObject>();
 
     // 버프 지속시간 관리를 위한 클래스
     [System.Serializable]
@@ -502,11 +504,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void OnCollisionEnter(Collision other)
     {
         CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
-
-        //foreach (ContactPoint contact in other.contacts)
-        //{
-        //    Debug.Log($"→ 접촉된 콜라이더: {contact.thisCollider.name} vs {contact.otherCollider.name}");
-        //}
 
         if (other.gameObject.CompareTag("Gold"))
         {
