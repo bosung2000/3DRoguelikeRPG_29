@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyAttackState : IEnemyState
 {
     private Transform _target;
-
+    int randomAttackIndex;
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
@@ -16,11 +16,21 @@ public class EnemyAttackState : IEnemyState
 
         controller.Enemy.CachedTargetPosition(_target.position);
         controller.agent.isStopped = true;
-        controller.animator.SetTrigger("Attack");
+        if(controller.Enemy.IsBoss)
+        {
+            randomAttackIndex = Random.Range(0, 3);
+            controller.animator.SetInteger("attackIndex", randomAttackIndex);
+            Debug.Log($"{randomAttackIndex}번 애니메이션 실행");
+        }
+        else
+        {
+            controller.animator.SetTrigger("Attack");
+        }
     }
 
     public void ExitState(EnemyController controller)
     {
+        controller.animator.SetInteger("attackIndex", -1);
         //controller.animator.SetBool("isRun", false);
     }
 
@@ -32,9 +42,13 @@ public class EnemyAttackState : IEnemyState
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
 
         //이름이 일치한지 확인하고 애니메이션의 진행파악함 시작(0.0), 끝(1.0)
-        if (stateInfo.IsName("Attack") && stateInfo.normalizedTime < 1.0f)
+        if (stateInfo.IsName("Attack") || stateInfo.IsName("Attack_0") || stateInfo.IsName("Attack_1") || stateInfo.IsName("Attack_2"))
         {
-            return;
+            if (stateInfo.normalizedTime >= 1.0f)
+            {
+                //controller.ChageState(EnemyStateType.Chase);
+                return;
+            }
         }
 
         // 애니메이션이 끝났으면 타겟 방향으로 회전
