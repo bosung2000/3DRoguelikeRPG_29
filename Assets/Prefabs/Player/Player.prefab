@@ -31,6 +31,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8323404404663867941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7142805744622932892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5843831928639333510}
+  - component: {fileID: 4097219881968671026}
+  m_Layer: 0
+  m_Name: FireCombo_collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5843831928639333510
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7142805744622932892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.001, z: 0.677}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8323404404663867951}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4097219881968671026
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7142805744622932892}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.1, z: 1.1881735}
+  m_Center: {x: 0.09943636, y: -0.040679544, z: 0.8684517}
 --- !u!1001 &2642185088956335190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -240,6 +293,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400078, guid: 4d6ba5995ac3ab44a93d537e92592523, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2642185088956473044}
+    - targetCorrespondingSourceObject: {fileID: 400078, guid: 4d6ba5995ac3ab44a93d537e92592523, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5843831928639333510}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100068, guid: 4d6ba5995ac3ab44a93d537e92592523, type: 3}
       insertIndex: -1
@@ -322,6 +378,7 @@ MonoBehaviour:
   _playerStat: {fileID: 0}
   _playerController: {fileID: 0}
   playerSkillController: {fileID: 0}
+  FireCombo_collider: {fileID: 7142805744622932892}
 --- !u!114 &1528692364275590171
 MonoBehaviour:
   m_ObjectHideFlags: 0
