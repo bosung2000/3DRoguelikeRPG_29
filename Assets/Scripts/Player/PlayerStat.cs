@@ -26,6 +26,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] private GameObject _dieMenu;
     [SerializeField] private GameObject[] _bloodEffect;
     [SerializeField] private Transform _bloodSpawnPoint;
+    [SerializeField] private Transform _dieSpawnPoint;
 
     private float _lastHitTime = -100f;
 
@@ -415,7 +416,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _cameraShake.ShakeCamera(2f, 0.3f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-        BloodEffect(0);
+        DieEffect(0,0,_bloodSpawnPoint,_bloodSpawnPoint,2);
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
@@ -423,6 +424,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
             _playerController.SetTrigger("Die");
             Time.timeScale = 0f;
+            DieEffect(3, 1, _dieSpawnPoint, _dieSpawnPoint, 6);
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         }
@@ -442,18 +444,57 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
+        float timer = 0f;
+        while (timer < 3f)
+        {
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
         _dieMenu.SetActive(true);
     }
-    public void BloodEffect(int index)
+    //public void BloodEffect(int index, Transform position, Transform rotation, int duration)
+    //{
+    //    CleanupActiveEffects();
+
+    //    GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
+
+    //    activeEffects.Add(effect);
+    //    Destroy(effect, duration);
+    //}
+
+    public void DieEffect(float delay, int index, Transform position, Transform rotation, float duration)
     {
         CleanupActiveEffects();
+        StartCoroutine(SpawnEffectAfterSeconds(delay, index, position, rotation, duration));
+    }
+    private IEnumerator SpawnEffectAfterSeconds(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
-        GameObject effect = Instantiate(_bloodEffect[index], _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
-
+        GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
         activeEffects.Add(effect);
-        Destroy(effect, 2f);
+
+        // 생성 후 제거도 예약
+        StartCoroutine(DestroyEffectAfterSeconds(effect, duration));
     }
 
+    private IEnumerator DestroyEffectAfterSeconds(GameObject obj, float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (obj != null) Destroy(obj);
+    }
 
     private void CleanupActiveEffects()
     {
