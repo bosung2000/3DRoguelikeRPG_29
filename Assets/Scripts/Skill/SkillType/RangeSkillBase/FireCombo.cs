@@ -22,6 +22,7 @@ public class FireCombo : MeleeSkillBase
             swordCollider = player.FireCombo_collider.GetComponent<BoxCollider>();
             if (swordCollider != null)
             {
+                swordCollider.enabled = false;
                 originalColliderSize = swordCollider.size;
                 originalColliderCenter = swordCollider.center;
             }
@@ -83,6 +84,7 @@ public class FireCombo : MeleeSkillBase
         {
             swordCollider.size = originalColliderSize;
             swordCollider.center = originalColliderCenter;
+            swordCollider.enabled = false;
         }
 
         isAttacking = false;
