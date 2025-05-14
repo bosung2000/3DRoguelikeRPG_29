@@ -23,7 +23,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
-    [SerializeField] private GameObject settingMenu;
+    [SerializeField] private GameObject _dieMenu;
     [SerializeField] private GameObject[] _bloodEffect;
     [SerializeField] private Transform _bloodSpawnPoint;
 
@@ -415,7 +415,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _cameraShake.ShakeCamera(2f, 0.3f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-        BloodEffect();
+        BloodEffect(0);
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
@@ -442,13 +442,13 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
-        settingMenu.SetActive(true);
+        _dieMenu.SetActive(true);
     }
-    public void BloodEffect()
+    public void BloodEffect(int index)
     {
         CleanupActiveEffects();
 
-        GameObject effect = Instantiate(_bloodEffect[0], _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
+        GameObject effect = Instantiate(_bloodEffect[index], _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
 
         activeEffects.Add(effect);
         Destroy(effect, 2f);

@@ -15,6 +15,8 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] Button settingBtn;
     [SerializeField] Button settingCloseBtn;
     [SerializeField] Button soundCloseBtn;
+    [SerializeField] Button dieLobbyBtn;
+    [SerializeField] Button dieEndBtn;
 
     [SerializeField] GameObject soundMenu;
     [SerializeField] GameObject settingMenu;
@@ -28,6 +30,8 @@ public class TitleMenu : MonoBehaviour
         if (settingCloseBtn != null) settingCloseBtn.onClick.AddListener(OnClickSettingCloseBtn);
         soundBtn.onClick.AddListener(OnClickSoundBtn);
         if (soundCloseBtn != null) soundCloseBtn.onClick.AddListener(OnClickSoundCloseBtn);
+        if (dieLobbyBtn != null) dieLobbyBtn.onClick.AddListener(OnClickLobbyBtn);
+        if (dieEndBtn != null) dieEndBtn.onClick.AddListener(OnClickEndBtn);
     }
 
     public void OnClickStart()
