@@ -24,7 +24,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
-    [SerializeField] private GameObject _bloodEffects;
+    [SerializeField] private GameObject _bloodEffect;
+    [SerializeField] private Transform _bloodSpawnPoint;
 
     private float _lastHitTime = -100f;
 
@@ -414,7 +415,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _cameraShake.ShakeCamera(2f, 0.3f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-
+        BloodEffect();
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
@@ -449,14 +450,15 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         CleanupActiveEffects();
 
         // 새 이펙트 생성
-        GameObject effect = Instantiate(_bloodEffects);
+        GameObject effect = Instantiate(_bloodEffect, _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
 
         // 플레이어 이동에 따라 이펙트도 같이 이동하도록 부모 설정
-        effect.transform.localPosition = Vector3.zero;
-        effect.transform.localRotation = Quaternion.identity;
+        //effect.transform.localPosition = Vector3.zero;
+        //effect.transform.localRotation = Quaternion.identity;
 
         // 활성화된 이펙트 목록에 추가
         activeEffects.Add(effect);
+        Destroy(effect, 1f);
     }
 
     // 기존 활성화된 이펙트 모두 제거
