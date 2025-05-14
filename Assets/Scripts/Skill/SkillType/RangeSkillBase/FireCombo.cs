@@ -7,44 +7,40 @@ public class FireCombo : MeleeSkillBase
     [SerializeField] private float criticalChanceBonus = 10f; // 크리티컬 확률 보너스
     [SerializeField] private float criticalDamageBonus = 40f; // 크리티컬 데미지 보너스
     [SerializeField] private float comboInterval = 0.2f; // 참격 간격
-    [SerializeField] private float hitBoxLength = 2.0f; // 콜라이더 길이(검의 2배)
-    [SerializeField] private float hitBoxWidth = 0.3f; // 콜라이더 폭
-    [SerializeField] private float hitBoxHeight = 0.3f; // 콜라이더 높이
     [SerializeField] private int comboCount = 5; // 참격 횟수
     [SerializeField] private float comboDamageRate = 40f; // 참격 데미지 %
 
-    public override void Execute(Player player, Vector3 direction)
+    private BoxCollider swordCollider;
+    private Vector3 originalColliderSize;
+    private Vector3 originalColliderCenter;
+
+    protected void Start()
     {
-        if (isAttacking || skillData.cooldown > 0) 
-            return;
-        StartCoroutine(FireComboCoroutine(player, direction));
+        // 플레이어의 검 콜라이더 찾기
+        swordCollider = GetComponentInChildren<BoxCollider>();
+        if (swordCollider != null)
+        {
+            originalColliderSize = swordCollider.size;
+            originalColliderCenter = swordCollider.center;
+        }
     }
 
-    private IEnumerator FireComboCoroutine(Player player, Vector3 direction)
+    protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
 
+        // 검 콜라이더 크기 2배로 확장
+        if (swordCollider != null)
+        {
+            swordCollider.size = originalColliderSize * 2f;
+            swordCollider.center = originalColliderCenter * 2f;
+        }
+
         for (int i = 0; i < comboCount; i++)
         {
-            // 방향 정규화
-            direction = direction.normalized;
-            // 콜라이더 위치/회전 계산
-            Vector3 hitBoxPos = player.transform.position + direction * 1.2f + Vector3.up * 1.2f;
-            Quaternion hitBoxRot = Quaternion.LookRotation(direction);
-
-            // 콜라이더 생성
-            GameObject hitBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            hitBox.transform.position = hitBoxPos;
-            hitBox.transform.rotation = hitBoxRot;
-            hitBox.transform.localScale = new Vector3(hitBoxWidth, hitBoxHeight, hitBoxLength);
-            var collider = hitBox.GetComponent<Collider>();
-            if (collider != null) collider.isTrigger = true;
-            var renderer = hitBox.GetComponent<Renderer>();
-            if (renderer != null) Destroy(renderer);
-
             // 데미지 계산
-            float SkillRate = comboDamageRate / 100f;
+            float SkillRate = (float)((float)skillData.value / (float)100);
             int comboDamage = (int)(player._playerStat.GetStatValue(PlayerStatType.Attack) * SkillRate);
 
             // 크리티컬 적용
@@ -56,30 +52,52 @@ public class FireCombo : MeleeSkillBase
                 isCritical = true;
             }
 
-            // 각 참격마다 HashSet 새로 생성
-            HashSet<Enemy> alreadyHit = new HashSet<Enemy>();
-            hitBox.AddComponent<FireComboHitBox>().Init(comboDamage, isCritical, alreadyHit);
+            // 콜라이더 활성화
+            if (swordCollider != null)
+            {
+                swordCollider.enabled = true;
+                // 데미지 처리 컴포넌트 추가
+                var damageHandler = swordCollider.gameObject.AddComponent<FireComboHitBox>();
+                damageHandler.Init(comboDamage, isCritical, new HashSet<Enemy>());
+            }
 
-            Destroy(hitBox, 0.1f);
             yield return new WaitForSeconds(comboInterval);
+
+            // 콜라이더 비활성화
+            if (swordCollider != null)
+            {
+                swordCollider.enabled = false;
+                // 데미지 처리 컴포넌트 제거
+                var damageHandler = swordCollider.gameObject.GetComponent<FireComboHitBox>();
+                if (damageHandler != null)
+                {
+                    Destroy(damageHandler);
+                }
+            }
         }
+
+        // 검 콜라이더 원래 크기로 복구
+        if (swordCollider != null)
+        {
+            swordCollider.size = originalColliderSize;
+            swordCollider.center = originalColliderCenter;
+        }
+
         isAttacking = false;
     }
-    
+
     // 크리티컬 보너스 적용/제거 메서드
     private void ApplyCriticalBonusToPlayer(Player player, bool apply)
     {
         if (player == null || player._playerStat == null) return;
-        
+
         if (apply)
         {
-            // 현재 크리티컬 확률과 데미지에 보너스 적용
             player._playerStat.ModifyStat(PlayerStatType.CriticalChance, criticalChanceBonus);
             player._playerStat.ModifyStat(PlayerStatType.CriticalDamage, criticalDamageBonus);
         }
         else
         {
-            // 보너스 제거
             player._playerStat.ModifyStat(PlayerStatType.CriticalChance, -criticalChanceBonus);
             player._playerStat.ModifyStat(PlayerStatType.CriticalDamage, -criticalDamageBonus);
         }

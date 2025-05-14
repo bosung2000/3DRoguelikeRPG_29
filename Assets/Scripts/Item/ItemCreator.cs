@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using System.IO;
 
 #if UNITY_EDITOR
 public class ItemCreator : EditorWindow
