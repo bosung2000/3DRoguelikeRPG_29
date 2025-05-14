@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
 
 public class Player : MonoBehaviour
 {
@@ -11,7 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerController _playerController;
     private float _lastHitTime = 0f;
     [SerializeField] private PlayerSkillController playerSkillController;
-
+    public GameObject FireCombo_collider;
     private void Awake()
     {
         _playerStat = GetComponent<PlayerStat>();

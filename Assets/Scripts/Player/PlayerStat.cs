@@ -24,6 +24,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
+    [SerializeField] private GameObject _bloodEffect;
+    [SerializeField] private Transform _bloodSpawnPoint;
 
     private float _lastHitTime = -100f;
 
@@ -36,6 +38,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     // 스킬 관련 변수
     private Dictionary<string, float> _skillCooldowns = new Dictionary<string, float>();
     private List<TimedBuff> _activeTimedBuffs = new List<TimedBuff>();
+    private List<GameObject> activeEffects = new List<GameObject>();
 
     // 버프 지속시간 관리를 위한 클래스
     [System.Serializable]
@@ -412,7 +415,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         _cameraShake.ShakeCamera(2f, 0.3f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-
+        BloodEffect();
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
@@ -441,7 +444,27 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         settingMenu.SetActive(true);
     }
+    public void BloodEffect()
+    {
+        CleanupActiveEffects();
 
+        GameObject effect = Instantiate(_bloodEffect, _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
+
+        activeEffects.Add(effect);
+        Destroy(effect, 2f);
+    }
+
+    private void CleanupActiveEffects()
+    {
+        foreach (GameObject effect in activeEffects)
+        {
+            if (effect != null)
+            {
+                Destroy(effect);
+            }
+        }
+        activeEffects.Clear();
+    }
     public void AttackUp(float attack)
     {
         ModifyStat(PlayerStatType.Attack, attack);
@@ -504,11 +527,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void OnCollisionEnter(Collision other)
     {
         CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
-
-        //foreach (ContactPoint contact in other.contacts)
-        //{
-        //    Debug.Log($"→ 접촉된 콜라이더: {contact.thisCollider.name} vs {contact.otherCollider.name}");
-        //}
 
         if (other.gameObject.CompareTag("Gold"))
         {
