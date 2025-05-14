@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySkillState : IEnemyState
 {
     Enemy enemy;
     public bool skillEnd;
-    public int skillChoice;
     AnimatorStateInfo stateInfo;
     public void EnterState(EnemyController controller)
     {
@@ -17,18 +14,18 @@ public class EnemySkillState : IEnemyState
             if(enemy.CurrentPhase == 1)
             {
                 //스킬1
+                enemy.CurrentSkillChoice = 0;
             }
             else if(enemy.CurrentPhase == 2)
             {
-                skillChoice = Random.Range(0,2);
-                if(skillChoice == 0)
-                {
-                    //스킬1
-                }
-                else
-                {
-                    //스킬2
-                }
+                enemy.CurrentSkillChoice = Random.Range(0, 2);
+            }
+
+            EnemySkillType skill = enemy.GetCurrentSkillType();
+            string trigger = enemy.GetSkillTriggerName(skill);
+            if(!string.IsNullOrEmpty(trigger))
+            {
+                controller.animator.SetTrigger(trigger);
             }
         }
         else//엘리트 스킬
@@ -60,25 +57,21 @@ public class EnemySkillState : IEnemyState
 
     public void UpdateState(EnemyController controller)
     {
+        EnemySkillType skill = enemy.GetCurrentSkillType();
+        string animName = enemy.GetSkillTriggerName(skill);
         stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         skillEnd = false;
 
         if (controller.Enemy.IsBoss)
         {
-            if (enemy.CurrentPhase == 1)
+            if (!string.IsNullOrEmpty(animName))
             {
-                //스킬1
-                //skillEnd = stateInfo.IsName("Skill_Phase1") && stateInfo.normalizedTime >= 1.0f;
-            }
-            else if (enemy.CurrentPhase == 2)
-            {
-                //skillEnd = (stateInfo.IsName("Skill_Phase1") || stateInfo.IsName("Skill_Phase2"))
-                //    && stateInfo.normalizedTime >= 1.0f;
+                skillEnd = stateInfo.IsName(animName) && stateInfo.normalizedTime >= 1.0f;
             }
         }
         else
         {
-            switch (controller.Enemy.skillB)
+            switch (controller.Enemy.skillA)
             {
                 case EnemySkillType.Dash:
                     skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 1.0f;
@@ -94,12 +87,19 @@ public class EnemySkillState : IEnemyState
         {
             if (controller.Enemy.IsBoss)
             {
-                // 보스 스킬 생략
+                switch (enemy.GetCurrentSkillType())
+                {
+                    case EnemySkillType.Dash:
+                        controller.Enemy.SkillDash();
+                        break;
+                    case EnemySkillType.SpreadShot:
+                        break;
+                }
             }
             else
             {
                 // 엘리트 스킬 실행
-                switch (controller.Enemy.skillB)
+                switch (controller.Enemy.skillA)
                 {
                     case EnemySkillType.Dash:
                         controller.Enemy.SkillDash();
