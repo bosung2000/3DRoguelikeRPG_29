@@ -24,7 +24,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
-    [SerializeField] private GameObject _bloodEffect;
+    [SerializeField] private GameObject[] _bloodEffect;
     [SerializeField] private Transform _bloodSpawnPoint;
 
     private float _lastHitTime = -100f;
@@ -448,11 +448,12 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         CleanupActiveEffects();
 
-        GameObject effect = Instantiate(_bloodEffect, _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
+        GameObject effect = Instantiate(_bloodEffect[0], _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
 
         activeEffects.Add(effect);
         Destroy(effect, 2f);
     }
+
 
     private void CleanupActiveEffects()
     {
