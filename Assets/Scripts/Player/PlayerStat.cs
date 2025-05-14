@@ -24,6 +24,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
+    [SerializeField] private GameObject _bloodEffects;
 
     private float _lastHitTime = -100f;
 
@@ -36,6 +37,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     // 스킬 관련 변수
     private Dictionary<string, float> _skillCooldowns = new Dictionary<string, float>();
     private List<TimedBuff> _activeTimedBuffs = new List<TimedBuff>();
+    private List<GameObject> activeEffects = new List<GameObject>();
 
     // 버프 지속시간 관리를 위한 클래스
     [System.Serializable]
@@ -441,7 +443,34 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         settingMenu.SetActive(true);
     }
+    public void BloodEffect()
+    {
+        // 기존 이펙트 모두 제거
+        CleanupActiveEffects();
 
+        // 새 이펙트 생성
+        GameObject effect = Instantiate(_bloodEffects);
+
+        // 플레이어 이동에 따라 이펙트도 같이 이동하도록 부모 설정
+        effect.transform.localPosition = Vector3.zero;
+        effect.transform.localRotation = Quaternion.identity;
+
+        // 활성화된 이펙트 목록에 추가
+        activeEffects.Add(effect);
+    }
+
+    // 기존 활성화된 이펙트 모두 제거
+    private void CleanupActiveEffects()
+    {
+        foreach (GameObject effect in activeEffects)
+        {
+            if (effect != null)
+            {
+                Destroy(effect);
+            }
+        }
+        activeEffects.Clear();
+    }
     public void AttackUp(float attack)
     {
         ModifyStat(PlayerStatType.Attack, attack);
@@ -504,11 +533,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void OnCollisionEnter(Collision other)
     {
         CurrencyData currencyData = other.gameObject.GetComponent<CurrencyData>();
-
-        //foreach (ContactPoint contact in other.contacts)
-        //{
-        //    Debug.Log($"→ 접촉된 콜라이더: {contact.thisCollider.name} vs {contact.otherCollider.name}");
-        //}
 
         if (other.gameObject.CompareTag("Gold"))
         {
