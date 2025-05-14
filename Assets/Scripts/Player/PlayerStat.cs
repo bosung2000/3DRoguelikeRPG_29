@@ -24,7 +24,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
     [SerializeField] private GameObject settingMenu;
-    [SerializeField] private GameObject BloodEffects;
+    [SerializeField] private GameObject _bloodEffects;
 
     private float _lastHitTime = -100f;
 
@@ -443,7 +443,34 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         settingMenu.SetActive(true);
     }
+    public void BloodEffect()
+    {
+        // 기존 이펙트 모두 제거
+        CleanupActiveEffects();
 
+        // 새 이펙트 생성
+        GameObject effect = Instantiate(_bloodEffects);
+
+        // 플레이어 이동에 따라 이펙트도 같이 이동하도록 부모 설정
+        effect.transform.localPosition = Vector3.zero;
+        effect.transform.localRotation = Quaternion.identity;
+
+        // 활성화된 이펙트 목록에 추가
+        activeEffects.Add(effect);
+    }
+
+    // 기존 활성화된 이펙트 모두 제거
+    private void CleanupActiveEffects()
+    {
+        foreach (GameObject effect in activeEffects)
+        {
+            if (effect != null)
+            {
+                Destroy(effect);
+            }
+        }
+        activeEffects.Clear();
+    }
     public void AttackUp(float attack)
     {
         ModifyStat(PlayerStatType.Attack, attack);
