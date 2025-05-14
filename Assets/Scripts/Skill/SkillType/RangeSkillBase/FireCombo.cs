@@ -16,25 +16,32 @@ public class FireCombo : MeleeSkillBase
 
     protected void Start()
     {
-        // 플레이어의 검 콜라이더 찾기
-        swordCollider = GetComponentInChildren<BoxCollider>();
-        if (swordCollider != null)
-        {
-            originalColliderSize = swordCollider.size;
-            originalColliderCenter = swordCollider.center;
-        }
+
     }
 
     protected override IEnumerator AttackCoroutine(Player player, Vector3 direction)
     {
+        if (swordCollider == null)
+        {
+            // 플레이어의 검 콜라이더 찾기
+            swordCollider = player.FireCombo_collider.GetComponent<BoxCollider>();
+            if (swordCollider != null)
+            {
+                originalColliderSize = swordCollider.size;
+                originalColliderCenter = swordCollider.center;
+            }
+        }
+
         isAttacking = true;
         skillData.cooldown = skillData.maxCooldown;
 
         // 검 콜라이더 크기 2배로 확장
         if (swordCollider != null)
         {
-            swordCollider.size = originalColliderSize * 2f;
-            swordCollider.center = originalColliderCenter * 2f;
+            Vector3 newSize = originalColliderSize;
+            newSize.z *= 2f;
+            swordCollider.size = newSize;
+            swordCollider.center = originalColliderCenter; // center는 그대로 두는 것이 일반적입니다
         }
 
         for (int i = 0; i < comboCount; i++)
