@@ -324,34 +324,6 @@ PrefabInstance:
       propertyPath: masterSlider
       value: 
       objectReference: {fileID: 1334528768}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[4].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 2f8613c5cc83ef74f9b100d893b47928, type: 3}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[4].type
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[5].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 04534f25f795cf1419e398ace572a239, type: 3}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[5].type
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[6].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3323860cc433276439709c8398dab8f5, type: 3}
-    - target: {fileID: 7088071468948643876, guid: 23b436d002abf30478cd80200937455f, type: 3}
-      propertyPath: effectEntries.Array.data[6].type
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 8912303414374656527, guid: 23b436d002abf30478cd80200937455f, type: 3}
       propertyPath: m_Name
       value: SoundManager
@@ -1817,11 +1789,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7014469577947471992, guid: dd08992fb364b4442a2cbcd7407f8a6f, type: 3}
   m_PrefabInstance: {fileID: 8995507936594309424}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1842459190 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8957265713365924141, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
-  m_PrefabInstance: {fileID: 4212794673218330973}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1843590573
 GameObject:
   m_ObjectHideFlags: 0
@@ -3083,26 +3050,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8957265713365924141, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.015
-      objectReference: {fileID: 0}
     - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
       propertyPath: settingMenu
       value: 
       objectReference: {fileID: 346760675}
     - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
-      propertyPath: _bloodEffect
-      value: 
-      objectReference: {fileID: 929468300236279442, guid: 9ed03889e83fcc744935d6189e9f2451, type: 3}
-    - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
       propertyPath: _cameraShake
       value: 
       objectReference: {fileID: 1934653429}
-    - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
-      propertyPath: _bloodSpawnPoint
-      value: 
-      objectReference: {fileID: 1842459190}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
