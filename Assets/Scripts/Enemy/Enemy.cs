@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     public bool IsBoss => Stat?.StatData.EnemyType == EnemyType.Boss;
     public EnemySkillType skillA => Stat?.StatData.SkillA ?? EnemySkillType.None;
     public EnemySkillType skillB => Stat?.StatData.SkillB ?? EnemySkillType.None;
+    public int CurrentSkillChoice { get; set; } = 0;
 
     public int CurrentPhase { get; private set; } = 1; //페이즈 전환
     private float lastSkillTime;
@@ -264,7 +265,22 @@ public class Enemy : MonoBehaviour
     }
 
     //스킬
+    public string GetSkillTriggerName(EnemySkillType type)
+    {
+        return type switch
+        {
+            EnemySkillType.SpreadShot => "Skill_SpreadShot",
+            EnemySkillType.Dash => "Skill_Dash",
+            _ => string.Empty
+        };
+    }
+    public EnemySkillType GetCurrentSkillType()
+    {
+        if (!IsBoss)
+            return skillB;
 
+        return CurrentPhase == 1 ? skillA : (CurrentSkillChoice == 0 ? skillA : skillB);
+    }
     //쿨타임관리
     public bool CanUseSkill()
     {
