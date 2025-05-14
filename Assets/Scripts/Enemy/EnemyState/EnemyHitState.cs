@@ -7,6 +7,7 @@ public class EnemyHitState : IEnemyState
     private float _timer = 0f;
     public void EnterState(EnemyController controller)
     {
+        enemy = controller.Enemy;
         if(enemy.IsBoss && controller.GetCurrentHP() > 0)
         {
             return;
