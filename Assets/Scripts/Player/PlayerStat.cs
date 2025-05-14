@@ -458,7 +458,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         // 활성화된 이펙트 목록에 추가
         activeEffects.Add(effect);
-        Destroy(effect, 1f);
+        Destroy(effect, 2f);
     }
 
     // 기존 활성화된 이펙트 모두 제거

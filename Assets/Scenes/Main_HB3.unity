@@ -1817,6 +1817,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7014469577947471992, guid: dd08992fb364b4442a2cbcd7407f8a6f, type: 3}
   m_PrefabInstance: {fileID: 8995507936594309424}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1842459190 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8957265713365924141, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
+  m_PrefabInstance: {fileID: 4212794673218330973}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1843590573
 GameObject:
   m_ObjectHideFlags: 0
@@ -1991,6 +1996,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -294.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.151068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -78.25107
+      objectReference: {fileID: 0}
     - target: {fileID: 6125840638680738444, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
       propertyPath: _takeDamageImage
       value: 
@@ -1999,6 +2016,18 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 694646077}
+    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -294.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.151068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -78.25107
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3054,14 +3083,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8957265713365924141, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.015
+      objectReference: {fileID: 0}
     - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
       propertyPath: settingMenu
       value: 
       objectReference: {fileID: 346760675}
     - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
+      propertyPath: _bloodEffect
+      value: 
+      objectReference: {fileID: 929468300236279442, guid: 9ed03889e83fcc744935d6189e9f2451, type: 3}
+    - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
       propertyPath: _cameraShake
       value: 
       objectReference: {fileID: 1934653429}
+    - target: {fileID: 9085935923683038320, guid: 72bbc1b32565f174db9fc306756cf53a, type: 3}
+      propertyPath: _bloodSpawnPoint
+      value: 
+      objectReference: {fileID: 1842459190}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
