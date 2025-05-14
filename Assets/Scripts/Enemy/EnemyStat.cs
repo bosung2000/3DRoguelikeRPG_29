@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using UnityEngine;
 
 public class EnemyStat : BaseStat<EnemyStatType>
@@ -12,8 +13,11 @@ public class EnemyStat : BaseStat<EnemyStatType>
 
         if (statData != null)
         {
-            SetStatValue(EnemyStatType.MaxHP, statData.MaxHP);
-            SetStatValue(EnemyStatType.HP, statData.MaxHP);
+            float multiplier = StageManager.Instance != null ? StageManager.Instance.HpMultiplier : 1f;
+            float currentMaxHp = Mathf.RoundToInt(statData.MaxHP * multiplier);
+
+            SetStatValue(EnemyStatType.MaxHP, currentMaxHp);
+            SetStatValue(EnemyStatType.HP, currentMaxHp);
             SetStatValue(EnemyStatType.Speed, statData.Speed);
             SetStatValue(EnemyStatType.Attack, statData.Attack);
             SetStatValue(EnemyStatType.Gold, statData.Gold);

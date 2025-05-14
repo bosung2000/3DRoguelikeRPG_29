@@ -435,6 +435,7 @@ public class MapManager : MonoBehaviour
                     break;
                 case RoomType.Boss:
                     // 보스 방 활성화
+                    targetRoom.spawnConfig.spawnnormal = true;
                     targetRoom.spawnConfig.spawnBoss = true;
                     targetRoom.ActivateRoom();
                     break;
@@ -502,9 +503,35 @@ public class MapManager : MonoBehaviour
     public void OnBossDefeated()
     {
         Debug.Log("보스 처치! 게임 클리어 또는 다음 단계로 진행");
+        StageManager.Instance.NextStage();
         // 게임 클리어 UI 표시 또는 다음 레벨 진행
+
+        // 0번 방(시작방)으로 이동
+        currentRoomIndex = 0;
+        foreach (Room room in rooms)
+        {
+            room.isVisited = false;
+            room.isAccessible = false;
+        }
+        rooms[0].isVisited = true;
+        rooms[0].isAccessible = true;
+
+        // 방 타입 재배치
+        AssignRoomTypes();
+
+        // 맵 UI/상태 초기화
+        UpdateAllRoomUI();
+        UpdateAccessibleRooms();
+
     }
 
+    private void UpdateAllRoomUI()
+    {
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            UpdateRoomUI(i);
+        }
+    }
     // 현재 활성화된 특수 오브젝트 정리
     private void CleanupCurrentActiveObject()
     {
