@@ -281,6 +281,29 @@ public class Enemy : MonoBehaviour
 
         return CurrentPhase == 1 ? skillA : (CurrentSkillChoice == 0 ? skillA : skillB);
     }
+
+    //스킬별 범위
+    public float GetSkillRange()
+    {
+        if (IsBoss)
+        {
+            var skillType = GetCurrentSkillType();
+            return skillType switch
+            {
+                EnemySkillType.Dash => 10f,
+                _ => 0f
+            };
+        }
+        else
+        {
+            return skillB switch
+            {
+                EnemySkillType.Dash => 10f,
+                EnemySkillType.SpreadShot => 7f,
+                _ => 0f
+            };
+        }
+    }
     //쿨타임관리
     public bool CanUseSkill()
     {
@@ -313,14 +336,14 @@ public class Enemy : MonoBehaviour
     {
         float dashTime = 0.5f;
         float dashSpeed = 15f;
-
+        float stopDistance = 1f;
+        float dist;
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
         dir.y = 0f;
         Quaternion initialRotation = Quaternion.LookRotation(dir);
-
         transform.rotation = initialRotation;
-        float timer = 0f;
 
+        float timer = 0f;
         //agent 비활성
         enemyController.agent.enabled = false;
         
@@ -328,6 +351,12 @@ public class Enemy : MonoBehaviour
         {
             transform.position += dir * dashSpeed * Time.deltaTime;
             timer += Time.deltaTime;
+
+            dist = Vector3.Distance(transform.position, GetPlayerTarget().position);
+            if(dist <= stopDistance )
+            {
+                break;
+            }
             yield return null;
         }
 
