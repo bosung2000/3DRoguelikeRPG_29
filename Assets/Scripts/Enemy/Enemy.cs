@@ -130,6 +130,12 @@ public class Enemy : MonoBehaviour
         if (_isDead) return;
         _isDead = true;
 
+        if (IsBoss ==true)
+        {
+            GameManager.Instance.MapManager.OnBossDefeated();
+            GameManager.Instance.PortalManager._unlockedPortals.Clear();
+        }
+
         if (enemyController != null)
         {
             enemyController.animator.SetTrigger("Die");

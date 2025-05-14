@@ -15,8 +15,8 @@ public class RoomZone : MonoBehaviour
 
     private void Awake()
     {
-        ClearBool = false;
-        spawnedEnemies = new();
+        
+        
 
         // 방 이름이 설정되지 않았으면 게임 오브젝트 이름을 사용
         if (string.IsNullOrEmpty(roomName))
@@ -37,7 +37,8 @@ public class RoomZone : MonoBehaviour
 
     public void ActivateRoom()
     {
-        
+        ClearBool = false;
+        spawnedEnemies = new();
         Debug.Log($"[RoomZone] {roomName} 시작됨");
         StartCoroutine(SpawnEnemiesCoroutine());
     }
