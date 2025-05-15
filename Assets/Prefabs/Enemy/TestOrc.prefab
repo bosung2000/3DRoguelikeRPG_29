@@ -1699,6 +1699,7 @@ Transform:
   - {fileID: 2881211584030438633}
   - {fileID: 4134136133616392687}
   - {fileID: 1454696453023073032}
+  - {fileID: 390740425467903724}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &29508181893649483
@@ -1771,7 +1772,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &3683812006785255632
 MonoBehaviour:
@@ -1790,6 +1791,9 @@ MonoBehaviour:
   _firePoint: {fileID: 0}
   _projectilePrefab: {fileID: 0}
   _weaponCollider: {fileID: 912621491616944823}
+  _bloodEffect:
+  - {fileID: 6550804457596160986, guid: f4e1145b9cfce734d835382b29251a1e, type: 3}
+  _bloodSpawnPoint: {fileID: 390740425467903724}
 --- !u!114 &7492417713774128618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2973,6 +2977,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.02246344, y: -0.009157851, z: 0}
     m_Extent: {x: 0.1585419, y: 0.19541256, z: 0.29841372}
   m_DirtyAABB: 0
+--- !u!1 &7436752184317942504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 390740425467903724}
+  m_Layer: 8
+  m_Name: BloodSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &390740425467903724
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436752184317942504}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.306, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7342538387826669489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8292203829871157869
 GameObject:
   m_ObjectHideFlags: 0
