@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIMap : PopupUI
 {
     [SerializeField] private MapManager mapManager;
     [SerializeField] private GameObject map;
+    [SerializeField] private TextMeshProUGUI Txt_Stage;
     private void Start()
     {
         closeButton.onClick.AddListener(Closebtn);
@@ -13,6 +13,7 @@ public class UIMap : PopupUI
 
     private void OnEnable()
     {
+        Txt_Stage.text = $"Stage : {StageManager.Instance.CurrentStage}";
         if (mapManager == null)
         {
             mapManager = GameManager.Instance.MapManager;
