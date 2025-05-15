@@ -272,20 +272,25 @@ public class MapManager : MonoBehaviour
             Button button = rooms[roomIndex].uiObject.GetComponent<Button>();
             button.interactable = rooms[roomIndex].isAccessible;
 
-            // 방문한 방은 색상 변경 등 시각적 표시 (선택사항)
-            if (rooms[roomIndex].isVisited)
+            Image image = button.GetComponent<Image>();
+            if (image != null)
             {
-                // 방문한 방 표시 코드
-            }
-
-            // 보스방 특별 표시
-            if (rooms[roomIndex].type == RoomType.Boss)
-            {
-                Image image = button.GetComponent<Image>();
-                if (image != null)
+                // 방문한 방은 반투명한 빨간색으로 표시
+                if (rooms[roomIndex].isVisited)
                 {
-                    // 보스방 강조 (예시)
-                    image.color = new Color(1f, 0.5f, 0.5f);
+                    image.color = new Color(1f, 0.3f, 0.3f, 1.0f);
+                }
+                else
+                {
+                    // 방문하지 않은 방은 원래 색상으로
+                    image.color = Color.white;
+                }
+
+                // 보스방 특별 표시
+                if (rooms[roomIndex].type == RoomType.Boss)
+                {
+                    // 보스방은 더 진한 빨간색으로 강조
+                    image.color = new Color(1f, 0.2f, 0.2f, 1.0f);
                 }
             }
         }
@@ -296,13 +301,15 @@ public class MapManager : MonoBehaviour
     {
         if (rooms[roomIndex].isAccessible)
         {
-            // 보스방 입장 전 확인 (필요시)
-            //if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
-            //{
-            //    Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
-            //    return;
-            //}
-            
+            //보스방 입장 전 확인(필요시)
+            if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
+            {
+                Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
+                return;
+            }
+
+
+
             // 이전 방에서 연결된 모든 방 비활성화
             foreach (int connectedRoom in rooms[currentRoomIndex].connectedRooms)
             {
@@ -342,7 +349,7 @@ public class MapManager : MonoBehaviour
         }
         
         // 예: 최소 7개의 방을 방문해야 보스방 입장 가능
-        return visitedCount >= 7;
+        return visitedCount >= 4;
         
         // 또는 항상 입장 가능하게 설정
         // return true;
@@ -351,16 +358,21 @@ public class MapManager : MonoBehaviour
     // 방 타입에 따른 게임 로직 처리
     private void HandleRoomAction(int roomIndex)
     {
+        // 들어가기전 현재방에있는 아이템을 clear(소울,골드)
+        if (roomZones.TryGetValue(currentRoomIndex, out RoomZone previousRoom))
+        {
+            previousRoom.CleanupRoom();
+        }
+        // 이전에 생성된 특수 오브젝트가 있으면 파괴
+        CleanupCurrentActiveObject();
+
+
         _portal.TryUsePortal($"potal_{roomIndex}");
         UIManager.Instance.ClosePopupUI<UIMap>();
 
         //다음 방 입장 직후에 저장
         GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
         
-        // 이전에 생성된 특수 오브젝트가 있으면 파괴
-        CleanupCurrentActiveObject();
-        
-        //이전에 있었던 몬스터의 시체 및 골드 소울 상점을 삭제시켜줘야됨 
 
         // 선택한 방 인덱스에 해당하는 RoomZone 찾기
         if(roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
@@ -488,19 +500,18 @@ public class MapManager : MonoBehaviour
     public void OnBossDefeated()
     {
         Debug.Log("보스 처치! 게임 클리어 또는 다음 단계로 진행");
+        
+        // 모든 방 정리
+        foreach (var roomZone in roomZones.Values)
+        {
+            roomZone.CleanupRoom();
+        }
+        
         StageManager.Instance.NextStage();
         // 게임 클리어 UI 표시 또는 다음 레벨 진행
 
         // 0번 방(시작방)으로 이동
         currentRoomIndex = 0;
-        //foreach (Room room in rooms)
-        //{
-        //    room.isVisited = false;
-        //    room.isAccessible = false;
-        //}
-
-
-        
 
         // 방 타입 재배치
         InitializeMapLayout();
@@ -512,8 +523,6 @@ public class MapManager : MonoBehaviour
         rooms[0].isAccessible = true;
         // 맵 UI/상태 초기화
         UpdateAllRoomUI();
-        
-
     }
 
     private void UpdateAllRoomUI()

@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     [Header("무기 설정")]
     [SerializeField] private Collider _weaponCollider; //무기 trigger작동
 
+    private RoomZone _parentRoomZone; // 부모 RoomZone 참조
+
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget { get; private set; }
     public GameObject ProjectilePrefab => _projectilePrefab;
@@ -40,6 +42,9 @@ public class Enemy : MonoBehaviour
         Stat = GetComponent<EnemyStat>();
         enemyController = GetComponent<EnemyController>();
         CachePlayer();
+        
+        // 부모 RoomZone 찾기
+        _parentRoomZone = GetComponentInParent<RoomZone>();
     }
 
     /// 플레이어 찾기
@@ -162,14 +167,13 @@ public class Enemy : MonoBehaviour
         if (prefab == null || amount <= 0) return;
 
         Vector3 dropPos = GetSafeDropPosition(transform.position, 1.5f);
-        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity);
+        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity, _parentRoomZone?.transform);
 
         CurrencyData currencyData = Obj.GetComponent<CurrencyData>();
         if (currencyData != null)
         {
             currencyData.SetAmount(amount);
         }
-
     }
     //생성 위치 보정
     private Vector3 GetSafeDropPosition(Vector3 center, float radius = 1.5f)
