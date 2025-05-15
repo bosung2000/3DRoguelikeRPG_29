@@ -7,9 +7,9 @@ using System;
 public class DamageText : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _damageText;
-    [SerializeField] private float _moveSpeed = 0.2f;
+    [SerializeField] private float _moveSpeed = 0.5f;
     [SerializeField] private float _fadeSpeed = 0.5f;
-    [SerializeField] private float _duration = 5.0f;
+    [SerializeField] private float _duration = 2.0f;
 
     private float _elapsedTime = 0f;
     private Color _textColor;
