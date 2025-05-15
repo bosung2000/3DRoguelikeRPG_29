@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -34,6 +35,11 @@ public class Enemy : MonoBehaviour
     private bool _isDeadAnimationEnd = false;
     private bool _isDead = false;
     private Vector3 _cachedTargetPosition;
+
+    [SerializeField] private GameObject[] _bloodEffect;
+    [SerializeField] private Transform _bloodSpawnPoint;
+    public Transform BloodSpawnPoint => _bloodSpawnPoint;
+    private List<GameObject> activeEffects = new List<GameObject>();
 
     public event Action<Enemy> OnDeath; //이벤트
 
@@ -82,7 +88,7 @@ public class Enemy : MonoBehaviour
 
         // 데미지 텍스트 생성
         ShowDamageText(damage, CriBool);
-
+        DieEffect(0, 0, BloodSpawnPoint, BloodSpawnPoint, 2);
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
         if (Stat.GetStatValue(EnemyStatType.HP) <= 0)
@@ -438,7 +444,49 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+    public void DieEffect(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        CleanupActiveEffects();
+        StartCoroutine(SpawnEffectAfterSeconds(delay, index, position, rotation, duration));
+    }
+    private IEnumerator SpawnEffectAfterSeconds(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
+        GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
+        activeEffects.Add(effect);
+
+        StartCoroutine(DestroyEffectAfterSeconds(effect, duration));
+    }
+
+    private IEnumerator DestroyEffectAfterSeconds(GameObject obj, float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (obj != null) Destroy(obj);
+    }
+
+    private void CleanupActiveEffects()
+    {
+        foreach (GameObject effect in activeEffects)
+        {
+            if (effect != null)
+            {
+                Destroy(effect);
+            }
+        }
+        activeEffects.Clear();
+    }
 
 
 

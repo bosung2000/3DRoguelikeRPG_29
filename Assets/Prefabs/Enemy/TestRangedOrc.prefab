@@ -1698,6 +1698,7 @@ Transform:
   - {fileID: 2881211584030438633}
   - {fileID: 4134136133616392687}
   - {fileID: 1454696453023073032}
+  - {fileID: 2132192024728692433}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &29508181893649483
@@ -1770,7 +1771,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &3683812006785255632
 MonoBehaviour:
@@ -1789,6 +1790,9 @@ MonoBehaviour:
   _firePoint: {fileID: 6493859687966190018}
   _projectilePrefab: {fileID: 8718303270019057224, guid: fcdbc4718e2c1c648bd47ced3d79d01c, type: 3}
   _weaponCollider: {fileID: 0}
+  _bloodEffect:
+  - {fileID: 6550804457596160986, guid: f4e1145b9cfce734d835382b29251a1e, type: 3}
+  _bloodSpawnPoint: {fileID: 2132192024728692433}
 --- !u!114 &7492417713774128618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2244,6 +2248,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.50624985, y: 0.15113814, z: -0.072727755}
     m_Extent: {x: 0.7747218, y: 0.24382316, z: 0.063440576}
   m_DirtyAABB: 0
+--- !u!1 &5334334960248658107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132192024728692433}
+  m_Layer: 8
+  m_Name: BloodSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2132192024728692433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5334334960248658107}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.273, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7342538387826669489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5447923043764771021
 GameObject:
   m_ObjectHideFlags: 0

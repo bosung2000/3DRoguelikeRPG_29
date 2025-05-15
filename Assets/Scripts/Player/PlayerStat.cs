@@ -423,8 +423,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
 
             _playerController.SetTrigger("Die");
-            Time.timeScale = 0f;
             DieEffect(3, 1, _dieSpawnPoint, _dieSpawnPoint, 6);
+            Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
         }
@@ -445,7 +445,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         float timer = 0f;
-        while (timer < 3f)
+        while (timer < 0.5f)
         {
             timer += Time.unscaledDeltaTime;
             yield return null;
