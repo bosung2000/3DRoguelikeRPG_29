@@ -11,7 +11,8 @@ public enum SoundEffectType
     TakeDamage,
     FireCombo,
     Lighting,
-    GreenSlash
+    GreenSlash,
+    Roll
 }
 
 [System.Serializable]

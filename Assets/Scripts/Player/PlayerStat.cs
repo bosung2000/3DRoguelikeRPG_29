@@ -413,7 +413,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             DamageTextManager.Instance.ShowDamageText(transform.position, finalDamage, false);
         }
 
-        _cameraShake.ShakeCamera(2f, 0.3f);
+        _cameraShake.ShakeAndDamage(2f, 0.3f,0.5f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
         DieEffect(0,0,_bloodSpawnPoint,_bloodSpawnPoint,2);
@@ -589,5 +589,22 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void DisableCollider()
     {
         _Weapon.DisableCollider();
+    }
+
+    public void LightingCamera()
+    {
+        _cameraShake.ShakeCamera(1, 1.5f);
+        _cameraShake.ShakeCamera(6, 1f);
+    }
+    public void FireComboCamera()
+    {
+        _cameraShake.ShakeCamera(1, 2f);
+        _cameraShake.ShakeCamera(6, 0.5f);
+    }
+    public void GreenSlashCamera()
+    {
+        _cameraShake.Zoom(40f, 1f);
+        _cameraShake.ShakeCamera(4, 1f);
+        _cameraShake.ShakeCamera(10, 0.2f);
     }
 }

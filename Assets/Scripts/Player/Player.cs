@@ -66,4 +66,8 @@ public class Player : MonoBehaviour
     {
         SoundManager.instance.PlayEffect(SoundEffectType.GreenSlash);
     }
+    public void RollSound()
+    {
+        SoundManager.instance.PlayEffect(SoundEffectType.Roll);
+    }
 }
