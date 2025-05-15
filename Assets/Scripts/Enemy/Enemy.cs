@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour
 
         // 데미지 텍스트 생성
         ShowDamageText(damage, CriBool);
-        DieEffect(0, 0, BloodSpawnPoint, BloodSpawnPoint, 2);
+        DieEffect(0, 0, BloodSpawnPoint, BloodSpawnPoint, 4);
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
         if (Stat.GetStatValue(EnemyStatType.HP) <= 0)
