@@ -62,7 +62,10 @@ public class EnemySkillState : IEnemyState
             Debug.Log("asdfRESET");
         }
 
-        controller.agent.isStopped = false;
+        if (controller.agent != null && controller.agent.enabled && controller.agent.isOnNavMesh)
+        {
+            controller.agent.isStopped = false;
+        }
     }
 
     public void UpdateState(EnemyController controller)

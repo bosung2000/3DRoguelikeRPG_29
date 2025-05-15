@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour
     private bool _isDeadAnimationEnd = false;
     private bool _isDead = false;
     private Vector3 _cachedTargetPosition;
+    private LayerMask layerMask;
 
     public event Action<Enemy> OnDeath; //이벤트
 
@@ -352,9 +353,9 @@ public class Enemy : MonoBehaviour
     private IEnumerator DashCoroutine()
     {
         float dashTime = 0.5f;
-        float dashSpeed = 15f;
-        float stopDistance = 1f;
-        float dist;
+        float dashSpeed = 10.5f;
+        float hitRadius = 1.0f;
+
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
         dir.y = 0f;
 
@@ -369,14 +370,26 @@ public class Enemy : MonoBehaviour
         while (timer < dashTime)
         {
             transform.position += dir * dashSpeed * Time.deltaTime;
-            timer += Time.deltaTime;
-            dist = Vector3.Distance(transform.position, GetPlayerTarget().position);
-            if(dist <= stopDistance )
+            Collider[] hits = Physics.OverlapSphere(transform.position, hitRadius, LayerMask.GetMask("Player"));
+            foreach(var hit in hits)
             {
-                break;
+                if(hit.CompareTag("Player"))
+                {
+                    PlayerStat player = hit.GetComponent<PlayerStat>();
+                    if(player != null )
+                    {
+                        player.TakeDamage(20);
+                    }
+
+                    timer = dashTime;
+                    break;
+                }
             }
+
+            timer += Time.deltaTime;
             yield return null;
         }
+
         //돌진 후 회전
         Vector3 toTarget = GetPlayerTarget().position - transform.position;
         toTarget.y = 0;
@@ -393,6 +406,7 @@ public class Enemy : MonoBehaviour
     //충격파
     public void SkillJumpStomp()
     {
+        //StartCoroutine(JumpStompCoroutine());
         float stompRadius = 4f;
         Vector3 stompCenter = transform.position;
 
@@ -406,6 +420,8 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+
 
     //원거리
     //SpreadShot
