@@ -134,38 +134,35 @@ public class DamageTextManager : MonoBehaviour
     // 데미지 텍스트 표시 (공개 메서드)
     public void ShowDamageText(Vector3 worldPosition, float damage, bool isCritical)
     {
-        // 캔버스가 카메라를 향하도록 설정
-        _worldSpaceCanvas.transform.forward = Camera.main.transform.forward;
-        
-        // 위치 계산 (약간의 랜덤성 추가)
-        Vector3 position = worldPosition + Vector3.up * 1.5f;
-        position += new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(0f, 0.3f), 0);
-        
-        // 캔버스 위치 설정
-        _worldSpaceCanvas.transform.position = position;
-        
-        // 풀에서 오브젝트 가져오기
         GameObject textObj = GetFromPool();
-        
-        // 로컬 위치/회전 초기화
+        textObj.transform.SetParent(_worldSpaceCanvas.transform);
+
+        // 몬스터 머리 위로 2.0f 올림 (랜덤성 제거)
+        Vector3 position = worldPosition + Vector3.up * 2.0f;
+
         RectTransform rectTransform = textObj.GetComponent<RectTransform>();
         if (rectTransform != null)
         {
-            rectTransform.localPosition = Vector3.zero;
+            rectTransform.position = position;
             rectTransform.localRotation = Quaternion.identity;
         }
-        
-        // 텍스트 내의 모든 자식 오브젝트도 로컬 회전 초기화
-        foreach (Transform child in textObj.transform)
+
+        // 텍스트가 항상 카메라를 바라보도록 설정
+        if (Camera.main != null)
         {
-            child.localRotation = Quaternion.identity;
+            textObj.transform.LookAt(Camera.main.transform);
+            textObj.transform.Rotate(0, 180f, 0); // 텍스트가 반대로 보이면 180도 회전
+            //transform.forward = Camera.main.transform.forward;
+            //DamageText의 초기화에서 identity로 해서 문제가 발생한것 
+            
         }
+
         
-        // 데미지 텍스트 설정
+
         DamageText damageText = textObj.GetComponent<DamageText>();
         if (damageText != null)
         {
-            damageText.SetDamageText(damage, isCritical);
+            damageText.SetDamageText(damage, isCritical, position);
             damageText.SetReturnCallback(() => ReturnToPool(textObj));
         }
     }

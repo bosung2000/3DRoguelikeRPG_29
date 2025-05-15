@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PortalManager : MonoBehaviour
 {
-    private HashSet<string> _unlockedPortals = new HashSet<string>();
+    public HashSet<string> _unlockedPortals = new HashSet<string>();
 
     //포탈 조건 충족
     public void UnlockPortal(string portalID)
