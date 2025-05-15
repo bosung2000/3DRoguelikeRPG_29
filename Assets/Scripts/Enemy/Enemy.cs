@@ -384,7 +384,8 @@ public class Enemy : MonoBehaviour
                     PlayerStat player = hit.GetComponent<PlayerStat>();
                     if(player != null )
                     {
-                        player.TakeDamage(20);
+                        //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
+                        player.TakeDamage(0);
                     }
 
                     timer = dashTime;
