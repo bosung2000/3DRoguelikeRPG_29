@@ -9,7 +9,13 @@ public class EnemySkillState : IEnemyState
     {
         enemy = controller.Enemy;
 
-        if(enemy.IsBoss)//보스 스킬
+        if (controller.animator == null)
+        {
+            Debug.LogError("Animator가 null임!");
+            return;
+        }
+
+        if (enemy.IsBoss)//보스 스킬
         {
             if(enemy.CurrentPhase == 1)
             {
@@ -30,10 +36,11 @@ public class EnemySkillState : IEnemyState
         }
         else//엘리트 스킬
         {
-            switch (controller.Enemy.skillB)
+            switch (controller.Enemy.skillA)
             {
                 case EnemySkillType.Dash:
                     controller.animator.SetTrigger("Skill_Dash");
+                    Debug.Log("asdf");
                     break;
                 case EnemySkillType.SpreadShot:
                     controller.animator.SetTrigger("Skill_SpreadShot");
@@ -49,10 +56,13 @@ public class EnemySkillState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         // 엘리트 몬스터일 때 쿨타임 다시 세팅
-        if (!controller.Enemy.IsBoss && controller.Enemy.skillB != EnemySkillType.None)
+        if (!controller.Enemy.IsBoss || controller.Enemy.skillA != EnemySkillType.None)
         {
             controller.Enemy.ResetSkillCooldown();  // 이 방식이 더 단순하고 명확함
+            Debug.Log("asdfRESET");
         }
+
+        controller.agent.isStopped = false;
     }
 
     public void UpdateState(EnemyController controller)
@@ -62,27 +72,17 @@ public class EnemySkillState : IEnemyState
         stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         skillEnd = false;
 
-        if (controller.Enemy.IsBoss)
-        {
-            if (!string.IsNullOrEmpty(animName))
-            {
-                skillEnd = stateInfo.IsName(animName) && stateInfo.normalizedTime >= 1.0f;
-            }
+        switch (controller.Enemy.skillA)
+        { 
+            case EnemySkillType.Dash:
+                skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 0.99f;
+                break;
+            case EnemySkillType.SpreadShot:
+                skillEnd = stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 0.99f;
+                break;
+                //다른 스킬
         }
-        else
-        {
-            switch (controller.Enemy.skillA)
-            {
-                case EnemySkillType.Dash:
-                    skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 1.0f;
-                    break;
-                case EnemySkillType.SpreadShot:
-                    skillEnd = stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 1.0f;
-                    break;
-                    //다른 스킬
-            }
-        }
-
+        Debug.Log($" IsName(\"Skill_Dash\") = {stateInfo.IsName("Skill_Dash")}, normalizedTime = {stateInfo.normalizedTime}, " + skillEnd);
         if (skillEnd)
         {
             if (controller.Enemy.IsBoss)
@@ -91,6 +91,7 @@ public class EnemySkillState : IEnemyState
                 {
                     case EnemySkillType.Dash:
                         controller.Enemy.SkillDash();
+                        Debug.Log("asdfend");
                         break;
                     case EnemySkillType.SpreadShot:
                         break;

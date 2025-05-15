@@ -37,7 +37,7 @@ public class EnemyChaseState : IEnemyState
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator.SetBool("isRun", false);
+        //controller.animator.SetBool("isRun", false);
     }
 
     public void UpdateState(EnemyController controller)
@@ -53,7 +53,7 @@ public class EnemyChaseState : IEnemyState
         //스킬범위 지정
         _skillRange = controller.Enemy.GetSkillRange();
 
-        if (controller.Enemy.CanUseSkill() && _distance <= _skillRange)
+        if (controller.Enemy.CanEnterSkillState() && _distance <= _skillRange)
         {
             controller.ChageState(EnemyStateType.Skill);
             return;

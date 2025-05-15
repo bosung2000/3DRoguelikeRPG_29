@@ -22,7 +22,7 @@ public class EnemyHitState : IEnemyState
 
     public void ExitState(EnemyController controller)
     {
-
+        controller.Enemy.DisableWeaponCollider();
     }
 
     public void UpdateState(EnemyController controller)

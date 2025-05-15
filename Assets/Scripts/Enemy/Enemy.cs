@@ -23,11 +23,11 @@ public class Enemy : MonoBehaviour
     public GameObject ProjectilePrefab => _projectilePrefab;
     public Transform FirePoint => _firePoint;
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
+    public EnemyType Type => Stat?.StatData.EnemyType ?? EnemyType.Normal;
     public bool IsBoss => Stat?.StatData.EnemyType == EnemyType.Boss;
     public EnemySkillType skillA => Stat?.StatData.SkillA ?? EnemySkillType.None;
     public EnemySkillType skillB => Stat?.StatData.SkillB ?? EnemySkillType.None;
     public int CurrentSkillChoice { get; set; } = 0;
-
     public int CurrentPhase { get; private set; } = 1; //페이즈 전환
     private float lastSkillTime;
     private EnemyController enemyController;
@@ -199,19 +199,26 @@ public class Enemy : MonoBehaviour
     {
         return _isDeadAnimationEnd;
     }
-        
+
+    public bool CanEnterSkillState()
+    {
+        return Type != EnemyType.Normal && CanUseSkill();
+    }
+
     //공격 - 콜라이더
     //ON
     public void EnableWeaponCollider()
     {
-        if(_weaponCollider != null)
-            _weaponCollider.enabled = true;
+        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
+        
+        _weaponCollider.enabled = true;
     }
     //OFF
     public void DisableWeaponCollider()
     {
-        if (_weaponCollider != null)
-            _weaponCollider.enabled = false;
+        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
+
+        _weaponCollider.enabled = false;
     }
 
     //트리거접촉 시
@@ -300,7 +307,7 @@ public class Enemy : MonoBehaviour
             var skillType = GetCurrentSkillType();
             return skillType switch
             {
-                EnemySkillType.Dash => 10f,
+                EnemySkillType.Dash => 8f,
                 _ => 0f
             };
         }
@@ -350,18 +357,19 @@ public class Enemy : MonoBehaviour
         float dist;
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
         dir.y = 0f;
+
         Quaternion initialRotation = Quaternion.LookRotation(dir);
         transform.rotation = initialRotation;
 
         float timer = 0f;
         //agent 비활성
         enemyController.agent.enabled = false;
-        
-        while(timer < dashTime)
+        enemyController.agent.updateRotation = false;
+
+        while (timer < dashTime)
         {
             transform.position += dir * dashSpeed * Time.deltaTime;
             timer += Time.deltaTime;
-
             dist = Vector3.Distance(transform.position, GetPlayerTarget().position);
             if(dist <= stopDistance )
             {
@@ -369,7 +377,6 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
-
         //돌진 후 회전
         Vector3 toTarget = GetPlayerTarget().position - transform.position;
         toTarget.y = 0;
@@ -380,6 +387,7 @@ public class Enemy : MonoBehaviour
         }
 
         enemyController.agent.enabled = true;
+        enemyController.agent.updateRotation = true;
         enemyController.agent.Warp(transform.position);
     }
     //충격파

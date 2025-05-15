@@ -20,7 +20,6 @@ public class EnemyAttackState : IEnemyState
         {
             randomAttackIndex = Random.Range(0, 3);
             controller.animator.SetInteger("attackIndex", randomAttackIndex);
-            Debug.Log($"{randomAttackIndex}번 애니메이션 실행");
         }
         else
         {
@@ -31,24 +30,19 @@ public class EnemyAttackState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         controller.animator.SetInteger("attackIndex", -1);
-        //controller.animator.SetBool("isRun", false);
     }
 
     public void UpdateState(EnemyController controller)
     {
         if (_target == null) return;
-
         //animator에서 레이어(0) -> base Layer에서 진행 중인 애니메이션의 정보를 가져옴
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
 
         //이름이 일치한지 확인하고 애니메이션의 진행파악함 시작(0.0), 끝(1.0)
-        if (stateInfo.IsName("Attack") || stateInfo.IsName("Attack_0") || stateInfo.IsName("Attack_1") || stateInfo.IsName("Attack_2"))
+        if ((stateInfo.IsName("Attack") || stateInfo.IsName("Attack_0") || stateInfo.IsName("Attack_1") || stateInfo.IsName("Attack_2")) && stateInfo.normalizedTime >= 0.9f)
         {
-            if (stateInfo.normalizedTime >= 1.0f)
-            {
-                //controller.ChageState(EnemyStateType.Chase);
-                return;
-            }
+            Debug.Log("애니 끝");//00
+            controller.ChageState(EnemyStateType.Chase);
         }
 
         // 애니메이션이 끝났으면 타겟 방향으로 회전
