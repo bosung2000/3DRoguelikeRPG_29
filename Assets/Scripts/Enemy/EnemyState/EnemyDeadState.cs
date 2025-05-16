@@ -7,10 +7,11 @@ public class EnemyDeadState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
-        if (controller.agent != null && controller.agent.isOnNavMesh)
+        if (!controller.agent.enabled)
         {
-            controller.agent.isStopped = true;
+            controller.agent.enabled = true;
         }
+        controller.agent.isStopped = true;
         controller.animator.SetTrigger("DIe");
     }
 
