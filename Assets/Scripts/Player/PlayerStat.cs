@@ -594,7 +594,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void LightingCamera()
     {
         _cameraShake.ShakeCamera(1, 1.5f);
-        _cameraShake.ShakeCamera(3, 1f);
+        _cameraShake.ShakeCamera(3, 0.25f);
     }
     public void FireComboCamera()
     {
@@ -603,7 +603,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     }
     public void GreenSlashCamera()
     {
-        _cameraShake.Zoom(60f, 1f);
+        _cameraShake.Zoom(45f, 1f);
         _cameraShake.ShakeCamera(2, 1f);
         _cameraShake.ShakeCamera(5, 0.2f);
     }
