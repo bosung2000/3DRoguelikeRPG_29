@@ -2,31 +2,32 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] tutorialSteps;
-    private int currentStepIndex = 0;
+    [SerializeField] private GameObject[] steps; //각 단계 오브젝트
+    private int currentStep = 0;
 
-    void Start()
+    private void Start()
     {
-        //첫 단계만 활성화
-        for (int i = 0; i < tutorialSteps.Length; i++)
-        {
-            tutorialSteps[i].SetActive(i == 0);
-        }
+        InitSteps();
     }
 
-    //다음 단계
-    public void NextStep()
+    private void InitSteps()
     {
-        if (currentStepIndex < tutorialSteps.Length - 1)
+        //첫 단계만 켬
+        for (int i = 0; i < steps.Length; i++)
+            steps[i].SetActive(i == 0);
+    }
+
+    public void ProceedToNextStep()
+    {
+        if (currentStep < steps.Length - 1)
         {
-            tutorialSteps[currentStepIndex].SetActive(false);
-            currentStepIndex++;
-            tutorialSteps[currentStepIndex].SetActive(true);
+            steps[currentStep].SetActive(false);
+            currentStep++;
+            steps[currentStep].SetActive(true);
         }
         else
         {
-            Debug.Log("튜토리얼 완료");
-            tutorialSteps[currentStepIndex].SetActive(false);
+            Debug.Log("튜토리얼 종료");
         }
     }
 }
