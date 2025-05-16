@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -295,6 +296,7 @@ public class Enemy : MonoBehaviour
         {
             EnemySkillType.SpreadShot => "Skill_SpreadShot",
             EnemySkillType.Dash => "Skill_Dash",
+            EnemySkillType.ShockWave => "Skill_ShockWave",
             _ => string.Empty
         };
     }
@@ -315,6 +317,8 @@ public class Enemy : MonoBehaviour
             return skillType switch
             {
                 EnemySkillType.Dash => 8f,
+                EnemySkillType.ShockWave => 8f,
+                EnemySkillType.SpreadShot => 7f,
                 _ => 0f
             };
         }
@@ -411,24 +415,43 @@ public class Enemy : MonoBehaviour
         enemyController.agent.Warp(transform.position);
     }
     //충격파
-    public void SkillJumpStomp()
+    public void SkillShockWave()
     {
-        //StartCoroutine(JumpStompCoroutine());
         float stompRadius = 4f;
-        Vector3 stompCenter = transform.position;
+        int damage = (int)(Stat.GetStatValue(EnemyStatType.Attack) * 0.5);
 
-        Collider[] hits = Physics.OverlapSphere(stompCenter, stompRadius, LayerMask.GetMask("Player"));
-        foreach(var hit in hits)
+        Collider[] hits = Physics.OverlapSphere(transform.position, stompRadius, LayerMask.GetMask("Player"));
+
+        foreach (var hit in hits)
         {
             if (hit.TryGetComponent(out PlayerStat player))
             {
-                int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
                 player.TakeDamage(damage);
             }
         }
     }
+    //충격파 - 거리이동
+    public void DoShockWaveJumpMove()
+    {
+        Transform player = GetPlayerTarget();
+        if (player == null) return;
 
+        Vector3 toPlayer = (player.position - transform.position).normalized;
+        toPlayer.y = 0f;
 
+        float desiredOffset = 1.5f; // 플레이어로부터 떨어질 거리 (앞에 착지)
+        Vector3 targetPos = player.position - toPlayer * desiredOffset;
+
+        // NavMesh 위에 위치 보정
+        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+        }
+        else
+        {
+            transform.position = targetPos;
+        }
+    }
 
     //원거리
     //SpreadShot
