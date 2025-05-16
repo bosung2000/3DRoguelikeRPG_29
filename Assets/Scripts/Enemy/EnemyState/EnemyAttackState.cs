@@ -41,7 +41,6 @@ public class EnemyAttackState : IEnemyState
         //이름이 일치한지 확인하고 애니메이션의 진행파악함 시작(0.0), 끝(1.0)
         if ((stateInfo.IsName("Attack") || stateInfo.IsName("Attack_0") || stateInfo.IsName("Attack_1") || stateInfo.IsName("Attack_2")) && stateInfo.normalizedTime >= 0.9f)
         {
-            Debug.Log("애니 끝");//00
             controller.ChageState(EnemyStateType.Chase);
         }
 

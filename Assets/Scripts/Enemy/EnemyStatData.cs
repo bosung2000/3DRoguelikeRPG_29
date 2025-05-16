@@ -18,7 +18,7 @@ public enum EnemySkillType
     None,
     Dash,       //돌진
     SpreadShot, //투사체 다중 발사
-
+    ShockWave,  //충격파
 }
 
 [CreateAssetMenu(fileName = "EnemyStatData", menuName = "Enemy/EnemyStat")]
