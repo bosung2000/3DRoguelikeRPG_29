@@ -495,6 +495,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &322538526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 322538528}
+  - component: {fileID: 322538527}
+  m_Layer: 0
+  m_Name: Debugger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &322538527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322538526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98301220e8b673144ad0517a4b09ea27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialPointName: TutorialStartPoint
+  teleportKey: 116
+--- !u!4 &322538528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322538526}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -153.29994, y: 1, z: 35.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &323103761 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 748192080887421908, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
@@ -3509,6 +3555,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6347028148029037816, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
+      propertyPath: m_Name
+      value: TutorialStartPoint
+      objectReference: {fileID: 0}
     - target: {fileID: 7641355058674513345, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
       propertyPath: instructionText
       value: 
@@ -3962,3 +4012,4 @@ SceneRoots:
   - {fileID: 2373328291953859958}
   - {fileID: 7172420456540458378}
   - {fileID: 5753500898982962331}
+  - {fileID: 322538528}

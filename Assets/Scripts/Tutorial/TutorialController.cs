@@ -17,6 +17,10 @@ public class TutorialController : MonoBehaviour
     [Header("튜토리얼 단계 설정")]
     public List<TutorialStep> steps = new List<TutorialStep>();
 
+    [Header("튜토리얼 오브젝트")]
+    public GameObject monsterGroupp;
+    public GameObject shopNPC;
+
     [Header("UI")]
     public GameObject instructionPanel;
     public TextMeshProUGUI instructionText;
@@ -36,7 +40,13 @@ public class TutorialController : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<Player>();
+
+        // 시작 위치 기억
         startPosition = player.transform.position;
+
+        // 초기 상태로 오브젝트 숨김
+        if (monsterGroupp) monsterGroupp.SetActive(false);
+        if (shopNPC) shopNPC.SetActive(false);
 
         SetupSteps();
         StartTutorial();
@@ -68,17 +78,25 @@ public class TutorialController : MonoBehaviour
             {
                 instructionText = "몬스터를 처치해보세요.",
                 conditionToComplete = () => hasKilledEnemy,
-                onStepStart = () => Debug.Log("[튜토리얼] 몬스터 처치 시작")
+                onStepStart = () =>
+                {
+                    Debug.Log("[튜토리얼] 몬스터 처치 시작");
+                    if (monsterGroupp) monsterGroupp.SetActive(true);
+                }
             },
             new TutorialStep
             {
                 instructionText = "상점에서 아이템을 구매해보세요.",
                 conditionToComplete = () => hasPurchased,
-                onStepStart = () => Debug.Log("[튜토리얼] 상점 이용 시작")
+                onStepStart = () =>
+                {
+                    Debug.Log("[튜토리얼] 상점 이용 시작");
+                    if (shopNPC) shopNPC.SetActive(true);
+                }
             },
             new TutorialStep
             {
-                instructionText = "인벤토리에서 장비를 장착해보세요.",
+                instructionText = "장비를 인벤토리에서 장착해보세요.",
                 conditionToComplete = () => hasEquipped,
                 onStepStart = () => Debug.Log("[튜토리얼] 장비 장착 시작")
             },
@@ -91,35 +109,12 @@ public class TutorialController : MonoBehaviour
         };
     }
 
-    public void OnAttackPerformed()
-    {
-        hasAttacked = true;
-    }
-
-    public void OnSkillUsed()
-    {
-        hasUsedSkill = true;
-    }
-
-    public void OnItemEquipped()
-    {
-        hasEquipped = true;
-    }
-
-    public void OnItemPurchased()
-    {
-        hasPurchased = true;
-    }
-
-    public void OnEnemyKilled()
-    {
-        hasKilledEnemy = true;
-    }
-
-    public void OnMapUsed()
-    {
-        hasUsedMap = true;
-    }
+    public void OnAttackPerformed() => hasAttacked = true;
+    public void OnSkillUsed() => hasUsedSkill = true;
+    public void OnItemEquipped() => hasEquipped = true;
+    public void OnItemPurchased() => hasPurchased = true;
+    public void OnEnemyKilled() => hasKilledEnemy = true;
+    public void OnMapUsed() => hasUsedMap = true;
 
     public void StartTutorial()
     {
