@@ -53,7 +53,6 @@ public class EnemySkillState : IEnemyState
                     break;
             }
         }
-
         controller.agent.isStopped = true;
     }
 
@@ -79,6 +78,7 @@ public class EnemySkillState : IEnemyState
         stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         skillEnd = false;
 
+        //충격파 관련 코드
         if (skill == EnemySkillType.ShockWave)
         {
             // 점프 이동 시작
@@ -152,7 +152,10 @@ public class EnemySkillState : IEnemyState
             return;
         }
 
-        switch (controller.Enemy.skillA)
+
+
+
+            switch (controller.Enemy.skillA)
         { 
             case EnemySkillType.Dash:
                 skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 0.99f;
@@ -171,6 +174,7 @@ public class EnemySkillState : IEnemyState
                 {
                     case EnemySkillType.Dash:
                         controller.Enemy.SkillDash();
+
                         break;
                     case EnemySkillType.SpreadShot:
                         break;
