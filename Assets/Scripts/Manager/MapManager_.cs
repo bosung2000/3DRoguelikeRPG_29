@@ -343,6 +343,9 @@ public class MapManager : MonoBehaviour
 
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
+
+            //튜토리얼 체크
+            FindObjectOfType<TutorialController>()?.OnRoomChanged();
         }
     }
 

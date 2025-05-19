@@ -37,6 +37,9 @@ public class TutorialController : MonoBehaviour
     private bool hasKilledEnemy = false;
     private bool hasUsedMap = false;
     private bool hasEquippedSkill = false;
+    private bool hasOpenedMap = false;
+    private bool hasMovedToNextRoom = false;
+
 
     private void Start()
     {
@@ -116,9 +119,10 @@ public class TutorialController : MonoBehaviour
             new TutorialStep
             {
                 instructionText = "맵을 열고 다음 방으로 이동하세요.",
-                conditionToComplete = () => hasUsedMap,
+                conditionToComplete = () => hasMovedToNextRoom,
                 onStepStart = () => Debug.Log("[튜토리얼] 맵 이동 시작")
-            }
+            },
+
         };
     }
 
@@ -177,4 +181,17 @@ public class TutorialController : MonoBehaviour
     {
         hasEquippedSkill = true;
     }
+    public void OnMapOpened()
+    {
+        hasOpenedMap = true;
+    }
+
+    public void OnRoomChanged()
+    {
+        if (hasOpenedMap)
+        {
+            hasMovedToNextRoom = true;
+        }
+    }
+
 }
