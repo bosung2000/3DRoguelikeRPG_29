@@ -36,6 +36,7 @@ public class TutorialController : MonoBehaviour
     private bool hasPurchased = false;
     private bool hasKilledEnemy = false;
     private bool hasUsedMap = false;
+    private bool hasEquippedSkill = false;
 
     private void Start()
     {
@@ -67,6 +68,12 @@ public class TutorialController : MonoBehaviour
                 instructionText = "공격 버튼을 눌러 기본 공격을 해보세요.",
                 conditionToComplete = () => hasAttacked,
                 onStepStart = () => Debug.Log("[튜토리얼] 공격 시작")
+            },
+            new TutorialStep
+            {
+                instructionText = "스킬을 장착해보세요.",
+                conditionToComplete = () => hasEquippedSkill,
+                onStepStart = () => Debug.Log("[튜토리얼] 스킬 장착 시작")
             },
             new TutorialStep
             {
@@ -164,5 +171,10 @@ public class TutorialController : MonoBehaviour
     {
         StopAllCoroutines();
         FinishTutorial();
+    }
+
+    public void OnSkillEquipped()
+    {
+        hasEquippedSkill = true;
     }
 }

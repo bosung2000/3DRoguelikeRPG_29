@@ -141,6 +141,9 @@ public class SkillManager : MonoBehaviour
         // UI 업데이트
         uiSkill.ResetSkillUI(slotIndex, newSkill);
 
+        //튜토리얼 체크
+        FindObjectOfType<TutorialController>()?.OnSkillEquipped();
+
         return true;
     }
 
