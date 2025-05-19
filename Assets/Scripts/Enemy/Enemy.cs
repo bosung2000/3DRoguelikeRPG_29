@@ -30,7 +30,6 @@ public class Enemy : MonoBehaviour
     public EnemySkillType skillA => Stat?.StatData.SkillA ?? EnemySkillType.None;
     public EnemySkillType skillB => Stat?.StatData.SkillB ?? EnemySkillType.None;
     public int CurrentSkillChoice { get; set; } = 0;
-    public int CurrentPhase { get; private set; } = 1; //페이즈 전환
     private float lastSkillTime;
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
@@ -109,18 +108,6 @@ public class Enemy : MonoBehaviour
             {
                 Debug.Log("컨트롤러가 널임");
                 return;
-            }
-        }
-
-        // 보스만 페이즈 전환 체크
-        if (IsBoss && CurrentPhase == 1)
-        {
-            float hpRatio = Stat.GetStatValue(EnemyStatType.HP) / Stat.GetStatValue(EnemyStatType.MaxHP);
-            if (hpRatio <= 0.5f)
-            {
-                CurrentPhase = 2;
-                Debug.Log("보스 2페이즈 진입!");
-                // 2페이즈 진입 연출 필요시 여기에 trigger
             }
         }
     }
@@ -308,7 +295,7 @@ public class Enemy : MonoBehaviour
         if (!IsBoss)
             return skillB;
 
-        return CurrentPhase == 1 ? skillA : (CurrentSkillChoice == 0 ? skillA : skillB);
+        return  (CurrentSkillChoice == 0 ? skillA : skillB);
     }
 
     //스킬별 범위
@@ -431,28 +418,6 @@ public class Enemy : MonoBehaviour
             {
                 player.TakeDamage(damage);
             }
-        }
-    }
-    //충격파 - 거리이동
-    public void DoShockWaveJumpMove()
-    {
-        Transform player = GetPlayerTarget();
-        if (player == null) return;
-
-        Vector3 toPlayer = (player.position - transform.position).normalized;
-        toPlayer.y = 0f;
-
-        float desiredOffset = 1.5f; // 플레이어로부터 떨어질 거리 (앞에 착지)
-        Vector3 targetPos = player.position - toPlayer * desiredOffset;
-
-        // NavMesh 위에 위치 보정
-        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-        {
-            transform.position = hit.position;
-        }
-        else
-        {
-            transform.position = targetPos;
         }
     }
 

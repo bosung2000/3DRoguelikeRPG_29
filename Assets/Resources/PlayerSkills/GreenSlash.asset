@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30285c5cf2675144083a365543bde066, type: 3}
-  m_Name: 00_Melee_FireCombo
+  m_Name: GreenSlash
   m_EditorClassIdentifier: 
-  index: 1
-  _name: FireCombo
+  index: 2
+  _name: GreenSlash
   description: 
-  value: 70
-  requiredMana: 10
+  value: 250
+  requiredMana: 8
   cooldown: 0
   maxCooldown: 10
-  attackRange: 100
+  attackRange: 5
   projectileSpeed: 10
   skillType: 0
-  icon: {fileID: 21300000, guid: ad818016cade56948afa522b47a9e217, type: 3}
+  icon: {fileID: 21300000, guid: 289030650d96f6e48b0e08a7f972bcfb, type: 3}
   isOwned: 0
   projectilePrefabs: {fileID: 0}
   effectPrefab: {fileID: 0}
-  projectileType: 1
+  projectileType: 0
   castPattern: 0
   burstCount: 3
   burstDelay: 0.15
@@ -35,7 +35,7 @@ MonoBehaviour:
   rainCount: 7
   rainRadius: 5
   circleCount: 8
-  buffType: 2
+  buffType: 0
   soundEffectPrefab: {fileID: 0}
   level: 1
   maxLevel: 5
