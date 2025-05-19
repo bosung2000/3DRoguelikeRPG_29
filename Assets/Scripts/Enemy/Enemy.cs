@@ -360,8 +360,10 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator DashCoroutine()
     {
-        float dashTime = 0.5f;
+        float dashDistance = 6f; //돌진 거리
         float dashSpeed = 10.5f;
+        float dashTime = dashDistance / dashSpeed; // 계산된 시간
+        float timer = 0f;
         float hitRadius = 1.0f;
 
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
@@ -370,7 +372,6 @@ public class Enemy : MonoBehaviour
         Quaternion initialRotation = Quaternion.LookRotation(dir);
         transform.rotation = initialRotation;
 
-        float timer = 0f;
         //agent 비활성
         enemyController.agent.enabled = false;
         enemyController.agent.updateRotation = false;
@@ -506,24 +507,40 @@ public class Enemy : MonoBehaviour
 
     //경고 표시
     //대쉬 라인 표시
-    public void CreateOrUpdateDashLine(Vector3 target)
+    public void CreateOrUpdateDashLine(Vector3 targetPosition, float dashDistance, float normalizedTime)
     {
+        if (dashWarningLinePrefab == null) return;
+
         Vector3 start = transform.position;
+        Vector3 target = targetPosition;
+        target.y = start.y; // y 고정
         Vector3 dir = (target - start).normalized;
-        float dist = Vector3.Distance(start, target);
-        Vector3 mid = (start + target) / 2f;
+
+        float scaleX = Mathf.Lerp(0.1f,1f,normalizedTime);
+        float Length = dashDistance;
+        Vector3 size = new Vector3(scaleX, 0.3f, Length);
+
+        Vector3 centerOffset = dir * (Length / 2f);
+        Vector3 centerPos = start + centerOffset;
+
         Quaternion rot = Quaternion.LookRotation(dir);
 
         if (activeDashLine == null)
         {
-            activeDashLine = Instantiate(dashWarningLinePrefab, mid, rot);
+            activeDashLine = Instantiate(dashWarningLinePrefab, centerPos, rot);
         }
         else
         {
-            activeDashLine.transform.SetPositionAndRotation(mid, rot);
+            activeDashLine.transform.SetPositionAndRotation(centerPos, rot);
         }
 
-        activeDashLine.transform.localScale = new Vector3(0.3f, 0.3f, dist);
+        activeDashLine.transform.localScale = size;
+
+        if (activeDashLine.TryGetComponent(out Renderer renderer) && renderer.material.HasProperty("_Color"))
+        {
+            Color baseColor = new Color(1f, 0f, 0f, Mathf.Lerp(0.3f, 1f, normalizedTime));
+            renderer.material.color = baseColor;
+        }
     }
     public void DestroyDashLine()
     {
@@ -534,23 +551,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-    public void ShowDashWarning(Vector3 targetPos)
-    {
-        if (dashWarningLinePrefab == null) return;
-
-        Vector3 start = transform.position;
-        Vector3 dir = (targetPos - start).normalized;
-        float distance = Vector3.Distance(start, targetPos);
-        Vector3 mid = (start + targetPos) / 2f;
-
-        Quaternion rotation = Quaternion.LookRotation(dir);
-        GameObject line = Instantiate(dashWarningLinePrefab, mid, rotation);
-
-        line.transform.localScale = new Vector3(0.3f, 0.3f, distance);
-        Destroy(line, 1.2f);
-
-    }
 
 
 
