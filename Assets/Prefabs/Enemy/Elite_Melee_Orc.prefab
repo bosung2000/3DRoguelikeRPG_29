@@ -1670,7 +1670,7 @@ GameObject:
   - component: {fileID: 2104680374202879832}
   - component: {fileID: 551721503561459938}
   m_Layer: 8
-  m_Name: TestOrc
+  m_Name: Elite_Melee_Orc
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1791,6 +1791,7 @@ MonoBehaviour:
   _firePoint: {fileID: 0}
   _projectilePrefab: {fileID: 0}
   _weaponCollider: {fileID: 912621491616944823}
+  dashWarningLinePrefab: {fileID: 8714967501098459796, guid: 9ebdb5e51bddbad4e8ca03e87480c41a, type: 3}
   _bloodEffect:
   - {fileID: 6550804457596160986, guid: f4e1145b9cfce734d835382b29251a1e, type: 3}
   _bloodSpawnPoint: {fileID: 390740425467903724}
@@ -1818,7 +1819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9133b9cb5389fe64bb59720d0f6ffe36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 755da37c2bc5472438ee4a54efcacec1, type: 2}
+  statData: {fileID: 11400000, guid: 94874a7e8ba79d342a81d8db909a5914, type: 2}
 --- !u!95 &551721503561459938
 Animator:
   serializedVersion: 5
