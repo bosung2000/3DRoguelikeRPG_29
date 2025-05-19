@@ -241,6 +241,9 @@ public class SkillManager : MonoBehaviour
 
         // 스킬 사용 이벤트 발생
         //player.GetComponent<PlayerController>().SetTrigger("Skill");
+
+        //튜토리얼 체크
+        FindObjectOfType<TutorialController>()?.OnSkillUsed();
     }
    
 

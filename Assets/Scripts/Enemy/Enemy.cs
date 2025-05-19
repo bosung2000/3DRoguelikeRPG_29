@@ -159,7 +159,10 @@ public class Enemy : MonoBehaviour
 
         //존 내의 적 처치 이벤트
         OnDeath?.Invoke(this);
-        
+
+        //튜토리얼 체크
+        FindObjectOfType<TutorialController>()?.OnEnemyKilled();
+
     }
     
     //재화 드랍

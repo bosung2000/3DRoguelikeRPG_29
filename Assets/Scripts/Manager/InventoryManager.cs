@@ -96,6 +96,9 @@ public class InventoryManager : MonoBehaviour
             //    ShopSellInventory.OnTabChanged(InventoryTabType.All);
             //}
 
+            //튜토리얼 체크
+            FindObjectOfType<TutorialController>()?.OnItemPurchased();
+
             return true;
         }
         return false;

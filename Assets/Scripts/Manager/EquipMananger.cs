@@ -52,6 +52,10 @@ public class EquipMananger : MonoBehaviour
         AddStats();
         // 장착 관련 이벤트를 발생
         OnEquipedChange(itemData.equipType, itemData, true);
+
+        //튜토리얼 체크
+        FindObjectOfType<TutorialController>()?.OnItemEquipped();
+
         return true;
     }
 
