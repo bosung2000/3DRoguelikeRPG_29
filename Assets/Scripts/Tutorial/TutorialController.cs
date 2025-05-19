@@ -81,7 +81,13 @@ public class TutorialController : MonoBehaviour
                 onStepStart = () =>
                 {
                     Debug.Log("[튜토리얼] 몬스터 처치 시작");
-                    if (monsterGroupp) monsterGroupp.SetActive(true);
+                    if (monsterGroupp)
+                    {
+                        monsterGroupp.SetActive(true);
+                         var roomZone = monsterGroupp.GetComponent<RoomZone>();
+                        if (roomZone != null)
+                            roomZone.ActivateRoom();
+                    }
                 }
             },
             new TutorialStep
