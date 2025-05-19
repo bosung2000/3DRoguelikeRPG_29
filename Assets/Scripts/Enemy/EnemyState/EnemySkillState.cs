@@ -61,7 +61,7 @@ public class EnemySkillState : IEnemyState
         // 엘리트 몬스터일 때 쿨타임 다시 세팅
         if (!controller.Enemy.IsBoss || controller.Enemy.skillA != EnemySkillType.None)
         {
-            controller.Enemy.ResetSkillCooldown();  // 이 방식이 더 단순하고 명확함
+            controller.Enemy.ResetSkillCooldown();
         }
 
         if (controller.agent != null && controller.agent.enabled && controller.agent.isOnNavMesh)
@@ -152,10 +152,34 @@ public class EnemySkillState : IEnemyState
             return;
         }
 
+        switch(skill)
+        {
+            case EnemySkillType.Dash:
+                if(stateInfo.IsName("Skill_Dash"))
+                {
+                    Vector3 playerPos = enemy.GetPlayerTarget().position;
+                    float dashProgress = Mathf.Clamp01(stateInfo.normalizedTime / 0.99f);
+                    enemy.CreateOrUpdateDashLine(playerPos, 7f, dashProgress);
+
+                    Vector3 toPlayer = playerPos - enemy.transform.position;
+                    toPlayer.y = 0f;
+
+                    if (toPlayer != Vector3.zero)
+                    {
+                        Quaternion lookRot = Quaternion.LookRotation(toPlayer);
+                        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, lookRot, Time.deltaTime * 10f);
+                    }
+                    if (stateInfo.normalizedTime >= 0.99f)
+                    {
+                        enemy.DestroyDashLine();
+                        break;
+                    }
+                }
+                return;
+        }
 
 
-
-            switch (controller.Enemy.skillA)
+        switch (controller.Enemy.skillA)
         { 
             case EnemySkillType.Dash:
                 skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 0.99f;
