@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemySkillState : IEnemyState
 {
@@ -9,6 +10,13 @@ public class EnemySkillState : IEnemyState
     private bool transitionedToAttack = false;
     private bool shockWaveTriggered = false;
     private bool jumpedForward = false;
+
+    //점프 스킬관련 변수
+    private bool isJumping = false;
+    private float jumpElapsed = 0f;
+    private float jumpDuration = 0.5f;
+    private Vector3 jumpStartPos;
+    private Vector3 jumpTargetPos;
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
@@ -69,42 +77,82 @@ public class EnemySkillState : IEnemyState
         {
             controller.agent.isStopped = false;
         }
+
+        isJumping = false;
     }
 
     public void UpdateState(EnemyController controller)
     {
         EnemySkillType skill = enemy.GetCurrentSkillType();
-        string animName = enemy.GetSkillTriggerName(skill);
         stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         skillEnd = false;
 
         if (skill == EnemySkillType.ShockWave)
         {
-            // 점프 중간 → 공격 애니 전환 트리거
-            if (!transitionedToAttack && stateInfo.IsName("Skill_ShockWave_Jump") && stateInfo.normalizedTime >= 0.5f)
+            // 점프 이동 시작
+            if (!jumpedForward && stateInfo.IsName("Skill_ShockWave_Jump"))
+            {
+                Transform player = enemy.GetPlayerTarget();
+                Vector3 toPlayer = (player.position - enemy.transform.position).normalized;
+                toPlayer.y = 0f;
+                float offset = 1.5f;
+
+                Vector3 target = player.position - toPlayer * offset;
+                if (NavMesh.SamplePosition(target, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                    target = hit.position;
+
+                jumpStartPos = enemy.transform.position;
+                jumpTargetPos = target;
+                jumpElapsed = 0f;
+                isJumping = true;
+
+                jumpedForward = true;
+            }
+
+            // 점프 이동 처리
+            if (isJumping)
+            {
+                jumpElapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(jumpElapsed / jumpDuration);
+                float height = 2.5f;
+                float yOffset = Mathf.Sin(Mathf.PI * t) * height;
+
+                Vector3 horizontal = Vector3.Lerp(jumpStartPos, jumpTargetPos, t);
+                enemy.transform.position = horizontal + Vector3.up * yOffset;
+
+                if (t >= 1f)
+                {
+                    isJumping = false;
+                    if (controller.agent.enabled && NavMesh.SamplePosition(enemy.transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                    {
+                        controller.agent.Warp(hit.position);
+                        controller.agent.isStopped = true;
+                    }
+                }
+            }
+
+            // 공격 애니 전환
+            if (!transitionedToAttack && stateInfo.IsName("Skill_ShockWave_Jump") && stateInfo.normalizedTime >= 0.15f)
             {
                 controller.animator.SetTrigger("JumpToAttack");
                 transitionedToAttack = true;
             }
 
-            if (!jumpedForward && stateInfo.IsName("Skill_ShockWave_Jump") && stateInfo.normalizedTime >= 0.4f)
-            {
-                enemy.DoShockWaveJumpMove(); 
-                jumpedForward = true;
-            }
-
-            // 공격 애니 중 착지 타이밍에 충격파 실행
+            // 충격파 실행
             if (!shockWaveTriggered && stateInfo.IsName("Skill_ShockWave_Attack") && stateInfo.normalizedTime >= 0.5f)
             {
                 enemy.SkillShockWave();
                 shockWaveTriggered = true;
             }
 
-            // 애니메이션 종료 후 상태 전환
+            // 종료
             if (stateInfo.IsName("Skill_ShockWave_Attack") && stateInfo.normalizedTime >= 0.99f)
             {
                 transitionedToAttack = false;
                 shockWaveTriggered = false;
+                jumpedForward = false;
+                isJumping = false;
+
                 enemy.ResetSkillCooldown();
                 controller.ChageState(EnemyStateType.Chase);
             }

@@ -430,28 +430,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    //충격파 - 거리이동
-    public void DoShockWaveJumpMove()
-    {
-        Transform player = GetPlayerTarget();
-        if (player == null) return;
-
-        Vector3 toPlayer = (player.position - transform.position).normalized;
-        toPlayer.y = 0f;
-
-        float desiredOffset = 1.5f; // 플레이어로부터 떨어질 거리 (앞에 착지)
-        Vector3 targetPos = player.position - toPlayer * desiredOffset;
-
-        // NavMesh 위에 위치 보정
-        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-        {
-            transform.position = hit.position;
-        }
-        else
-        {
-            transform.position = targetPos;
-        }
-    }
 
     //원거리
     //SpreadShot
