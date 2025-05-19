@@ -45,7 +45,7 @@ public class TutorialController : MonoBehaviour
         startPosition = player.transform.position;
 
         // 초기 상태로 오브젝트 숨김
-        if (monsterGroupp) monsterGroupp.SetActive(false);
+        //if (monsterGroupp) monsterGroupp.SetActive(false);
         if (shopNPC) shopNPC.SetActive(false);
 
         SetupSteps();
@@ -83,7 +83,7 @@ public class TutorialController : MonoBehaviour
                     Debug.Log("[튜토리얼] 몬스터 처치 시작");
                     if (monsterGroupp)
                     {
-                        monsterGroupp.SetActive(true);
+                        //monsterGroupp.SetActive(true);
                          var roomZone = monsterGroupp.GetComponent<RoomZone>();
                         if (roomZone != null)
                             roomZone.ActivateRoom();
