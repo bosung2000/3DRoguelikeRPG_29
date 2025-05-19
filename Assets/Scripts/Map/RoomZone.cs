@@ -6,17 +6,17 @@ public class RoomZone : MonoBehaviour
 {
     public string roomName;
     public List<Transform> spawnPoints;
-    
+
     public RoomSpawnConfig spawnConfig;
     public float spawnInterval = 0.1f; //일반 몬스터 반복 소환 간격
 
-    private List<Enemy> spawnedEnemies;
+    public List<Enemy> spawnedEnemies;
     public bool ClearBool;
 
     private void Awake()
     {
-        ClearBool = false;
-        spawnedEnemies = new();
+
+
 
         // 방 이름이 설정되지 않았으면 게임 오브젝트 이름을 사용
         if (string.IsNullOrEmpty(roomName))
@@ -37,7 +37,8 @@ public class RoomZone : MonoBehaviour
 
     public void ActivateRoom()
     {
-        
+        ClearBool = false;
+        spawnedEnemies = new();
         Debug.Log($"[RoomZone] {roomName} 시작됨");
         StartCoroutine(SpawnEnemiesCoroutine());
     }
@@ -68,7 +69,7 @@ public class RoomZone : MonoBehaviour
             SpawnEnemy(spawnConfig.bossEnemyPrefab, point.position);
         }
 
-        if (spawnedEnemies.Count == 0 )
+        if (spawnedEnemies.Count == 0)
         {
             ClearBool = true;
             //nextRoom.ActivateRoom();
@@ -79,10 +80,9 @@ public class RoomZone : MonoBehaviour
     {
         if (prefab == null) return;
 
-        GameObject enemyGO = Instantiate(prefab, position, Quaternion.identity);
+        GameObject enemyGO = Instantiate(prefab, position, Quaternion.identity, transform);
         Enemy enemy = enemyGO.GetComponent<Enemy>();
         //stage 별로 능력치 증가 수치 수정 
-
 
         if (enemy != null)
         {
@@ -101,5 +101,33 @@ public class RoomZone : MonoBehaviour
             ClearBool = true;
             //nextRoom?.ActivateRoom();
         }
+    }
+
+    public void CleanupRoom()
+    {
+        // 생성된 모든 몬스터 제거
+        if (spawnedEnemies != null)
+        {
+            foreach (Enemy enemy in spawnedEnemies)
+            {
+                if (enemy != null)
+                {
+                    Destroy(enemy.gameObject);
+                }
+            }
+            spawnedEnemies.Clear();
+        }
+
+        // 방 내의 모든 아이템, 골드 등 정리
+        // RoomZone의 자식 오브젝트 중 특정 태그를 가진 오브젝트들 정리
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Gold") || child.CompareTag("Soul"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        ClearBool = false;
     }
 }

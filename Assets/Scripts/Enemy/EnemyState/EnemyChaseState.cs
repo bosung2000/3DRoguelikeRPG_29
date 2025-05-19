@@ -8,6 +8,7 @@ public class EnemyChaseState : IEnemyState
     private float _chaseRange;             //추적범위
     private float _attackRange;            //공격 범위
     private float _distance;               //플레이어와의 거리
+    private float _skillRange;             //스킬범위
 
     public void EnterState(EnemyController controller)
     {
@@ -36,7 +37,7 @@ public class EnemyChaseState : IEnemyState
 
     public void ExitState(EnemyController controller)
     {
-        controller.animator.SetBool("isRun", false);
+        //controller.animator.SetBool("isRun", false);
     }
 
     public void UpdateState(EnemyController controller)
@@ -49,6 +50,14 @@ public class EnemyChaseState : IEnemyState
 
         //플레이어와 거리 차이
         _distance = Vector3.Distance(controller.transform.position, _target.position);
+        //스킬범위 지정
+        _skillRange = controller.Enemy.GetSkillRange();
+
+        if (controller.Enemy.CanEnterSkillState() && _distance <= _skillRange)
+        {
+            controller.ChageState(EnemyStateType.Skill);
+            return;
+        }
 
         // 범위 밖이면 목적지 계산해서 추적
         if (_distance > _attackRange + 1f)
@@ -65,12 +74,6 @@ public class EnemyChaseState : IEnemyState
         }
         else
         {
-            if(controller.Enemy.CanUseSkill())
-            {
-                controller.ChageState(EnemyStateType.Skill);
-                return;
-            }
-
             //스킬이 없거나 쿨타임이 안 됐으면
             controller.ChageState(EnemyStateType.Attack);
             controller.agent.isStopped = true;

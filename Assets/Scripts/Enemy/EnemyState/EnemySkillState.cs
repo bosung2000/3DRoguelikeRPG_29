@@ -5,11 +5,21 @@ public class EnemySkillState : IEnemyState
     Enemy enemy;
     public bool skillEnd;
     AnimatorStateInfo stateInfo;
+
+    private bool transitionedToAttack = false;
+    private bool shockWaveTriggered = false;
+    private bool jumpedForward = false;
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
 
-        if(enemy.IsBoss)//보스 스킬
+        if (controller.animator == null)
+        {
+            Debug.LogError("Animator가 null임!");
+            return;
+        }
+
+        if (enemy.IsBoss)//보스 스킬
         {
             if(enemy.CurrentPhase == 1)
             {
@@ -30,10 +40,11 @@ public class EnemySkillState : IEnemyState
         }
         else//엘리트 스킬
         {
-            switch (controller.Enemy.skillB)
+            switch (controller.Enemy.skillA)
             {
                 case EnemySkillType.Dash:
                     controller.animator.SetTrigger("Skill_Dash");
+                    Debug.Log("asdf");
                     break;
                 case EnemySkillType.SpreadShot:
                     controller.animator.SetTrigger("Skill_SpreadShot");
@@ -49,9 +60,14 @@ public class EnemySkillState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         // 엘리트 몬스터일 때 쿨타임 다시 세팅
-        if (!controller.Enemy.IsBoss && controller.Enemy.skillB != EnemySkillType.None)
+        if (!controller.Enemy.IsBoss || controller.Enemy.skillA != EnemySkillType.None)
         {
             controller.Enemy.ResetSkillCooldown();  // 이 방식이 더 단순하고 명확함
+        }
+
+        if (controller.agent != null && controller.agent.enabled && controller.agent.isOnNavMesh)
+        {
+            controller.agent.isStopped = false;
         }
     }
 
@@ -62,25 +78,49 @@ public class EnemySkillState : IEnemyState
         stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         skillEnd = false;
 
-        if (controller.Enemy.IsBoss)
+        if (skill == EnemySkillType.ShockWave)
         {
-            if (!string.IsNullOrEmpty(animName))
+            // 점프 중간 → 공격 애니 전환 트리거
+            if (!transitionedToAttack && stateInfo.IsName("Skill_ShockWave_Jump") && stateInfo.normalizedTime >= 0.5f)
             {
-                skillEnd = stateInfo.IsName(animName) && stateInfo.normalizedTime >= 1.0f;
+                controller.animator.SetTrigger("JumpToAttack");
+                transitionedToAttack = true;
             }
+
+            if (!jumpedForward && stateInfo.IsName("Skill_ShockWave_Jump") && stateInfo.normalizedTime >= 0.4f)
+            {
+                enemy.DoShockWaveJumpMove(); 
+                jumpedForward = true;
+            }
+
+            // 공격 애니 중 착지 타이밍에 충격파 실행
+            if (!shockWaveTriggered && stateInfo.IsName("Skill_ShockWave_Attack") && stateInfo.normalizedTime >= 0.5f)
+            {
+                enemy.SkillShockWave();
+                shockWaveTriggered = true;
+            }
+
+            // 애니메이션 종료 후 상태 전환
+            if (stateInfo.IsName("Skill_ShockWave_Attack") && stateInfo.normalizedTime >= 0.99f)
+            {
+                transitionedToAttack = false;
+                shockWaveTriggered = false;
+                enemy.ResetSkillCooldown();
+                controller.ChageState(EnemyStateType.Chase);
+            }
+
+            return;
         }
-        else
-        {
-            switch (controller.Enemy.skillA)
-            {
-                case EnemySkillType.Dash:
-                    skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 1.0f;
-                    break;
-                case EnemySkillType.SpreadShot:
-                    skillEnd = stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 1.0f;
-                    break;
-                    //다른 스킬
-            }
+
+        switch (controller.Enemy.skillA)
+        { 
+            case EnemySkillType.Dash:
+                skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 0.99f;
+                break;
+            case EnemySkillType.SpreadShot:
+                skillEnd = stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 0.99f;
+                break;
+                //다른 스킬
         }
 
         if (skillEnd)

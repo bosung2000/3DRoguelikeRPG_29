@@ -23,9 +23,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerController _playerController;
     [SerializeField] Weapon _Weapon;
     [SerializeField] private CameraShake _cameraShake;
-    [SerializeField] private GameObject settingMenu;
-    [SerializeField] private GameObject _bloodEffect;
+    [SerializeField] private GameObject _dieMenu;
+    [SerializeField] private GameObject[] _bloodEffect;
     [SerializeField] private Transform _bloodSpawnPoint;
+    [SerializeField] private Transform _dieSpawnPoint;
 
     private float _lastHitTime = -100f;
 
@@ -412,16 +413,17 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             DamageTextManager.Instance.ShowDamageText(transform.position, finalDamage, false);
         }
 
-        _cameraShake.ShakeCamera(2f, 0.3f);
+        _cameraShake.ShakeAndDamage(2f, 0.3f,0.5f);
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
-        BloodEffect();
+        DieEffect(0,0,_bloodSpawnPoint,_bloodSpawnPoint,2);
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
             GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
 
             _playerController.SetTrigger("Die");
+            DieEffect(3, 1, _dieSpawnPoint, _dieSpawnPoint, 6);
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
@@ -442,26 +444,58 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         yield return new WaitUntil(() => _playerController._anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
-        settingMenu.SetActive(true);
+        float timer = 0f;
+        while (timer < 0.5f)
+        {
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        _dieMenu.SetActive(true);
     }
-    public void BloodEffect()
+    //public void BloodEffect(int index, Transform position, Transform rotation, int duration)
+    //{
+    //    CleanupActiveEffects();
+
+    //    GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
+
+    //    activeEffects.Add(effect);
+    //    Destroy(effect, duration);
+    //}
+
+    public void DieEffect(float delay, int index, Transform position, Transform rotation, float duration)
     {
-        // 기존 이펙트 모두 제거
         CleanupActiveEffects();
+        StartCoroutine(SpawnEffectAfterSeconds(delay, index, position, rotation, duration));
+    }
+    private IEnumerator SpawnEffectAfterSeconds(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
-        // 새 이펙트 생성
-        GameObject effect = Instantiate(_bloodEffect, _bloodSpawnPoint.position, _bloodSpawnPoint.rotation);
-
-        // 플레이어 이동에 따라 이펙트도 같이 이동하도록 부모 설정
-        //effect.transform.localPosition = Vector3.zero;
-        //effect.transform.localRotation = Quaternion.identity;
-
-        // 활성화된 이펙트 목록에 추가
+        GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
         activeEffects.Add(effect);
-        Destroy(effect, 1f);
+
+        // 생성 후 제거도 예약
+        StartCoroutine(DestroyEffectAfterSeconds(effect, duration));
     }
 
-    // 기존 활성화된 이펙트 모두 제거
+    private IEnumerator DestroyEffectAfterSeconds(GameObject obj, float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (obj != null) Destroy(obj);
+    }
+
     private void CleanupActiveEffects()
     {
         foreach (GameObject effect in activeEffects)
@@ -555,5 +589,22 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void DisableCollider()
     {
         _Weapon.DisableCollider();
+    }
+
+    public void LightingCamera()
+    {
+        _cameraShake.ShakeCamera(1, 1.5f);
+        _cameraShake.ShakeCamera(3, 0.25f);
+    }
+    public void FireComboCamera()
+    {
+        _cameraShake.ShakeCamera(1, 2f);
+        _cameraShake.ShakeCamera(3, 0.5f);
+    }
+    public void GreenSlashCamera()
+    {
+        _cameraShake.Zoom(45f, 1f);
+        _cameraShake.ShakeCamera(2, 1f);
+        _cameraShake.ShakeCamera(5, 0.2f);
     }
 }

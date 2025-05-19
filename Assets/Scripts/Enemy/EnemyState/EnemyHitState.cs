@@ -2,20 +2,27 @@ using UnityEngine;
 
 public class EnemyHitState : IEnemyState
 {
+    Enemy enemy;
     private float _hitDuration = 0.3f; // 경직 시간
     private float _timer = 0f;
     public void EnterState(EnemyController controller)
     {
+        enemy = controller.Enemy;
+        if(enemy.IsBoss && controller.GetCurrentHP() > 0)
+        {
+            return;
+        }
+
         _timer = 0f;
-        controller.animator.SetTrigger("Hit");
         controller.agent.isStopped = true;
         controller.agent.ResetPath();
-
+        controller.animator.SetTrigger("Hit");
         controller.ResetAttackCooldown();
     }
 
     public void ExitState(EnemyController controller)
     {
+        controller.Enemy.DisableWeaponCollider();
     }
 
     public void UpdateState(EnemyController controller)

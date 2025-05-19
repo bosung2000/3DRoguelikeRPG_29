@@ -7,12 +7,13 @@ public class EnemyIdleState : IEnemyState
     private LayerMask _targetLayer;
 
     // 정찰/순찰 시스템
-    private float _wanderRadius = 10f;  // 이동 가능 범위
+    private float _wanderRadius = 8f;  // 이동 가능 범위
     private float _waitTime = 2f;       //도착 후 대기 시간
     private float _waitTimer = 0;       // 대기 시간 체크
+    private float _moveTimeout = 5f; // 이동 제한 시간
+    private float _moveTimer = 0f;
     private bool _isWaiting = false;
-
-
+    private float _dist;
     public void EnterState(EnemyController controller)
     {
         _scanRadius = controller.GetStat(EnemyStatType.ChaseRange);
@@ -45,9 +46,24 @@ public class EnemyIdleState : IEnemyState
             controller.ChageState(EnemyStateType.Chase);
         }
 
-        if(!controller.agent.pathPending && controller.agent.remainingDistance <= 0.5f)
+        if (controller.Enemy.IsBoss)
+            return;
+
+        _dist = controller.agent.remainingDistance;
+
+        if (!controller.agent.hasPath || controller.agent.pathStatus != NavMeshPathStatus.PathComplete)
         {
-            if(!_isWaiting)
+            _moveTimer = 0f;
+            _isWaiting = false;
+            RandMovePos(controller);
+            return;
+        }
+
+        if (!controller.agent.pathPending && controller.agent.remainingDistance <= 0.5f)
+        {
+            _moveTimer = 0f;
+
+            if (!_isWaiting)
             {
                 _isWaiting = true;
                 _waitTimer = 0f;
@@ -60,6 +76,16 @@ public class EnemyIdleState : IEnemyState
                     _isWaiting = false;
                     RandMovePos(controller);
                 }
+            }
+        }
+        else
+        {
+            _moveTimer += Time.deltaTime;
+            if (_moveTimer > _moveTimeout)
+            {
+                _moveTimer = 0f;
+                _isWaiting = false;
+                RandMovePos(controller);
             }
         }
 
@@ -79,6 +105,10 @@ public class EnemyIdleState : IEnemyState
         if(NavMesh.SamplePosition(randDirection, out hit, _wanderRadius, NavMesh.AllAreas))
         {
             controller.agent.SetDestination(hit.position);
+        }
+        else
+        {
+            Debug.Log("목적지 못 찾음");
         }
     }
 }

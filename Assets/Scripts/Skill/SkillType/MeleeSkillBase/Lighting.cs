@@ -32,7 +32,7 @@ public class Lighting : MeleeSkillBase
             yield return new WaitForSeconds(spinInterval);
             elapsed += spinInterval;
         }
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.2f);
 
         // 2. 피니시 슬래시 단계
         FinishSlash(player, direction);

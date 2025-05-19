@@ -18,13 +18,13 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] private GameObject mapui;
     [SerializeField] Portal _portal;
-    
+
     // 방 인덱스별 RoomZone 참조를 저장할 딕셔너리 추가
     private Dictionary<int, RoomZone> roomZones = new Dictionary<int, RoomZone>();
-    
+
     // 현재 활성화된 특수 오브젝트(상점, 보물 등)
     private GameObject currentActiveObject;
-    
+
     private List<Room> rooms;
     private int currentRoomIndex = 0;  // 현재 플레이어가 위치한 방
 
@@ -38,23 +38,23 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
-        rooms = new List<Room>();
+
         // 씬에서 모든 RoomZone을 찾아서 딕셔너리에 저장
         FindAllRoomZones();
     }
-    
+
     // 모든 RoomZone을 찾아서 이름에 따라 딕셔너리에 저장하는 메서드
     private void FindAllRoomZones()
     {
         RoomZone[] allRoomZones = FindObjectsOfType<RoomZone>();
-        foreach(RoomZone rz in allRoomZones)
+        foreach (RoomZone rz in allRoomZones)
         {
             string roomName = rz.roomName;
             // Room_0, Room_1 형식에서 인덱스 추출
-            if(roomName.StartsWith("Room"))
+            if (roomName.StartsWith("Room"))
             {
                 string[] parts = roomName.Split('_');
-                if(parts.Length > 1 && int.TryParse(parts[1], out int roomIndex))
+                if (parts.Length > 1 && int.TryParse(parts[1], out int roomIndex))
                 {
                     roomZones[roomIndex] = rz;
                     Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
@@ -67,15 +67,15 @@ public class MapManager : MonoBehaviour
     private void Start()
     {
         _portal = FindObjectOfType<Portal>();
-        
+
         // Awake에서 모든 방이 발견되지 않았을 수 있으므로 한 번 더 확인
         if (roomZones.Count == 0)
         {
             Debug.LogWarning("Start에서 RoomZone 재검색 실행...");
             FindAllRoomZones();
         }
-        
-        
+
+
     }
 
     public void initStart(GameObject _mapui)
@@ -90,6 +90,7 @@ public class MapManager : MonoBehaviour
     // 맵 레이아웃 초기화 (고정된 위치와 연결 구조)
     private void InitializeMapLayout()
     {
+        rooms = new List<Room>();
         // 14개 방의 위치 설정
         Vector2[] positions = new Vector2[]
         {
@@ -222,7 +223,16 @@ public class MapManager : MonoBehaviour
             UpdateRoomUI(i);
         }
 
-        
+
+    }
+
+    private void ClearMapUI()
+    {
+        // mapui의 모든 자식 오브젝트 삭제
+        foreach (Transform child in mapui.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     // 방 타입에 맞는 프리팹 반환
@@ -240,39 +250,12 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    // 연결선 생성
-    private void CreateConnectionLines()
-    {
-        // 이미 생성된 선들을 관리할 리스트 (필요시)
-        List<GameObject> connectionLines = new List<GameObject>();
 
-        // 각 방에서 연결된 방들로 선 그리기
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            foreach (int connectedRoomIndex in rooms[i].connectedRooms)
-            {
-                // 중복 선 방지 (i < connectedRoomIndex인 경우만 선 그리기)
-                if (i < connectedRoomIndex)
-                {
-                    GameObject line = Instantiate(linePrefab, mapui.transform);
-                    LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-
-                    Vector3 startPos = new Vector3(rooms[i].position.x * 150, rooms[i].position.y * 150, 0);
-                    Vector3 endPos = new Vector3(rooms[connectedRoomIndex].position.x * 150, rooms[connectedRoomIndex].position.y * 150, 0);
-
-                    lineRenderer.SetPosition(0, startPos);
-                    lineRenderer.SetPosition(1, endPos);
-
-                    connectionLines.Add(line);
-                }
-            }
-        }
-    }
 
     // 접근 가능한 방 업데이트
     private void UpdateAccessibleRooms()
     {
-        
+
         // 현재 방에서 연결된 방들을 접근 가능하게 설정
         foreach (int connectedRoomIndex in rooms[currentRoomIndex].connectedRooms)
         {
@@ -289,21 +272,30 @@ public class MapManager : MonoBehaviour
             Button button = rooms[roomIndex].uiObject.GetComponent<Button>();
             button.interactable = rooms[roomIndex].isAccessible;
 
-            // 방문한 방은 색상 변경 등 시각적 표시 (선택사항)
-            if (rooms[roomIndex].isVisited)
+            Image image = button.GetComponent<Image>();
+            if (image != null)
             {
-                // 방문한 방 표시 코드
-            }
-
-            // 보스방 특별 표시
-            if (rooms[roomIndex].type == RoomType.Boss)
-            {
-                Image image = button.GetComponent<Image>();
-                if (image != null)
+                // 방문한 방은 반투명한 빨간색으로 표시
+                if (rooms[roomIndex].isVisited)
                 {
-                    // 보스방 강조 (예시)
-                    image.color = new Color(1f, 0.5f, 0.5f);
+                    if (roomIndex == 0)
+                    {
+                        return;
+                    }
+                    image.color = new Color(1f, 0.5f, 0.5f, 1.0f);
                 }
+                else
+                {
+                    // 방문하지 않은 방은 원래 색상으로
+                    image.color = Color.white;
+                }
+
+                // 보스방 특별 표시
+                //if (rooms[roomIndex].type == RoomType.Boss)
+                //{
+                //    // 보스방은 더 진한 빨간색으로 강조
+                //    image.color = new Color(1f, 0.2f, 0.2f, 1.0f);
+                //}
             }
         }
     }
@@ -313,20 +305,22 @@ public class MapManager : MonoBehaviour
     {
         if (rooms[roomIndex].isAccessible)
         {
-            // 보스방 입장 전 확인 (필요시)
-            //if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
-            //{
-            //    Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
-            //    return;
-            //}
-            
+            //보스방 입장 전 확인(필요시)
+            if (rooms[roomIndex].type == RoomType.Boss && !CanEnterBossRoom())
+            {
+                Debug.Log("보스방 입장 조건을 충족하지 못했습니다!");
+                return;
+            }
+
+
+
             // 이전 방에서 연결된 모든 방 비활성화
             foreach (int connectedRoom in rooms[currentRoomIndex].connectedRooms)
             {
                 rooms[connectedRoom].isAccessible = false;
                 UpdateRoomUI(connectedRoom);
             }
-            
+
             // 시작 방(0번째 방) 추가 처리 - 첫 번째 층(1,2,3)에 도달했을 때 0번 방 비활성화
             if (roomIndex == 1 || roomIndex == 2 || roomIndex == 3)
             {
@@ -334,15 +328,15 @@ public class MapManager : MonoBehaviour
                 UpdateRoomUI(0);
                 Debug.Log("시작 방 접근 비활성화");
             }
-            
+
             // 현재 방 업데이트
             currentRoomIndex = roomIndex;
             rooms[currentRoomIndex].isVisited = true;
             UpdateRoomUI(currentRoomIndex);
-            
+
             // 새로운 방에서 접근 가능한 방 활성화
             UpdateAccessibleRooms();
-            
+
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
         }
@@ -357,30 +351,39 @@ public class MapManager : MonoBehaviour
         {
             if (room.isVisited) visitedCount++;
         }
-        
+
         // 예: 최소 7개의 방을 방문해야 보스방 입장 가능
-        return visitedCount >= 7;
-        
+        return visitedCount >= 4;
+
         // 또는 항상 입장 가능하게 설정
         // return true;
     }
-        
+
     // 방 타입에 따른 게임 로직 처리
     private void HandleRoomAction(int roomIndex)
     {
+        // 들어가기전 현재방에있는 아이템을 clear(소울,골드)
+        if (roomZones.TryGetValue(currentRoomIndex, out RoomZone previousRoom))
+        {
+            previousRoom.CleanupRoom();
+        }
+        // 이전에 생성된 특수 오브젝트가 있으면 파괴
+        CleanupCurrentActiveObject();
+
+
         _portal.TryUsePortal($"potal_{roomIndex}");
         UIManager.Instance.ClosePopupUI<UIMap>();
 
         //다음 방 입장 직후에 저장
         GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
-        
-        // 이전에 생성된 특수 오브젝트가 있으면 파괴
-        CleanupCurrentActiveObject();
-        
+
+
         // 선택한 방 인덱스에 해당하는 RoomZone 찾기
-        if(roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
+        if (roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
         {
-            
+            targetRoom.spawnConfig.spawnnormal = false;
+            targetRoom.spawnConfig.spawnElite = false;
+            targetRoom.spawnConfig.spawnBoss = false;
             // 해당 방의 타입에 맞는 처리
             switch (rooms[roomIndex].type)
             {
@@ -390,7 +393,6 @@ public class MapManager : MonoBehaviour
                     break;
                 case RoomType.Elite:
                     // 엘리트용 설정 적용 후 방 활성화
-                    //targetRoom.spawnConfig.spawnnormal = true;
                     targetRoom.spawnConfig.spawnElite = true;
                     targetRoom.ActivateRoom();
                     break;
@@ -466,7 +468,7 @@ public class MapManager : MonoBehaviour
         // spawnPoints 중에서 랜덤으로 하나 선택
         int randomIndex = Random.Range(0, targetRoom.spawnPoints.Count);
         Transform spawnPoint = targetRoom.spawnPoints[randomIndex];
-        
+
         if (spawnPoint == null)
         {
             Debug.LogError("선택된 스폰 포인트가 null입니다!");
@@ -478,9 +480,9 @@ public class MapManager : MonoBehaviour
         // y축으로 -12만큼 내림
         //spawnPosition.y -= 3f;
         GameObject spawnedObject = Instantiate(prefab, spawnPosition, spawnPoint.rotation);
-        
+
         Debug.Log($"프리팹 '{prefab.name}' 생성됨 - 위치: {spawnPosition}, 방: {targetRoom.roomName}, 스폰 포인트 인덱스: {randomIndex}");
-        
+
         return spawnedObject;
     }
 
@@ -502,9 +504,38 @@ public class MapManager : MonoBehaviour
     public void OnBossDefeated()
     {
         Debug.Log("보스 처치! 게임 클리어 또는 다음 단계로 진행");
+
+        // 모든 방 정리
+        foreach (var roomZone in roomZones.Values)
+        {
+            roomZone.CleanupRoom();
+        }
+
+        StageManager.Instance.NextStage();
         // 게임 클리어 UI 표시 또는 다음 레벨 진행
+
+        // 0번 방(시작방)으로 이동
+        currentRoomIndex = 0;
+
+        // 방 타입 재배치
+        InitializeMapLayout();
+        AssignRoomTypes();
+
+        ClearMapUI();
+        CreateMapUI();
+        rooms[0].isVisited = true;
+        rooms[0].isAccessible = true;
+        // 맵 UI/상태 초기화
+        UpdateAllRoomUI();
     }
 
+    private void UpdateAllRoomUI()
+    {
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            UpdateRoomUI(i);
+        }
+    }
     // 현재 활성화된 특수 오브젝트 정리
     private void CleanupCurrentActiveObject()
     {

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,22 +18,30 @@ public class Enemy : MonoBehaviour
     [Header("무기 설정")]
     [SerializeField] private Collider _weaponCollider; //무기 trigger작동
 
+    private RoomZone _parentRoomZone; // 부모 RoomZone 참조
+
     public EnemyStat Stat { get; private set; }
     public Transform PlayerTarget { get; private set; }
     public GameObject ProjectilePrefab => _projectilePrefab;
     public Transform FirePoint => _firePoint;
     public EnemyRoleType Role => Stat?.StatData.EnemyRole ?? EnemyRoleType.Melee;
+    public EnemyType Type => Stat?.StatData.EnemyType ?? EnemyType.Normal;
     public bool IsBoss => Stat?.StatData.EnemyType == EnemyType.Boss;
     public EnemySkillType skillA => Stat?.StatData.SkillA ?? EnemySkillType.None;
     public EnemySkillType skillB => Stat?.StatData.SkillB ?? EnemySkillType.None;
     public int CurrentSkillChoice { get; set; } = 0;
-
     public int CurrentPhase { get; private set; } = 1; //페이즈 전환
     private float lastSkillTime;
     private EnemyController enemyController;
     private bool _isDeadAnimationEnd = false;
     private bool _isDead = false;
     private Vector3 _cachedTargetPosition;
+    private LayerMask layerMask;
+
+    [SerializeField] private GameObject[] _bloodEffect;
+    [SerializeField] private Transform _bloodSpawnPoint;
+    public Transform BloodSpawnPoint => _bloodSpawnPoint;
+    private List<GameObject> activeEffects = new List<GameObject>();
 
     public event Action<Enemy> OnDeath; //이벤트
 
@@ -40,6 +50,9 @@ public class Enemy : MonoBehaviour
         Stat = GetComponent<EnemyStat>();
         enemyController = GetComponent<EnemyController>();
         CachePlayer();
+        
+        // 부모 RoomZone 찾기
+        _parentRoomZone = GetComponentInParent<RoomZone>();
     }
 
     /// 플레이어 찾기
@@ -77,7 +90,7 @@ public class Enemy : MonoBehaviour
 
         // 데미지 텍스트 생성
         ShowDamageText(damage, CriBool);
-
+        DieEffect(0, 0, BloodSpawnPoint, BloodSpawnPoint, 4);
         Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
         if (Stat.GetStatValue(EnemyStatType.HP) <= 0)
@@ -130,6 +143,12 @@ public class Enemy : MonoBehaviour
         if (_isDead) return;
         _isDead = true;
 
+        if (IsBoss ==true)
+        {
+            GameManager.Instance.MapManager.OnBossDefeated();
+            GameManager.Instance.PortalManager._unlockedPortals.Clear();
+        }
+
         if (enemyController != null)
         {
             enemyController.animator.SetTrigger("Die");
@@ -156,14 +175,13 @@ public class Enemy : MonoBehaviour
         if (prefab == null || amount <= 0) return;
 
         Vector3 dropPos = GetSafeDropPosition(transform.position, 1.5f);
-        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity);
+        GameObject Obj = Instantiate(prefab, dropPos, Quaternion.identity, _parentRoomZone?.transform);
 
         CurrencyData currencyData = Obj.GetComponent<CurrencyData>();
         if (currencyData != null)
         {
             currencyData.SetAmount(amount);
         }
-
     }
     //생성 위치 보정
     private Vector3 GetSafeDropPosition(Vector3 center, float radius = 1.5f)
@@ -189,19 +207,26 @@ public class Enemy : MonoBehaviour
     {
         return _isDeadAnimationEnd;
     }
-        
+
+    public bool CanEnterSkillState()
+    {
+        return Type != EnemyType.Normal && CanUseSkill();
+    }
+
     //공격 - 콜라이더
     //ON
     public void EnableWeaponCollider()
     {
-        if(_weaponCollider != null)
-            _weaponCollider.enabled = true;
+        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
+        
+        _weaponCollider.enabled = true;
     }
     //OFF
     public void DisableWeaponCollider()
     {
-        if (_weaponCollider != null)
-            _weaponCollider.enabled = false;
+        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
+
+        _weaponCollider.enabled = false;
     }
 
     //트리거접촉 시
@@ -271,6 +296,7 @@ public class Enemy : MonoBehaviour
         {
             EnemySkillType.SpreadShot => "Skill_SpreadShot",
             EnemySkillType.Dash => "Skill_Dash",
+            EnemySkillType.ShockWave => "Skill_ShockWave",
             _ => string.Empty
         };
     }
@@ -280,6 +306,31 @@ public class Enemy : MonoBehaviour
             return skillB;
 
         return CurrentPhase == 1 ? skillA : (CurrentSkillChoice == 0 ? skillA : skillB);
+    }
+
+    //스킬별 범위
+    public float GetSkillRange()
+    {
+        if (IsBoss)
+        {
+            var skillType = GetCurrentSkillType();
+            return skillType switch
+            {
+                EnemySkillType.Dash => 8f,
+                EnemySkillType.ShockWave => 8f,
+                EnemySkillType.SpreadShot => 7f,
+                _ => 0f
+            };
+        }
+        else
+        {
+            return skillB switch
+            {
+                EnemySkillType.Dash => 10f,
+                EnemySkillType.SpreadShot => 7f,
+                _ => 0f
+            };
+        }
     }
     //쿨타임관리
     public bool CanUseSkill()
@@ -312,21 +363,40 @@ public class Enemy : MonoBehaviour
     private IEnumerator DashCoroutine()
     {
         float dashTime = 0.5f;
-        float dashSpeed = 15f;
+        float dashSpeed = 10.5f;
+        float hitRadius = 1.0f;
 
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
         dir.y = 0f;
+
         Quaternion initialRotation = Quaternion.LookRotation(dir);
-
         transform.rotation = initialRotation;
-        float timer = 0f;
 
+        float timer = 0f;
         //agent 비활성
         enemyController.agent.enabled = false;
-        
-        while(timer < dashTime)
+        enemyController.agent.updateRotation = false;
+
+        while (timer < dashTime)
         {
             transform.position += dir * dashSpeed * Time.deltaTime;
+            Collider[] hits = Physics.OverlapSphere(transform.position, hitRadius, LayerMask.GetMask("Player"));
+            foreach(var hit in hits)
+            {
+                if(hit.CompareTag("Player"))
+                {
+                    PlayerStat player = hit.GetComponent<PlayerStat>();
+                    if(player != null )
+                    {
+                        //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
+                        player.TakeDamage(0);
+                    }
+
+                    timer = dashTime;
+                    break;
+                }
+            }
+
             timer += Time.deltaTime;
             yield return null;
         }
@@ -341,22 +411,45 @@ public class Enemy : MonoBehaviour
         }
 
         enemyController.agent.enabled = true;
+        enemyController.agent.updateRotation = true;
         enemyController.agent.Warp(transform.position);
     }
     //충격파
-    public void SkillJumpStomp()
+    public void SkillShockWave()
     {
         float stompRadius = 4f;
-        Vector3 stompCenter = transform.position;
+        int damage = (int)(Stat.GetStatValue(EnemyStatType.Attack) * 0.5);
 
-        Collider[] hits = Physics.OverlapSphere(stompCenter, stompRadius, LayerMask.GetMask("Player"));
-        foreach(var hit in hits)
+        Collider[] hits = Physics.OverlapSphere(transform.position, stompRadius, LayerMask.GetMask("Player"));
+
+        foreach (var hit in hits)
         {
             if (hit.TryGetComponent(out PlayerStat player))
             {
-                int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
                 player.TakeDamage(damage);
             }
+        }
+    }
+    //충격파 - 거리이동
+    public void DoShockWaveJumpMove()
+    {
+        Transform player = GetPlayerTarget();
+        if (player == null) return;
+
+        Vector3 toPlayer = (player.position - transform.position).normalized;
+        toPlayer.y = 0f;
+
+        float desiredOffset = 1.5f; // 플레이어로부터 떨어질 거리 (앞에 착지)
+        Vector3 targetPos = player.position - toPlayer * desiredOffset;
+
+        // NavMesh 위에 위치 보정
+        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+        }
+        else
+        {
+            transform.position = targetPos;
         }
     }
 
@@ -391,7 +484,49 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+    public void DieEffect(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        CleanupActiveEffects();
+        StartCoroutine(SpawnEffectAfterSeconds(delay, index, position, rotation, duration));
+    }
+    private IEnumerator SpawnEffectAfterSeconds(float delay, int index, Transform position, Transform rotation, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
+        GameObject effect = Instantiate(_bloodEffect[index], position.position, rotation.rotation);
+        activeEffects.Add(effect);
+
+        StartCoroutine(DestroyEffectAfterSeconds(effect, duration));
+    }
+
+    private IEnumerator DestroyEffectAfterSeconds(GameObject obj, float delay)
+    {
+        float elapsed = 0f;
+        while (elapsed < delay)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (obj != null) Destroy(obj);
+    }
+
+    private void CleanupActiveEffects()
+    {
+        foreach (GameObject effect in activeEffects)
+        {
+            if (effect != null)
+            {
+                Destroy(effect);
+            }
+        }
+        activeEffects.Clear();
+    }
 
 
 
