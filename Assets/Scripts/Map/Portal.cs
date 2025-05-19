@@ -25,6 +25,8 @@ public class Portal : MonoBehaviour
         TryUsePortal("potal_0");
 
     }
+
+    
     public void TryUsePortal(string targetPortalID)
     {
         StartCoroutine(TeleportWithConfiner(targetPortalID));
@@ -63,15 +65,9 @@ public class Portal : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom2");
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom3");
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom4");
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom5");
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom6");
-            //GameManager.Instance.PortalManager.UnlockPortal("PortalToRoom7");
-            Debug.Log("포탈 오픈");
+            TryUsePortal("TutorialRoom");
         }
     }
 }

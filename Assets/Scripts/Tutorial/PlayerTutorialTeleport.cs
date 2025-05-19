@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerTutorialTeleport : MonoBehaviour
 {
-    public string tutorialPointName = "TutorialStartPoint"; // 이동 지점 오브젝트 이름
+    public string tutorialPointName = "potal_TutorialRoom"; // 이동 지점 오브젝트 이름
     public KeyCode teleportKey = KeyCode.T; // 누를 키
 
     private void Update()
