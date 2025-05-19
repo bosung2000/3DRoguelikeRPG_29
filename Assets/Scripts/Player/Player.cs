@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
         _playerController.SetTrigger("Attack");
         playerSkillController.UseSlashSkill(3);
         _lastHitTime = Time.time;
+
+        //튜토리얼 체크
+        FindObjectOfType<TutorialController>()?.OnAttackPerformed();
     }
 
     public void Dash()

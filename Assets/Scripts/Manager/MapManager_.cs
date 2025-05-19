@@ -329,6 +329,7 @@ public class MapManager : MonoBehaviour
                 Debug.Log("시작 방 접근 비활성화");
             }
 
+
             // 현재 방 업데이트
             currentRoomIndex = roomIndex;
             rooms[currentRoomIndex].isVisited = true;
@@ -336,6 +337,9 @@ public class MapManager : MonoBehaviour
 
             // 새로운 방에서 접근 가능한 방 활성화
             UpdateAccessibleRooms();
+
+            //튜토리얼 체크
+            FindObjectOfType<TutorialController>()?.OnMapUsed();
 
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
