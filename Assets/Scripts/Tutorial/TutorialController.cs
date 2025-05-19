@@ -66,9 +66,9 @@ public class TutorialController : MonoBehaviour
             },
             new TutorialStep
             {
-                instructionText = "장비를 인벤토리에서 장착해보세요.",
-                conditionToComplete = () => hasEquipped,
-                onStepStart = () => Debug.Log("[튜토리얼] 장비 장착 시작")
+                instructionText = "몬스터를 처치해보세요.",
+                conditionToComplete = () => hasKilledEnemy,
+                onStepStart = () => Debug.Log("[튜토리얼] 몬스터 처치 시작")
             },
             new TutorialStep
             {
@@ -78,9 +78,9 @@ public class TutorialController : MonoBehaviour
             },
             new TutorialStep
             {
-                instructionText = "몬스터를 처치해보세요.",
-                conditionToComplete = () => hasKilledEnemy,
-                onStepStart = () => Debug.Log("[튜토리얼] 몬스터 처치 시작")
+                instructionText = "인벤토리에서 장비를 장착해보세요.",
+                conditionToComplete = () => hasEquipped,
+                onStepStart = () => Debug.Log("[튜토리얼] 장비 장착 시작")
             },
             new TutorialStep
             {

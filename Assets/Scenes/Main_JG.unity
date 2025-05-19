@@ -3217,6 +3217,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3621380392920812127, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
+      propertyPath: m_Color.a
+      value: 0.003921569
+      objectReference: {fileID: 0}
+    - target: {fileID: 3621380392920812127, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6090478146188979821, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3296,6 +3304,10 @@ PrefabInstance:
     - target: {fileID: 6090478146188979821, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8798628944399012461, guid: c86004e931ba7894db95d12ca3a7f4d1, type: 3}
+      propertyPath: m_text
+      value: Tutorial
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3453,10 +3465,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2485737169547885831, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
-      propertyPath: CurrentroomZone
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4498812976466113252, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
       propertyPath: m_Name
       value: TutorialRoom
@@ -3501,34 +3509,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7641355058674513345, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
+      propertyPath: instructionText
+      value: 
+      objectReference: {fileID: 324356415}
+    - target: {fileID: 7641355058674513345, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
+      propertyPath: instructionPanel
+      value: 
+      objectReference: {fileID: 323103761}
+    m_RemovedComponents:
+    - {fileID: 985769197948788373, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4498812976466113252, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7172420456540458380}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
---- !u!1 &7172420456540458379 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4498812976466113252, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
-  m_PrefabInstance: {fileID: 7172420456540458378}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7172420456540458380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7172420456540458379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd75652dab213941b0d3e6410e85a59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  steps: []
-  instructionPanel: {fileID: 323103761}
-  instructionText: {fileID: 324356415}
 --- !u!1001 &7469944999818168502
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3954,7 +3948,6 @@ SceneRoots:
   - {fileID: 1934653428}
   - {fileID: 1869639590246960896}
   - {fileID: 119136571129108462}
-  - {fileID: 7172420456540458378}
   - {fileID: 466834529571560821}
   - {fileID: 4212834421690190044}
   - {fileID: 8371678632395990563}
@@ -3967,4 +3960,5 @@ SceneRoots:
   - {fileID: 9144794253147934079}
   - {fileID: 2459745304270232295}
   - {fileID: 2373328291953859958}
+  - {fileID: 7172420456540458378}
   - {fileID: 5753500898982962331}
