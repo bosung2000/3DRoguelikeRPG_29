@@ -70,6 +70,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private void Start()
     {
         InitBaseStat(_statData);
+        StartCoroutine(PeriodicRegen());
     }
 
     private void Update()
@@ -79,13 +80,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         // 스킬 쿨다운 업데이트
         UpdateSkillCooldowns();
-
-        // MP 자연 회복 (기존 코드에 없으면 추가)
-        float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
-        if (mpRecovery > 0)
-        {
-            RegenerateMana(mpRecovery * Time.deltaTime);
-        }
     }
 
     // 스킬 관련 메서드들 //
@@ -105,7 +99,28 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         SetStatValue(PlayerStatType.MP, currentMP - amount);
         return true;
     }
+    private IEnumerator PeriodicRegen()
+    {
+        WaitForSeconds wait = new WaitForSeconds(10f);
 
+        while (true)
+        {
+            yield return wait;
+
+            float hpRecovery = GetStatValue(PlayerStatType.HPRecovery);
+            float mpRecovery = GetStatValue(PlayerStatType.MPRecovery);
+
+            RegenerateHP(hpRecovery);
+            RegenerateMana(mpRecovery);
+        }
+    }
+    public void RegenerateHP(float amount)
+    {
+        float currentHP = GetStatValue(PlayerStatType.HP);
+        float maxHP = GetStatValue(PlayerStatType.MaxHP);
+
+        SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + amount, maxHP));
+    }
     /// <summary>
     /// 마나 회복 메서드
     /// </summary>
