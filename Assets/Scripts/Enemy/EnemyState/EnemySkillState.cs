@@ -29,16 +29,8 @@ public class EnemySkillState : IEnemyState
 
         if (enemy.IsBoss)//보스 스킬
         {
-            if(enemy.CurrentPhase == 1)
-            {
-                //스킬1
-                enemy.CurrentSkillChoice = 0;
-            }
-            else if(enemy.CurrentPhase == 2)
-            {
-                enemy.CurrentSkillChoice = Random.Range(0, 2);
-            }
-
+            enemy.CurrentSkillChoice = Random.Range(0, 2);
+            
             EnemySkillType skill = enemy.GetCurrentSkillType();
             string trigger = enemy.GetSkillTriggerName(skill);
             if(!string.IsNullOrEmpty(trigger))

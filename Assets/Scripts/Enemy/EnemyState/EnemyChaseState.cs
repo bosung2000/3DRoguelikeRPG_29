@@ -60,7 +60,7 @@ public class EnemyChaseState : IEnemyState
         }
 
         // 범위 밖이면 목적지 계산해서 추적
-        if (_distance > _attackRange + 1f)
+        if (_distance > _attackRange + 0.5f)
         {
             Vector3 direction = (_target.position - controller.transform.position).normalized;
             Vector3 stopPosition = _target.position - direction * (_attackRange);
