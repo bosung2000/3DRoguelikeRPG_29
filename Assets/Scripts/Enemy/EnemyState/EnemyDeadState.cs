@@ -7,6 +7,10 @@ public class EnemyDeadState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
+        if (!controller.agent.enabled)
+        {
+            controller.agent.enabled = true;
+        }
         controller.agent.isStopped = true;
         controller.animator.SetTrigger("DIe");
     }
@@ -18,7 +22,6 @@ public class EnemyDeadState : IEnemyState
 
     public void UpdateState(EnemyController controller)
     {
-
         if (enemy == null) return;
 
         if (enemy.IsDeadAnimationEnded())

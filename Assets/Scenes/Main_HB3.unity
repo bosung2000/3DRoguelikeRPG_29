@@ -1770,10 +1770,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8441160259190912584}
   - {fileID: 283653102791237476}
   - {fileID: 5825420334481150000}
   - {fileID: 7469944999818168503}
-  - {fileID: 8441160259190912584}
   - {fileID: 3633565617394751289}
   - {fileID: 174453060}
   - {fileID: 1030330833}
@@ -1915,18 +1915,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -294.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.151068
-      objectReference: {fileID: 0}
-    - target: {fileID: 6083162821042521336, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -78.25107
-      objectReference: {fileID: 0}
     - target: {fileID: 6125840638680738444, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
       propertyPath: _takeDamageImage
       value: 
@@ -1935,18 +1923,6 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 694646077}
-    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -294.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.151068
-      objectReference: {fileID: 0}
-    - target: {fileID: 8135719186188426448, guid: ecb1239f833be304080ee66ac46f543b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -78.25107
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2130,7 +2106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1987446872579480182, guid: 280220dd00033fa43be12f8fd9fa3d45, type: 3}
       propertyPath: m_Name
-      value: GameManger
+      value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 7508205960733686480, guid: 280220dd00033fa43be12f8fd9fa3d45, type: 3}
       propertyPath: _uiManager
