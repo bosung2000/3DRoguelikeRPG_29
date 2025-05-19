@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,6 +18,13 @@ public class Enemy : MonoBehaviour
 
     [Header("무기 설정")]
     [SerializeField] private Collider _weaponCollider; //무기 trigger작동
+
+    [Header("경고표시 설정")]
+    [SerializeField] private GameObject dashWarningLinePrefab;
+
+    private GameObject activeDashLine;
+
+
 
     private RoomZone _parentRoomZone; // 부모 RoomZone 참조
 
@@ -293,7 +301,7 @@ public class Enemy : MonoBehaviour
     public EnemySkillType GetCurrentSkillType()
     {
         if (!IsBoss)
-            return skillB;
+            return skillA;
 
         return  (CurrentSkillChoice == 0 ? skillA : skillB);
     }
@@ -496,8 +504,53 @@ public class Enemy : MonoBehaviour
         activeEffects.Clear();
     }
 
+    //경고 표시
+    //대쉬 라인 표시
+    public void CreateOrUpdateDashLine(Vector3 target)
+    {
+        Vector3 start = transform.position;
+        Vector3 dir = (target - start).normalized;
+        float dist = Vector3.Distance(start, target);
+        Vector3 mid = (start + target) / 2f;
+        Quaternion rot = Quaternion.LookRotation(dir);
+
+        if (activeDashLine == null)
+        {
+            activeDashLine = Instantiate(dashWarningLinePrefab, mid, rot);
+        }
+        else
+        {
+            activeDashLine.transform.SetPositionAndRotation(mid, rot);
+        }
+
+        activeDashLine.transform.localScale = new Vector3(0.3f, 0.3f, dist);
+    }
+    public void DestroyDashLine()
+    {
+        if (activeDashLine != null)
+        {
+            Destroy(activeDashLine);
+            activeDashLine = null;
+        }
+    }
 
 
+    public void ShowDashWarning(Vector3 targetPos)
+    {
+        if (dashWarningLinePrefab == null) return;
+
+        Vector3 start = transform.position;
+        Vector3 dir = (targetPos - start).normalized;
+        float distance = Vector3.Distance(start, targetPos);
+        Vector3 mid = (start + targetPos) / 2f;
+
+        Quaternion rotation = Quaternion.LookRotation(dir);
+        GameObject line = Instantiate(dashWarningLinePrefab, mid, rotation);
+
+        line.transform.localScale = new Vector3(0.3f, 0.3f, distance);
+        Destroy(line, 1.2f);
+
+    }
 
 
 

@@ -1735,6 +1735,7 @@ MonoBehaviour:
   _firePoint: {fileID: 0}
   _projectilePrefab: {fileID: 0}
   _weaponCollider: {fileID: 7040352430550129919}
+  dashWarningLinePrefab: {fileID: 8714967501098459796, guid: 9ebdb5e51bddbad4e8ca03e87480c41a, type: 3}
   _bloodEffect:
   - {fileID: 6550804457596160986, guid: f4e1145b9cfce734d835382b29251a1e, type: 3}
   _bloodSpawnPoint: {fileID: 9150554524039845903}
@@ -2750,6 +2751,18 @@ PrefabInstance:
     - target: {fileID: 3253581183789951367, guid: b55a81b3910ea5748a6e80d5db666505, type: 3}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253581183789951367, guid: b55a81b3910ea5748a6e80d5db666505, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253581183789951367, guid: b55a81b3910ea5748a6e80d5db666505, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253581183789951367, guid: b55a81b3910ea5748a6e80d5db666505, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3253581183789951367, guid: b55a81b3910ea5748a6e80d5db666505, type: 3}
       propertyPath: m_LocalPosition.x
