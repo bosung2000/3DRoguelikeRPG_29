@@ -26,14 +26,24 @@ public class ShopNPC : MonoBehaviour
     //    }
     //}
 
-    private void OnTriggerStay(Collider other)
+    private void OnCollisionStay(Collision collision)
     {
-        if (other.transform.CompareTag("Player")&& Input.GetKeyDown(KeyCode.E))
+        if (collision.transform.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
         {
 
             OpenShop();
             Time.timeScale = 0;
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        //if (other.transform.CompareTag("Player")&& Input.GetKeyDown(KeyCode.E))
+        //{
+
+        //    OpenShop();
+        //    Time.timeScale = 0;
+        //}
     }
 
     private void OpenShop()
