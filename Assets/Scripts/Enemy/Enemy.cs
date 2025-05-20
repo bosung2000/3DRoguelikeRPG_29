@@ -110,7 +110,10 @@ public class Enemy : MonoBehaviour
             if (enemyController != null)
             {
                 enemyController.ResetAttackCooldown();
-                enemyController.ChageState(EnemyStateType.Hit);
+                if (!IsBoss || enemyController.CurrentStateType != EnemyStateType.Skill)
+                {
+                    enemyController.ChageState(EnemyStateType.Hit);
+                }
             }
             else
             {
@@ -360,12 +363,12 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator DashCoroutine()
     {
-        float dashDistance = 6f; //돌진 거리
-        float dashSpeed = 10.5f;
-        float dashTime = dashDistance / dashSpeed; // 계산된 시간
+        float dashDistance = GetSkillRange(); //돌진 거리
+        float dashSpeed = 8f;
+        float dashTime = 0.5f; 
         float timer = 0f;
         float hitRadius = 1.0f;
-
+        
         Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
         dir.y = 0f;
 
@@ -387,8 +390,9 @@ public class Enemy : MonoBehaviour
                     PlayerStat player = hit.GetComponent<PlayerStat>();
                     if(player != null )
                     {
+                        int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
                         //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
-                        player.TakeDamage(0);
+                        player.TakeDamage(damage);
                     }
 
                     timer = dashTime;
@@ -507,8 +511,9 @@ public class Enemy : MonoBehaviour
 
     //경고 표시
     //대쉬 라인 표시
-    public void DashLineWarning(Vector3 start, Vector3 target, float dashDistance, float normalizedTime)
+    public void DashLineWarning(Vector3 start, Vector3 target, float normalizedTime)
     {
+        float dashDistance = GetSkillRange();
         Vector3 dir = (target - start).normalized;
         Vector3 end = start + dir * dashDistance;
         Vector3 mid = (start + end) / 2f;
