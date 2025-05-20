@@ -27,13 +27,13 @@ public class Shop : MonoBehaviour
     {
         playerManager = GameManager.Instance.PlayerManager;
         availableItems.Clear();
-        shopTier = UnityEngine.Random.Range(0, 10);
+        shopTier = UnityEngine.Random.Range(6, 10);
 
         if (shoptype == ShopType.Eqyip)
         {
             //장비
             // List로 받아오고 이걸 slotitemdata형태로 변경해야됨 
-            List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, 10);
+            List<ItemData> items = ItemManager.Instance.GetItemsByTierRange(shopTier, shopTier);
 
             foreach (var item in items)
             {
@@ -44,7 +44,7 @@ public class Shop : MonoBehaviour
         else if (shoptype == ShopType.Relic)
         {
             //유물 
-            List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(RelicsitemCount);
+            List<ItemData> items = ItemManager.Instance.GetRelicsByRandom(3);
             foreach (var item in items)
             {
                 SlotItemData slotItemData = new SlotItemData(item, 1);
