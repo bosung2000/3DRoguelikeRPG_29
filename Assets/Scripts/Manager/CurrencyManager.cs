@@ -105,7 +105,7 @@ public class CurrencyManager : MonoBehaviour
 
     internal bool CanAfford(CurrencyType _currencyType, int _gold)
     {
-        if (currencies[_currencyType] > _gold)
+        if (currencies[_currencyType] >= _gold)
         {
             return true;
         }

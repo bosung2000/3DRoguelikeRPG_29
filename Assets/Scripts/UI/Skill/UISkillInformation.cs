@@ -144,7 +144,7 @@ public class UISkillInformation : PopupUI
     private void UpdateDescrtion()
     {
         Txt_Duscrition.text =
-            $"스킬 데미지 : 공격력 * {CurrentSkill.skill.value}% \n" +
+            $"스킬 데미지 : 공격력 * ({CurrentSkill.skill.description}) \n" +
             $"마나 소모량 : {CurrentSkill.skill.requiredMana}\n" +
             $"스킬 쿨타임 : {CurrentSkill.skill.maxCooldown}";
 
