@@ -130,4 +130,14 @@ public class CurrencyManager : MonoBehaviour
     {
         SaveCurrency();
     }
+    public void ResetCurrencyToInitial()
+    {
+        currencies[CurrencyType.Gold] = 1000; // 초기 골드
+        currencies[CurrencyType.Soul] = 100;  // 초기 소울
+
+        OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
+        OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
+
+        SaveCurrency();
+    }
 }

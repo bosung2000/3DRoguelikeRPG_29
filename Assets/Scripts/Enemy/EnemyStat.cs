@@ -13,13 +13,18 @@ public class EnemyStat : BaseStat<EnemyStatType>
 
         if (statData != null)
         {
-            float multiplier = StageManager.Instance != null ? StageManager.Instance.HpMultiplier : 1f;
-            float currentMaxHp = Mathf.RoundToInt(statData.MaxHP * multiplier);
+            float HPmultiplier = StageManager.Instance != null ? StageManager.Instance.HpMultiplier : 1f;
+            float currentMaxHp = Mathf.RoundToInt(statData.MaxHP * HPmultiplier);
+            float Attackmultiplier = StageManager.Instance != null ? StageManager.Instance.AttackMultiplier : 1f;
+            float currenAttack = Mathf.RoundToInt(statData.MaxHP * Attackmultiplier);
+            float Speedmultiplier = StageManager.Instance != null ? StageManager.Instance.SpeedMultiplier : 1f;
+            float currenSpeed = Mathf.RoundToInt(statData.MaxHP * Speedmultiplier);
+
 
             SetStatValue(EnemyStatType.MaxHP, currentMaxHp);
             SetStatValue(EnemyStatType.HP, currentMaxHp);
-            SetStatValue(EnemyStatType.Speed, statData.Speed);
-            SetStatValue(EnemyStatType.Attack, statData.Attack);
+            SetStatValue(EnemyStatType.Speed, currenSpeed);
+            SetStatValue(EnemyStatType.Attack, currenAttack);
             SetStatValue(EnemyStatType.Gold, statData.Gold);
             SetStatValue(EnemyStatType.Soul, statData.Soul);
             SetStatValue(EnemyStatType.AttackRange, statData.AttackRange);

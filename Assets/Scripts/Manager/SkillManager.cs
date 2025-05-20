@@ -138,6 +138,17 @@ public class SkillManager : MonoBehaviour
         newSkill.skillComponent = CreateSkillComponent(newSkill.skill);
         ActiveSkills[slotIndex] = newSkill;
 
+        float cooldownReduction = Mathf.Clamp01(player._playerStat.GetStatValue(PlayerStatType.SkillCooltime) / 100f);
+        float realCooldown = newSkill.skill.maxCooldown * (1f - cooldownReduction);
+
+        var skillUI = uiSkill.GetSlotCondition(slotIndex);
+        if (skillUI != null)
+        {
+            skillUI.currentCooldown = realCooldown;
+            skillUI.maximumCooldown = newSkill.skill.maxCooldown;
+
+            skillUI.UICoolDown.fillAmount = 1f;
+        }
         // UI 업데이트
         uiSkill.ResetSkillUI(slotIndex, newSkill);
 
@@ -241,7 +252,8 @@ public class SkillManager : MonoBehaviour
 
         // 쿨타임 적용
         //_skill.cooldown = _skill.maxCooldown * (player._playerStat.GetStatValue(PlayerStatType.SkillColltime)/100f);
-        _skill.cooldown = _skill.maxCooldown * (player._playerStat.GetStatValue(PlayerStatType.SkillColltime));
+        //_skill.cooldown = _skill.maxCooldown * (player._playerStat.GetStatValue(PlayerStatType.SkillColltime));
+        _skill.cooldown = _skill.maxCooldown * Mathf.Clamp01(1f - (player._playerStat.GetStatValue(PlayerStatType.SkillCooltime) / 100f));
         // 스킬 사용 이벤트 발생
         //player.GetComponent<PlayerController>().SetTrigger("Skill");
 

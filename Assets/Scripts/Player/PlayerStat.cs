@@ -141,7 +141,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     public void StartSkillCooldown(string skillName, float cooldownTime)
     {
         // 스킬 쿨타임 감소 적용
-        float cooldownReduction = GetStatValue(PlayerStatType.SkillColltime) / 100f;
+        float cooldownReduction = GetStatValue(PlayerStatType.SkillCooltime) / 100f;
         float finalCooldown = cooldownTime * (1f - cooldownReduction);
 
         _skillCooldowns[skillName] = finalCooldown;
@@ -573,7 +573,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     }
     public void SkillCooldownUp(float skillColltime)
     {
-        ModifyStat(PlayerStatType.SkillColltime, skillColltime);
+        ModifyStat(PlayerStatType.SkillCooltime, skillColltime);
     }
     public void AttackSpeedUp(float attackSpeed)
     {
