@@ -102,7 +102,7 @@ public class TutorialController : MonoBehaviour
             },
             new TutorialStep
             {
-                instructionText = "상점에서 아이템을 구매해보세요.",
+                instructionText = "상점에서 아이템을 구매해보세요. 상점 이용 [E]",
                 conditionToComplete = () => hasPurchased,
                 onStepStart = () =>
                 {
