@@ -5,6 +5,5 @@ public class GameData
 {
     public int gold;
     public int soul;
-
-    //나중에 어디까지 갔는지 등 추가
+    public bool isTutorialDone = false; // 최초 실행 시 false
 }
