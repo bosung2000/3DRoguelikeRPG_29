@@ -110,7 +110,10 @@ public class Enemy : MonoBehaviour
             if (enemyController != null)
             {
                 enemyController.ResetAttackCooldown();
-                enemyController.ChageState(EnemyStateType.Hit);
+                if (!IsBoss || enemyController.CurrentStateType != EnemyStateType.Skill)
+                {
+                    enemyController.ChageState(EnemyStateType.Hit);
+                }
             }
             else
             {
