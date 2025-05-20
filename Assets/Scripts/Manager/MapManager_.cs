@@ -343,6 +343,9 @@ public class MapManager : MonoBehaviour
 
             // 선택한 방 타입에 따른 게임 로직 처리
             HandleRoomAction(roomIndex);
+
+            //튜토리얼 체크
+            FindObjectOfType<TutorialController>()?.OnRoomChanged();
         }
     }
 
@@ -481,8 +484,9 @@ public class MapManager : MonoBehaviour
 
         // 선택된 위치에 프리팹 생성
         Vector3 spawnPosition = spawnPoint.position;
-        // y축으로 -12만큼 내림
-        //spawnPosition.y -= 3f;
+        
+
+
         GameObject spawnedObject = Instantiate(prefab, spawnPosition, spawnPoint.rotation);
 
         Debug.Log($"프리팹 '{prefab.name}' 생성됨 - 위치: {spawnPosition}, 방: {targetRoom.roomName}, 스폰 포인트 인덱스: {randomIndex}");
