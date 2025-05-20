@@ -45,6 +45,7 @@ public abstract class PopupUI : BaseUI
 
     public override void Show()
     {
+        gameObject.SetActive(true);
         base.Show();
         // 팝업이 표시될 때마다 최상단으로
         transform.SetAsLastSibling();
@@ -52,6 +53,7 @@ public abstract class PopupUI : BaseUI
 
     public virtual void Close()
     {
+        gameObject.SetActive(false);
         Hide();
         Clear();
     }
