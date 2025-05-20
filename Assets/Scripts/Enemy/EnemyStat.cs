@@ -16,9 +16,9 @@ public class EnemyStat : BaseStat<EnemyStatType>
             float HPmultiplier = StageManager.Instance != null ? StageManager.Instance.HpMultiplier : 1f;
             float currentMaxHp = Mathf.RoundToInt(statData.MaxHP * HPmultiplier);
             float Attackmultiplier = StageManager.Instance != null ? StageManager.Instance.AttackMultiplier : 1f;
-            float currenAttack = Mathf.RoundToInt(statData.MaxHP * Attackmultiplier);
+            float currenAttack = Mathf.RoundToInt(statData.Attack * Attackmultiplier);
             float Speedmultiplier = StageManager.Instance != null ? StageManager.Instance.SpeedMultiplier : 1f;
-            float currenSpeed = Mathf.RoundToInt(statData.MaxHP * Speedmultiplier);
+            float currenSpeed = Mathf.RoundToInt(statData.Speed * Speedmultiplier);
 
 
             SetStatValue(EnemyStatType.MaxHP, currentMaxHp);
