@@ -52,6 +52,25 @@ public class UISkill : MonoBehaviour
 
     public void UIUpdate(int index, float cooldown)
     {
-        skillConditions[index].currentCooldown = cooldown;
+        if (index < 0 || index >= skillConditions.Length) return;
+
+        var condition = skillConditions[index];
+        condition.currentCooldown = cooldown;
+
+        // ✅ fillAmount도 여기서 직접 갱신하는 게 가장 안정적
+        float cooldownReduction = Mathf.Clamp01(skillManager.player._playerStat.GetStatValue(PlayerStatType.SkillCooltime) / 100f);
+        float realCooldown = condition.maximumCooldown * (1f - cooldownReduction);
+
+        condition.UICoolDown.fillAmount = Mathf.Clamp01(cooldown / realCooldown);
+    }
+    public SkillCondition GetSlotCondition(int index)
+    {
+        if (index < 0 || index >= skillConditions.Length)
+        {
+            Debug.LogWarning($"[UISkill] 유효하지 않은 슬롯 인덱스: {index}");
+            return null;
+        }
+
+        return skillConditions[index];
     }
 }

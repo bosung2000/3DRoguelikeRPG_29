@@ -49,7 +49,10 @@ public class SkillCondition : MonoBehaviour
 
     public float GetPercentage()
     {
-        return maximumCooldown > 0 ? currentCooldown / (maximumCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime)) : 0;
+        float cooldownReduction = Mathf.Clamp01(player._playerStat.GetStatValue(PlayerStatType.SkillCooltime) / 100f);
+        float realCooldown = maximumCooldown * (1f - cooldownReduction);
+
+        return realCooldown > 0f ? currentCooldown / realCooldown : 0f;
     }
 
     
@@ -62,7 +65,7 @@ public class SkillCondition : MonoBehaviour
         }
         if (skill != null)
         {
-            maximumCooldown = skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillColltime);
+            maximumCooldown = skill.maxCooldown * player._playerStat.GetStatValue(PlayerStatType.SkillCooltime);
             currentCooldown = skill.cooldown;
         }
         else

@@ -54,18 +54,6 @@ public class PlayerSkillController : MonoBehaviour
         // 활성화된 이펙트 목록에 추가
         activeEffects.Add(effect);
         
-        //// 프로젝타일인 경우
-        //if (effect.TryGetComponent(out MaykerStudio.Demo.Projectile projectile))
-        //{
-        //    projectile.Fire();
-        //    // 부모 해제 (독립적으로 이동하기 위해)
-        //    effect.transform.SetParent(null);
-        //}
-        //// 일반 파티클인 경우
-        //else if (effect.TryGetComponent(out ParticleSystem particleSystem))
-        //{
-        //    particleSystem.Play(true);
-        //}
         
         // 일정 시간 후 자동 제거
         Destroy(effect, effectDuration);
