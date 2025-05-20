@@ -42,11 +42,11 @@ public class RoomZone : MonoBehaviour
         Debug.Log($"[RoomZone] {roomName} 시작됨");
 
         //튜토리얼 선택 팝업
-        if (roomName == "Room_0")
-        {
-            var prompt = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
-            prompt.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
-        }
+        //if (roomName == "Room_0")
+        //{
+        //    var prompt = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
+        //    prompt.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
+        //}
 
         StartCoroutine(SpawnEnemiesCoroutine());
     }
@@ -67,8 +67,11 @@ public class RoomZone : MonoBehaviour
         // 엘리트 몬스터
         if (spawnConfig.spawnElite && spawnConfig.eliteEnemyPrefab != null)
         {
-            Transform point = spawnPoints[Random.Range(0, spawnPoints.Count)];
-            SpawnEnemy(spawnConfig.eliteEnemyPrefab, point.position);
+            for (int i = 0; i < spawnConfig.EliteCount; i++)
+            {
+                Transform point = spawnPoints[Random.Range(0, spawnPoints.Count)];
+                SpawnEnemy(spawnConfig.eliteEnemyPrefab, point.position);
+            }
         }
         // 보스 몬스터
         if (spawnConfig.spawnBoss && spawnConfig.bossEnemyPrefab != null)
