@@ -12,7 +12,7 @@ public class EnemySkillState : IEnemyState
     private bool jumpedForward = false;
 
     //점프 스킬관련 변수
-    private bool isJumping = false;
+    private bool isMoving = false;
     private float jumpElapsed = 0f;
     private float jumpDuration = 0.75f;
     private Vector3 jumpStartPos;
@@ -20,7 +20,7 @@ public class EnemySkillState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
-
+        isMoving = false;
         if (controller.animator == null)
         {
             Debug.LogError("Animator가 null임!");
@@ -70,7 +70,7 @@ public class EnemySkillState : IEnemyState
         }
         enemy.DestroyWarningSign();
         skillEnd = false;
-        isJumping = false;
+        isMoving = false;
     }
 
     public void UpdateState(EnemyController controller)
@@ -97,7 +97,7 @@ public class EnemySkillState : IEnemyState
                 jumpStartPos = enemy.transform.position;
                 jumpTargetPos = target;
                 jumpElapsed = 0f;
-                isJumping = true;
+                isMoving = true;
 
                 Vector3 jumpDir = (jumpTargetPos - jumpStartPos).normalized;
                 jumpDir.y = 0f;
@@ -109,7 +109,7 @@ public class EnemySkillState : IEnemyState
             }
 
             // 점프 이동 처리
-            if (isJumping)
+            if (isMoving)
             {
                 jumpElapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(jumpElapsed / jumpDuration);
@@ -122,7 +122,7 @@ public class EnemySkillState : IEnemyState
 
                 if (t >= 1f)
                 {
-                    isJumping = false;
+                    isMoving = false;
                     if (controller.agent.enabled && NavMesh.SamplePosition(enemy.transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
                     {
                         controller.agent.Warp(hit.position);
@@ -158,7 +158,7 @@ public class EnemySkillState : IEnemyState
                 transitionedToAttack = false;
                 shockWaveTriggered = false;
                 jumpedForward = false;
-                isJumping = false;
+                isMoving = false;
 
                 enemy.ResetSkillCooldown();
                 enemy.DestroyWarningSign();
@@ -172,7 +172,7 @@ public class EnemySkillState : IEnemyState
             Vector3 playerPos = enemy.GetPlayerTarget().position;
             float dashProgress = Mathf.Clamp01(stateInfo.normalizedTime / 0.99f);
                     
-            enemy.DashLineWarning(enemy.transform.position, playerPos, 7f, dashProgress);
+            enemy.DashLineWarning(enemy.transform.position, playerPos, dashProgress);
 
             Vector3 toPlayer = playerPos - enemy.transform.position;
             toPlayer.y = 0f;
@@ -182,10 +182,11 @@ public class EnemySkillState : IEnemyState
                 Quaternion lookRot = Quaternion.LookRotation(toPlayer);
                 enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, lookRot, Time.deltaTime * 10f);
             }
-            if (stateInfo.normalizedTime >= 0.99f)
+            if (!isMoving && stateInfo.normalizedTime >= 0.99f)
             {
                 enemy.SkillDash();
                 enemy.DestroyWarningSign();
+                isMoving = true;
                 skillEnd = true;
             }
         }
