@@ -40,6 +40,14 @@ public class RoomZone : MonoBehaviour
         ClearBool = false;
         spawnedEnemies = new();
         Debug.Log($"[RoomZone] {roomName} 시작됨");
+
+        //튜토리얼 선택 팝업
+        if (roomName == "Room_0")
+        {
+            var prompt = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
+            prompt.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
+        }
+
         StartCoroutine(SpawnEnemiesCoroutine());
     }
 
