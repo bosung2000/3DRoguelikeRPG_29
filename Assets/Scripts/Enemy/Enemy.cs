@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using Color = UnityEngine.Color;
 
 public class Enemy : MonoBehaviour
 {
@@ -20,9 +19,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Collider _weaponCollider; //무기 trigger작동
 
     [Header("경고표시 설정")]
-    [SerializeField] private GameObject dashWarningLinePrefab;
+    [SerializeField] private GameObject dashWarningPrefab;
+    [SerializeField] private GameObject shockWaveWarningPrefab;
 
-    private GameObject activeDashLine;
+    private GameObject activeWarning;
 
 
 
@@ -507,56 +507,64 @@ public class Enemy : MonoBehaviour
 
     //경고 표시
     //대쉬 라인 표시
-    public void CreateOrUpdateDashLine(Vector3 targetPosition, float dashDistance, float normalizedTime)
+    public void DashLineWarning(Vector3 start, Vector3 target, float dashDistance, float normalizedTime)
     {
-        if (dashWarningLinePrefab == null) return;
-
-        Vector3 start = transform.position;
-        Vector3 target = targetPosition;
-        target.y = start.y; // y 고정
         Vector3 dir = (target - start).normalized;
-
-        float scaleX = Mathf.Lerp(0.1f,1f,normalizedTime);
-        float Length = dashDistance;
-        Vector3 size = new Vector3(scaleX, 0.3f, Length);
-
-        Vector3 centerOffset = dir * (Length / 2f);
-        Vector3 centerPos = start + centerOffset;
-
+        Vector3 end = start + dir * dashDistance;
+        Vector3 mid = (start + end) / 2f;
         Quaternion rot = Quaternion.LookRotation(dir);
+        float scaleX = Mathf.Lerp(0.1f, 1f, normalizedTime);
+        Vector3 scale = new Vector3(scaleX, 0.3f, dashDistance);
+        float alpha = Mathf.Lerp(0.3f, 1f, normalizedTime);
 
-        if (activeDashLine == null)
+        CreateOrUpdateWarning(dashWarningPrefab, mid, rot, scale, alpha);
+    }
+    //충격파
+    public void ShockWaveWarning(Vector3 position, float maxRadius, float normalizedTime)
+    {
+        position.y += 0.05f;
+        float radius = Mathf.Lerp(0.5f, maxRadius, normalizedTime) / 0.5f;
+        Vector3 scale = new Vector3(radius, 0.01f, radius);
+        float alpha = Mathf.Lerp(0.1f, 0.5f, normalizedTime);
+        Quaternion rot = Quaternion.identity;
+
+        CreateOrUpdateWarning(shockWaveWarningPrefab, position, rot, scale, alpha);
+    }
+    //소환 및 업데이트
+    private void CreateOrUpdateWarning(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale, float alpha)
+    {
+        if (prefab == null) return;
+
+        if (activeWarning == null)
         {
-            activeDashLine = Instantiate(dashWarningLinePrefab, centerPos, rot);
+            activeWarning = Instantiate(prefab, position, rotation);
         }
         else
         {
-            activeDashLine.transform.SetPositionAndRotation(centerPos, rot);
+            activeWarning.transform.SetPositionAndRotation(position, rotation);
         }
 
-        activeDashLine.transform.localScale = size;
+        activeWarning.transform.localScale = scale;
 
-        if (activeDashLine.TryGetComponent(out Renderer renderer) && renderer.material.HasProperty("_Color"))
+        if (activeWarning.TryGetComponent(out Renderer renderer) && renderer.material.HasProperty("_Color"))
         {
-            Color baseColor = new Color(1f, 0f, 0f, Mathf.Lerp(0.3f, 1f, normalizedTime));
+            Color baseColor = new Color(1f, 0f, 0f, Mathf.Lerp(0.3f, 1f, alpha));
             renderer.material.color = baseColor;
         }
     }
+
+
+
+
+    //경고 표시 제거 함수
     public void DestroyDashLine()
     {
-        if (activeDashLine != null)
+        if (activeWarning != null)
         {
-            Destroy(activeDashLine);
-            activeDashLine = null;
+            Destroy(activeWarning);
+            activeWarning = null;
         }
     }
-
-
-
-
-
-
-
 
     //임시 몬스터 제거 키 추후 삭제
     private void Update()

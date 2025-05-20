@@ -14,7 +14,7 @@ public class EnemySkillState : IEnemyState
     //점프 스킬관련 변수
     private bool isJumping = false;
     private float jumpElapsed = 0f;
-    private float jumpDuration = 0.5f;
+    private float jumpDuration = 0.75f;
     private Vector3 jumpStartPos;
     private Vector3 jumpTargetPos;
     public void EnterState(EnemyController controller)
@@ -98,6 +98,12 @@ public class EnemySkillState : IEnemyState
                 jumpElapsed = 0f;
                 isJumping = true;
 
+                Vector3 jumpDir = (jumpTargetPos - jumpStartPos).normalized;
+                jumpDir.y = 0f;
+                Vector3 warningPos = jumpTargetPos + jumpDir;
+
+                enemy.ShockWaveWarning(warningPos, 4f, 0f);
+
                 jumpedForward = true;
             }
 
@@ -106,9 +112,10 @@ public class EnemySkillState : IEnemyState
             {
                 jumpElapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(jumpElapsed / jumpDuration);
+
+                //포물선 이동
                 float height = 2.5f;
                 float yOffset = Mathf.Sin(Mathf.PI * t) * height;
-
                 Vector3 horizontal = Vector3.Lerp(jumpStartPos, jumpTargetPos, t);
                 enemy.transform.position = horizontal + Vector3.up * yOffset;
 
@@ -121,6 +128,13 @@ public class EnemySkillState : IEnemyState
                         controller.agent.isStopped = true;
                     }
                 }
+
+                Vector3 jumpDir = (jumpTargetPos - jumpStartPos).normalized;
+                jumpDir.y = 0f;
+                Vector3 warningPos = jumpTargetPos;
+
+                // 경고선 갱신
+                enemy.ShockWaveWarning(warningPos, 4f, t);
             }
 
             // 공격 애니 전환
@@ -146,36 +160,33 @@ public class EnemySkillState : IEnemyState
                 isJumping = false;
 
                 enemy.ResetSkillCooldown();
+                enemy.DestroyDashLine();
                 controller.ChageState(EnemyStateType.Chase);
             }
 
             return;
         }
 
-        switch(skill)
+        if(stateInfo.IsName("Skill_Dash"))
         {
-            case EnemySkillType.Dash:
-                if(stateInfo.IsName("Skill_Dash"))
-                {
-                    Vector3 playerPos = enemy.GetPlayerTarget().position;
-                    float dashProgress = Mathf.Clamp01(stateInfo.normalizedTime / 0.99f);
-                    enemy.CreateOrUpdateDashLine(playerPos, 7f, dashProgress);
+            Vector3 playerPos = enemy.GetPlayerTarget().position;
+            float dashProgress = Mathf.Clamp01(stateInfo.normalizedTime / 0.99f);
+                    
+            enemy.DashLineWarning(enemy.transform.position, playerPos, 7f, dashProgress);
 
-                    Vector3 toPlayer = playerPos - enemy.transform.position;
-                    toPlayer.y = 0f;
+            Vector3 toPlayer = playerPos - enemy.transform.position;
+            toPlayer.y = 0f;
 
-                    if (toPlayer != Vector3.zero)
-                    {
-                        Quaternion lookRot = Quaternion.LookRotation(toPlayer);
-                        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, lookRot, Time.deltaTime * 10f);
-                    }
-                    if (stateInfo.normalizedTime >= 0.99f)
-                    {
-                        enemy.DestroyDashLine();
-                        break;
-                    }
-                }
+            if (toPlayer != Vector3.zero)
+            {
+                Quaternion lookRot = Quaternion.LookRotation(toPlayer);
+                enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, lookRot, Time.deltaTime * 10f);
+            }
+            if (stateInfo.normalizedTime >= 0.99f)
+            {
+                enemy.DestroyDashLine();
                 return;
+            }
         }
 
 
