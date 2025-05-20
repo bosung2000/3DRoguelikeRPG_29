@@ -14,7 +14,7 @@ public class MapShow : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (CurrentroomZone.ClearOK())
+        if (CurrentroomZone.ClearOK() &&other.gameObject.CompareTag("Player"))
         {
             MapBtn.gameObject.SetActive(true);
         }
@@ -29,7 +29,7 @@ public class MapShow : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (CurrentroomZone.ClearOK())
+        if (CurrentroomZone.ClearOK() && other.gameObject.CompareTag("Player"))
         {
             MapBtn.gameObject.SetActive(false);
         }
