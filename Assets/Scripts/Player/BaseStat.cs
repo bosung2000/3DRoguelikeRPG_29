@@ -22,7 +22,7 @@ public enum PlayerStatType
     HPRecovery, //HP자동회복
     MPRecovery,//MP자동회복
     GoldAcquisition,//골드획득량
-    SkillColltime,//스킬쿨타임
+    SkillCooltime,//스킬쿨타임
     AttackSpeed//공격속도
 }
 
