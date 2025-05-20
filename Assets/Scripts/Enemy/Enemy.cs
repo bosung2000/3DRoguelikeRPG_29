@@ -361,8 +361,8 @@ public class Enemy : MonoBehaviour
     private IEnumerator DashCoroutine()
     {
         float dashDistance = GetSkillRange(); //돌진 거리
-        float dashSpeed = 10.5f;
-        float dashTime = dashDistance / dashSpeed; // 계산된 시간
+        float dashSpeed = 8f;
+        float dashTime = 0.5f; 
         float timer = 0f;
         float hitRadius = 1.0f;
         
