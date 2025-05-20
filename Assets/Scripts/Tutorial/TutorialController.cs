@@ -169,6 +169,10 @@ public class TutorialController : MonoBehaviour
         isRunning = false;
         instructionPanel.SetActive(false);
         Debug.Log("튜토리얼 완료!");
+
+        //재화초기화'
+        CurrencyManager.Instance?.ResetCurrencyToInitial();
+
     }
 
     public void SkipTutorial()
