@@ -23,6 +23,21 @@ public class UITutorialPrompt : PopupUI
     private void OnYesClicked()
     {
         Player player = FindObjectOfType<Player>();
+
+        if (tutorialStartPoint == null)
+        {
+            GameObject found = GameObject.Find("TutorialStartPoint");
+            if (found != null)
+            {
+                tutorialStartPoint = found.transform;
+            }
+            else
+            {
+                Debug.LogWarning("튜토리얼 스폰 포인트 찾기 실패.");
+            }
+        }
+
+        // 이동 처리
         if (player != null && tutorialStartPoint != null)
         {
             player.transform.position = tutorialStartPoint.position;
