@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TutorialController : MonoBehaviour
 {
@@ -115,14 +116,7 @@ public class TutorialController : MonoBehaviour
                 instructionText = "장비를 인벤토리에서 장착해보세요.",
                 conditionToComplete = () => hasEquipped,
                 onStepStart = () => Debug.Log("[튜토리얼] 장비 장착 시작")
-            },
-            new TutorialStep
-            {
-                instructionText = "맵을 열고 다음 방으로 이동하세요.",
-                conditionToComplete = () => hasUsedMap,
-                onStepStart = () => Debug.Log("[튜토리얼] 맵 이동 시작")
-            },
-
+            },       
         };
     }
 
@@ -172,6 +166,9 @@ public class TutorialController : MonoBehaviour
 
         //재화초기화'
         CurrencyManager.Instance?.ResetCurrencyToInitial();
+
+        //로비씬으로 이동
+        SceneManager.LoadScene("Lobby_HB");
 
     }
 
