@@ -119,7 +119,7 @@ public class TutorialController : MonoBehaviour
             new TutorialStep
             {
                 instructionText = "맵을 열고 다음 방으로 이동하세요.",
-                conditionToComplete = () => hasMovedToNextRoom,
+                conditionToComplete = () => hasUsedMap,
                 onStepStart = () => Debug.Log("[튜토리얼] 맵 이동 시작")
             },
 

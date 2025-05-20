@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum CurrencyType
 {
@@ -45,10 +46,12 @@ public class CurrencyManager : MonoBehaviour
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
 
-        if (!data.isTutorialDone)
+        // 게임 씬에서만 튜토리얼 팝업 실행
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (!data.isTutorialDone && (currentScene == "Bosung_02" || currentScene == "Main_02"))
         {
             var popup = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
-            popup.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
+            popup.tutorialStartPoint = GameObject.Find("potal_TutorialRoom")?.transform;
             popup.Initialize(data); // GameData 넘겨주기
         }
 

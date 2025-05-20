@@ -8,9 +8,11 @@ public class UITutorialPrompt : PopupUI
     public Transform tutorialStartPoint;
 
     private GameData gameData;
+    private Portal portal;
 
     private void Start()
     {
+        portal= FindObjectOfType<Portal>();
         yesButton.onClick.AddListener(OnYesClicked);
         noButton.onClick.AddListener(OnNoClicked);
     }
@@ -25,18 +27,22 @@ public class UITutorialPrompt : PopupUI
         Player player = FindObjectOfType<Player>();
         if (player != null && tutorialStartPoint != null)
         {
-            player.transform.position = tutorialStartPoint.position;
+            if (portal !=null)
+            {
+                portal.TutorialMove();
+            }
+            //player.transform.position = tutorialStartPoint.position;
         }
 
         gameData.isTutorialDone = true;
-        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
         UIManager.Instance.ClosePopupUI(this);
+        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
     }
 
     private void OnNoClicked()
     {
         gameData.isTutorialDone = true;
-        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
         UIManager.Instance.ClosePopupUI(this);
+        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
     }
 }
