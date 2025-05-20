@@ -5,13 +5,19 @@ public class UITutorialPrompt : PopupUI
 {
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
-
     public Transform tutorialStartPoint;
+
+    private GameData gameData;
 
     private void Start()
     {
         yesButton.onClick.AddListener(OnYesClicked);
         noButton.onClick.AddListener(OnNoClicked);
+    }
+
+    public void Initialize(GameData data)
+    {
+        gameData = data;
     }
 
     private void OnYesClicked()
@@ -22,11 +28,17 @@ public class UITutorialPrompt : PopupUI
             player.transform.position = tutorialStartPoint.position;
         }
 
+        gameData.isTutorialDone = true;
+        GameManager.Instance.PlayerManager.Currency.SaveCurrency();
+
         UIManager.Instance.ClosePopupUI(this);
     }
 
     private void OnNoClicked()
     {
+        gameData.isTutorialDone = true;
+        GameManager.Instance.PlayerManager.Currency.SaveCurrency();
+
         UIManager.Instance.ClosePopupUI(this);
     }
 }

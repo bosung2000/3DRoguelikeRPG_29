@@ -45,6 +45,13 @@ public class CurrencyManager : MonoBehaviour
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
 
+        if (!data.isTutorialDone)
+        {
+            var popup = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
+            popup.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
+            popup.Initialize(data); // GameData 넘겨주기
+        }
+
     }
 
     public void init()
