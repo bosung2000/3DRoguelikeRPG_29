@@ -21,12 +21,18 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     [SerializeField] PlayerStatData _statData;
     public PlayerStat playerStat;
     [SerializeField] PlayerController _playerController;
+
     [SerializeField] Weapon _Weapon;
+
     [SerializeField] private CameraShake _cameraShake;
+
     [SerializeField] private GameObject _dieMenu;
+
     [SerializeField] private GameObject[] _bloodEffect;
     [SerializeField] private Transform _bloodSpawnPoint;
     [SerializeField] private Transform _dieSpawnPoint;
+
+    private float _healBuffer = 0f;
 
     private float _lastHitTime = -100f;
 
@@ -372,7 +378,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     {
         float maxHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.MaxHP));
         float currentHP = Mathf.RoundToInt(GetStatValue(PlayerStatType.HP));
-        SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + value, maxHP));
+        _healBuffer += value;
+
+        if (_healBuffer >= 1f)
+        {
+            int healAmount = Mathf.FloorToInt(_healBuffer);
+            _healBuffer -= healAmount;
+            SetStatValue(PlayerStatType.HP, Mathf.Min(currentHP + healAmount, maxHP));
+        }
     }
     public void MaxMPUp(float value)
     {
