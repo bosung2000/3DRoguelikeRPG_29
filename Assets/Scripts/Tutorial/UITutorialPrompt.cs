@@ -29,16 +29,14 @@ public class UITutorialPrompt : PopupUI
         }
 
         gameData.isTutorialDone = true;
-        GameManager.Instance.PlayerManager.Currency.SaveCurrency();
-
+        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
         UIManager.Instance.ClosePopupUI(this);
     }
 
     private void OnNoClicked()
     {
         gameData.isTutorialDone = true;
-        GameManager.Instance.PlayerManager.Currency.SaveCurrency();
-
+        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
         UIManager.Instance.ClosePopupUI(this);
     }
 }

@@ -53,6 +53,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapManager _mapManager;
     public MapManager MapManager => _mapManager;
 
+    [SerializeField] private SaveManager _saveManager;
+    public SaveManager SaveManager => _saveManager;
+
+
 
     private void Awake()
     {
