@@ -68,7 +68,8 @@ public class EnemySkillState : IEnemyState
         {
             controller.agent.isStopped = false;
         }
-
+        enemy.DestroyWarningSign();
+        skillEnd = false;
         isJumping = false;
     }
 
@@ -160,13 +161,12 @@ public class EnemySkillState : IEnemyState
                 isJumping = false;
 
                 enemy.ResetSkillCooldown();
-                enemy.DestroyDashLine();
-                controller.ChageState(EnemyStateType.Chase);
+                enemy.DestroyWarningSign();
+                skillEnd = true;
             }
-
-            return;
         }
 
+        //대쉬
         if(stateInfo.IsName("Skill_Dash"))
         {
             Vector3 playerPos = enemy.GetPlayerTarget().position;
@@ -184,48 +184,27 @@ public class EnemySkillState : IEnemyState
             }
             if (stateInfo.normalizedTime >= 0.99f)
             {
-                enemy.DestroyDashLine();
-                return;
+                enemy.SkillDash();
+                enemy.DestroyWarningSign();
+                skillEnd = true;
             }
         }
 
-
-        switch (controller.Enemy.skillA)
-        { 
-            case EnemySkillType.Dash:
-                skillEnd = stateInfo.IsName("Skill_Dash") && stateInfo.normalizedTime >= 0.99f;
-                break;
-            case EnemySkillType.SpreadShot:
-                skillEnd = stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 0.99f;
-                break;
-                //다른 스킬
+        //분산
+        if (stateInfo.IsName("Skill_SpreadShot") && stateInfo.normalizedTime >= 0.99f)
+        {
+            skillEnd = true;
         }
 
         if (skillEnd)
         {
-            if (controller.Enemy.IsBoss)
+            switch (enemy.GetCurrentSkillType())
             {
-                switch (enemy.GetCurrentSkillType())
-                {
-                    case EnemySkillType.Dash:
-                        controller.Enemy.SkillDash();
-
-                        break;
-                    case EnemySkillType.SpreadShot:
-                        break;
-                }
-            }
-            else
-            {
-                // 엘리트 스킬 실행
-                switch (controller.Enemy.skillA)
-                {
-                    case EnemySkillType.Dash:
-                        controller.Enemy.SkillDash();
-                        break;
-                    case EnemySkillType.SpreadShot:
-                        break;
-                }
+                case EnemySkillType.Dash:
+                    controller.Enemy.SkillDash();
+                    break;
+                case EnemySkillType.SpreadShot:
+                    break;
             }
             controller.ChageState(EnemyStateType.Chase);
         }

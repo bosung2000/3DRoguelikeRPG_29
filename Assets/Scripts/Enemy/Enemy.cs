@@ -557,7 +557,7 @@ public class Enemy : MonoBehaviour
 
 
     //경고 표시 제거 함수
-    public void DestroyDashLine()
+    public void DestroyWarningSign()
     {
         if (activeWarning != null)
         {

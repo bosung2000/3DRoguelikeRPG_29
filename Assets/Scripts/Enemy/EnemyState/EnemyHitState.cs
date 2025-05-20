@@ -8,11 +8,6 @@ public class EnemyHitState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         enemy = controller.Enemy;
-        if(enemy.IsBoss && controller.GetCurrentHP() > 0)
-        {
-            return;
-        }
-
         _timer = 0f;
         controller.agent.isStopped = true;
         controller.agent.ResetPath();
