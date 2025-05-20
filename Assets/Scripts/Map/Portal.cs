@@ -26,7 +26,7 @@ public class Portal : MonoBehaviour
 
     }
 
-    
+
     public void TryUsePortal(string targetPortalID)
     {
         StartCoroutine(TeleportWithConfiner(targetPortalID));
@@ -65,9 +65,11 @@ public class Portal : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            TryUsePortal("TutorialRoom");
-        }
+
+    }
+
+    public void TutorialMove()
+    {
+        TryUsePortal("TutorialRoom");
     }
 }

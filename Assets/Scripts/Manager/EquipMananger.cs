@@ -269,7 +269,7 @@ public class EquipMananger : MonoBehaviour
             case ConditionType.GoldAcquisition:
                 return PlayerStatType.GoldAcquisition;
             case ConditionType.SkillColltime:
-                return PlayerStatType.SkillColltime;
+                return PlayerStatType.SkillCooltime;
             case ConditionType.AttackSpeed:
                 return PlayerStatType.AttackSpeed;
             // 기타 조건 추가

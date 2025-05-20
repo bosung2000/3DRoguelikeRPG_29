@@ -45,7 +45,7 @@ public class RoomZone : MonoBehaviour
         //if (roomName == "Room_0")
         //{
         //    var prompt = UIManager.Instance.ShowPopupUI<UITutorialPrompt>();
-        //    prompt.tutorialStartPoint = GameObject.Find("TutorialStartPoint")?.transform;
+        //    prompt.tutorialStartPoint = GameObject.Find("potal_TutorialRoom")?.transform;
         //}
 
         StartCoroutine(SpawnEnemiesCoroutine());

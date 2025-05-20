@@ -82,7 +82,7 @@ public class UIStat : MonoBehaviour
             case PlayerStatType.MoveSpeed:
                 return "이동 속도";
             case PlayerStatType.DMGReduction:
-                return "피해 감소";
+                return "받는 데미지 감소";
             case PlayerStatType.CriticalChance:
                 return "치명타 확률";
             case PlayerStatType.CriticalDamage:
@@ -97,8 +97,8 @@ public class UIStat : MonoBehaviour
                 return "MP 회복";
             case PlayerStatType.GoldAcquisition:
                 return "골드 획득량";
-            case PlayerStatType.SkillColltime:
-                return "스킬 쿨타임";
+            case PlayerStatType.SkillCooltime:
+                return "스킬 쿨타임 감소";
             case PlayerStatType.AttackSpeed:
                 return "공격 속도";
             default:
@@ -116,7 +116,7 @@ public class UIStat : MonoBehaviour
             type == PlayerStatType.absorp ||
             type == PlayerStatType.DMGIncrease ||
             type == PlayerStatType.GoldAcquisition ||
-            type == PlayerStatType.SkillColltime ||
+            type == PlayerStatType.SkillCooltime ||
             type == PlayerStatType.AttackSpeed)
         {
             return $"{value:F1}%"; // 소수점 한 자리까지 표시하고 % 추가

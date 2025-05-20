@@ -278,7 +278,8 @@ public class Enemy : MonoBehaviour
         if (target == null) return;
 
         Vector3 spawnPos = FirePoint.position;
-        Vector3 dir = (_cachedTargetPosition - spawnPos).normalized;
+        Vector3 aimTarget = target.position + Vector3.up * 1.0f;
+        Vector3 dir = (aimTarget - spawnPos).normalized;
         Quaternion rot = Quaternion.LookRotation(dir);
 
         GameObject projectile = GameObject.Instantiate(ProjectilePrefab, spawnPos, rot);
