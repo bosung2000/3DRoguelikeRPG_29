@@ -60,12 +60,10 @@ public class EnemyChaseState : IEnemyState
         }
 
         // 범위 밖이면 목적지 계산해서 추적
-        if (_distance > _attackRange + 0.5f)
+        if (_distance > _attackRange)
         {
-            Vector3 direction = (_target.position - controller.transform.position).normalized;
-            Vector3 stopPosition = _target.position - direction * (_attackRange);
             controller.agent.isStopped = false;
-            controller.agent.SetDestination(stopPosition);
+            controller.agent.SetDestination(_target.position);
 
             //애니메이션 제어
             bool isRun = !controller.agent.pathPending && controller.agent.remainingDistance > controller.agent.stoppingDistance;
