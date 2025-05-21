@@ -18,7 +18,7 @@ public class CurrencyManager : MonoBehaviour
     public event Action<int> OnSoulChange;
     
     public SaveManager saveManager;
-
+    GameData data;
     public static CurrencyManager Instance { get; private set; }
 
     private void Awake()
@@ -28,7 +28,7 @@ public class CurrencyManager : MonoBehaviour
 
     private void Start()
     {
-        GameData data = saveManager.LoadData();
+        data = saveManager.LoadData();
 
         if (data.gold == 0 && data.soul == 0)
         {
@@ -116,12 +116,15 @@ public class CurrencyManager : MonoBehaviour
 
     public void SaveCurrency()
     {
-        GameData data = new GameData
-        {
-            gold = currencies[CurrencyType.Gold],
-            soul = currencies[CurrencyType.Soul]
+        data.gold = currencies[CurrencyType.Gold];
+        data.soul = currencies[CurrencyType.Soul];
 
-        };
+        //GameData data = new GameData
+        //{
+        //    gold = currencies[CurrencyType.Gold],
+        //    soul = currencies[CurrencyType.Soul]
+
+        //};
 
         saveManager.SaveData(data);
     }
