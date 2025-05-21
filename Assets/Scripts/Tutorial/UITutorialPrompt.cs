@@ -10,6 +10,8 @@ public class UITutorialPrompt : PopupUI
     private GameData gameData;
     private Portal portal;
 
+
+
     private void Start()
     {
         portal= FindObjectOfType<Portal>();
@@ -25,34 +27,35 @@ public class UITutorialPrompt : PopupUI
     private void OnYesClicked()
     {
         Player player = FindObjectOfType<Player>();
+        TutorialController tutorial = FindObjectOfType<TutorialController>();
 
         if (tutorialStartPoint == null)
         {
             GameObject found = GameObject.Find("TutorialStartPoint");
             if (found != null)
-            {
                 tutorialStartPoint = found.transform;
-            }
             else
-            {
                 Debug.LogWarning("튜토리얼 스폰 포인트 찾기 실패.");
-            }
         }
 
-        // 이동 처리
         if (player != null && tutorialStartPoint != null)
         {
-            if (portal !=null)
-            {
+            if (portal != null)
                 portal.TutorialMove();
-            }
-            //player.transform.position = tutorialStartPoint.position;
+        }
+
+        if (tutorial != null)
+        {
+            tutorial.StartTutorialManually(); 
         }
 
         gameData.isTutorialDone = true;
         UIManager.Instance.ClosePopupUI(this);
-        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
+        GameManager.Instance.SaveManager.SaveData(gameData);
     }
+
+
+
 
     private void OnNoClicked()
     {

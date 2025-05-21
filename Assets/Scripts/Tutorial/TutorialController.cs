@@ -55,9 +55,10 @@ public class TutorialController : MonoBehaviour
         // 초기 상태로 오브젝트 숨김
         //if (monsterGroupp) monsterGroupp.SetActive(false);
         if (shopNPC) shopNPC.SetActive(false);
+        if (completionPanel != null) completionPanel.SetActive(false);
+        if (instructionPanel != null) instructionPanel.SetActive(false);
 
         SetupSteps();
-        StartTutorial();
     }
 
     private void SetupSteps()
@@ -165,6 +166,7 @@ public class TutorialController : MonoBehaviour
     {
         isRunning = false;
         instructionPanel.SetActive(false);
+        
 
         //재화초기화'
         CurrencyManager.Instance?.ResetCurrencyToInitial();
@@ -180,7 +182,7 @@ public class TutorialController : MonoBehaviour
         }
 
         //씬 전환 대기 코루틴 실행
-        StartCoroutine(GoToLobbyAfterDelay(2f)); //2초후에 로비로
+        StartCoroutine(GoToLobbyAfterDelay(5f)); //5초후에 로비로
 
     }
 
@@ -190,13 +192,19 @@ public class TutorialController : MonoBehaviour
         SceneManager.LoadScene("Lobby_HB");
     }
 
-    
-
     public void SkipTutorial()
     {
         StopAllCoroutines();
-        FinishTutorial();
+        isRunning = false;
+
+        //튜토리얼 안내 문구 UI 끄기
+        if (instructionPanel != null)
+            instructionPanel.SetActive(false);
+
+        //완료 메시지도 표시하지 않고, 씬 이동도 없음
+        Debug.Log("튜토리얼을 스킵했습니다.");
     }
+
 
     public void OnSkillEquipped()
     {
@@ -213,6 +221,12 @@ public class TutorialController : MonoBehaviour
         {
             hasMovedToNextRoom = true;
         }
+    }
+
+    public void StartTutorialManually()
+    {
+        instructionPanel?.SetActive(true);
+        StartTutorial();
     }
 
 }
