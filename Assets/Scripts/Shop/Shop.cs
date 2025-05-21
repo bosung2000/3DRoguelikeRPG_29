@@ -27,7 +27,7 @@ public class Shop : MonoBehaviour
     {
         playerManager = GameManager.Instance.PlayerManager;
         availableItems.Clear();
-        shopTier = UnityEngine.Random.Range(6, 10);
+        shopTier = UnityEngine.Random.Range(1, 6);
 
         if (shoptype == ShopType.Eqyip)
         {
