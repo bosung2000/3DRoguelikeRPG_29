@@ -472,14 +472,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             _playerController.SetTrigger("GetHit");
         }
     }
-    public bool CanAttack()
-    {
-        AnimatorStateInfo current = _playerController._anim.GetCurrentAnimatorStateInfo(0);
-        return !_isLockedState &&
-               !current.IsName("GetHit") &&
-               !current.IsTag("Uninterruptible") &&
-               !_playerController._anim.IsInTransition(0);
-    }
     private IEnumerator PlayDeathAnimThenPauseGame()
     {
         AnimatorStateInfo state = _playerController._anim.GetCurrentAnimatorStateInfo(0);

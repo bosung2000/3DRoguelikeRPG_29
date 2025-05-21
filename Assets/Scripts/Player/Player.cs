@@ -25,6 +25,11 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
+        AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+
+        if (currentState.IsName("GetHit") || currentState.IsTag("Uninterruptible") || _playerController._anim.IsInTransition(0))
+            return;
+
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
         float attackCooldown = 1 / attackSpeed;
         if (Time.time < _lastHitTime+attackCooldown) return;
