@@ -22,7 +22,7 @@ public class RoomZone : MonoBehaviour
         if (string.IsNullOrEmpty(roomName))
         {
             roomName = gameObject.name;
-            Debug.Log($"[RoomZone] 방 이름이 자동 설정됨: {roomName}");
+            //Debug.Log($"[RoomZone] 방 이름이 자동 설정됨: {roomName}");
         }
     }
 
@@ -39,7 +39,7 @@ public class RoomZone : MonoBehaviour
     {
         ClearBool = false;
         spawnedEnemies = new();
-        Debug.Log($"[RoomZone] {roomName} 시작됨");
+        //Debug.Log($"[RoomZone] {roomName} 시작됨");
 
         //튜토리얼 선택 팝업
         //if (roomName == "Room_0")

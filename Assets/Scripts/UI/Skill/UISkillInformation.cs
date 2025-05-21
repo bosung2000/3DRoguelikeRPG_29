@@ -75,7 +75,7 @@ public class UISkillInformation : PopupUI
 
         if (success)
         {
-            Debug.Log($"{CurrentSkill.skill.name} 스킬을 슬롯 {slotToUse + 1}에 장착했습니다.");
+            //Debug.Log($"{CurrentSkill.skill.name} 스킬을 슬롯 {slotToUse + 1}에 장착했습니다.");
             base.OnCloseButtonClick();
         }
         else

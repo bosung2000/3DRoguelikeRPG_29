@@ -429,7 +429,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         else
             SoundManager.instance.PlayEffect(SoundEffectType.Hit);
 
-        Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
+        //Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }
     public void TakeDamage(int damage)
     {

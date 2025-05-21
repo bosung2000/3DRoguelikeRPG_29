@@ -57,7 +57,7 @@ public class MapManager : MonoBehaviour
                 if (parts.Length > 1 && int.TryParse(parts[1], out int roomIndex))
                 {
                     roomZones[roomIndex] = rz;
-                    Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
+                    //Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
                 }
             }
         }
@@ -326,7 +326,7 @@ public class MapManager : MonoBehaviour
             {
                 rooms[0].isAccessible = false;
                 UpdateRoomUI(0);
-                Debug.Log("시작 방 접근 비활성화");
+                //Debug.Log("시작 방 접근 비활성화");
             }
 
 
@@ -409,11 +409,11 @@ public class MapManager : MonoBehaviour
                     {
                         targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Shop_weapon, targetRoom);
-                        Debug.Log("무기 상점 생성됨");
+                        //Debug.Log("무기 상점 생성됨");
                     }
                     else
                     {
-                        Debug.LogError("무기 상점 프리팹이 설정되지 않았습니다!");
+                        //Debug.LogError("무기 상점 프리팹이 설정되지 않았습니다!");
                     }
                     break;
                 case RoomType.RelicShop:
@@ -422,11 +422,11 @@ public class MapManager : MonoBehaviour
                     {
                         targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Shop_Relics, targetRoom);
-                        Debug.Log("유물 상점 생성됨");
+                        //Debug.Log("유물 상점 생성됨");
                     }
                     else
                     {
-                        Debug.LogError("유물 상점 프리팹이 설정되지 않았습니다!");
+                        //Debug.LogError("유물 상점 프리팹이 설정되지 않았습니다!");
                     }
                     break;
                 case RoomType.Treasure:
@@ -435,11 +435,11 @@ public class MapManager : MonoBehaviour
                     {
                         targetRoom.ClearBool = true;
                         currentActiveObject = SpawnPrefabAtRandomPoint(Treasure, targetRoom);
-                        Debug.Log("보물 생성됨");
+                        //Debug.Log("보물 생성됨");
                     }
                     else
                     {
-                        Debug.LogError("보물 프리팹이 설정되지 않았습니다!");
+                        //Debug.LogError("보물 프리팹이 설정되지 않았습니다!");
                     }
                     break;
                 case RoomType.Boss:
