@@ -24,8 +24,7 @@ public class EnemyZone : MonoBehaviour
         enemies.Remove(deadEnemy);
 
         if (enemies.Count == 0)
-        {
-            Debug.Log($"모든 적 처치 완료, 포탈 {portalIDToUnlock} 오픈");
+        {           
             GameManager.Instance.PortalManager.UnlockPortal(portalIDToUnlock);
         }
     }

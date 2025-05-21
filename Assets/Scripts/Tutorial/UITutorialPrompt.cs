@@ -34,8 +34,6 @@ public class UITutorialPrompt : PopupUI
             GameObject found = GameObject.Find("TutorialStartPoint");
             if (found != null)
                 tutorialStartPoint = found.transform;
-            else
-                Debug.LogWarning("튜토리얼 스폰 포인트 찾기 실패.");
         }
 
         if (player != null && tutorialStartPoint != null)
