@@ -37,7 +37,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     private float _lastHitTime = -100f;
 
     public event Action<PlayerStat> OnStatsChanged;
-
+    private bool _isLockedState = false;
     private Dictionary<PlayerStatType, float> _equipmentBonuses = new Dictionary<PlayerStatType, float>();
     private Dictionary<PlayerStatType, float> _relicBonuses = new Dictionary<PlayerStatType, float>();
     private Dictionary<PlayerStatType, float> _buffBonuses = new Dictionary<PlayerStatType, float>();
@@ -403,8 +403,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         ModifyStat(PlayerStatType.MoveSpeed, speed);
         //_playerController._anim.speed = (GetStatValue(PlayerStatType.MoveSpeed))*0.2f;
     }
+    
     public void Attack(Enemy enemy)
     {
+        AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+
+        if (currentState.IsName("GetHit") || currentState.IsTag("Uninterruptible") || _playerController._anim.IsInTransition(0))
+            return;
+
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
         float critDamage = GetStatValue(PlayerStatType.CriticalDamage);
@@ -412,7 +418,9 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         bool isCrit = UnityEngine.Random.Range(0f, 100f) < critChance;
         float finalDamage = isCrit ? baseAttack * critDamage * 0.01f : baseAttack;
+
         enemy.TakeDamage(Mathf.RoundToInt(finalDamage), isCrit);
+
         absorp = Mathf.RoundToInt(finalDamage * absorp * 0.01f);
         Healing(absorp);
 
@@ -420,6 +428,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             SoundManager.instance.PlayEffect(SoundEffectType.CriticalHit);
         else
             SoundManager.instance.PlayEffect(SoundEffectType.Hit);
+
         Debug.Log($"{enemy}에게 {finalDamage} 데미지 ({(isCrit ? "CRI!" : "Normal")})");
     }
     public void TakeDamage(int damage)
@@ -445,6 +454,7 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         SoundManager.instance.PlayEffect(SoundEffectType.TakeDamage);
         DieEffect(0,0,_bloodSpawnPoint,_bloodSpawnPoint,2);
+
         if (GetStatValue(PlayerStatType.HP) == 0)
         {
             //죽었을 때 저장
@@ -461,6 +471,14 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
         {
             _playerController.SetTrigger("GetHit");
         }
+    }
+    public bool CanAttack()
+    {
+        AnimatorStateInfo current = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+        return !_isLockedState &&
+               !current.IsName("GetHit") &&
+               !current.IsTag("Uninterruptible") &&
+               !_playerController._anim.IsInTransition(0);
     }
     private IEnumerator PlayDeathAnimThenPauseGame()
     {
