@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8725738349611280747}
+  - component: {fileID: 1900772942705325782}
   m_Layer: 0
   m_Name: Room4
   m_TagString: Untagged
@@ -95,6 +96,33 @@ Transform:
   - {fileID: 263274686492985854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1900772942705325782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8530525506193735930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3436a5cb80bcfdf4c974857298cadf3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomName: 
+  spawnPoints: []
+  spawnConfig:
+    normalEnemyPrefab: {fileID: 0}
+    spawnnormal: 0
+    normalCount: 0
+    eliteEnemyPrefab: {fileID: 0}
+    EliteCount: 0
+    spawnElite: 0
+    bossEnemyPrefab: {fileID: 0}
+    BossCount: 0
+    spawnBoss: 0
+  spawnInterval: 0.1
+  spawnedEnemies: []
+  ClearBool: 0
 --- !u!1001 &37439868424795165
 PrefabInstance:
   m_ObjectHideFlags: 0
