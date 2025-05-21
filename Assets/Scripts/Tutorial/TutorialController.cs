@@ -41,6 +41,9 @@ public class TutorialController : MonoBehaviour
     private bool hasOpenedMap = false;
     private bool hasMovedToNextRoom = false;
 
+    public GameObject completionPanel;
+    public TextMeshProUGUI completionText;
+
 
     private void Start()
     {
@@ -52,9 +55,10 @@ public class TutorialController : MonoBehaviour
         // 초기 상태로 오브젝트 숨김
         //if (monsterGroupp) monsterGroupp.SetActive(false);
         if (shopNPC) shopNPC.SetActive(false);
+        if (completionPanel != null) completionPanel.SetActive(false);
+        if (instructionPanel != null) instructionPanel.SetActive(false);
 
         SetupSteps();
-        StartTutorial();
     }
 
     private void SetupSteps()
@@ -162,21 +166,45 @@ public class TutorialController : MonoBehaviour
     {
         isRunning = false;
         instructionPanel.SetActive(false);
-        Debug.Log("튜토리얼 완료!");
+        
 
         //재화초기화'
         CurrencyManager.Instance?.ResetCurrencyToInitial();
 
-        //로비씬으로 이동
-        SceneManager.LoadScene("Lobby_HB");
+        if (completionPanel != null && completionText != null)
+        {
+            completionText.text = "튜토리얼이 완료되었습니다!";
+            completionPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("completionPanel 또는 completionText가 설정되지 않았습니다.");
+        }
 
+        //씬 전환 대기 코루틴 실행
+        StartCoroutine(GoToLobbyAfterDelay(5f)); //5초후에 로비로
+
+    }
+
+    private IEnumerator GoToLobbyAfterDelay(float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+        SceneManager.LoadScene("Lobby_HB");
     }
 
     public void SkipTutorial()
     {
         StopAllCoroutines();
-        FinishTutorial();
+        isRunning = false;
+
+        //튜토리얼 안내 문구 UI 끄기
+        if (instructionPanel != null)
+            instructionPanel.SetActive(false);
+
+        //완료 메시지도 표시하지 않고, 씬 이동도 없음
+        Debug.Log("튜토리얼을 스킵했습니다.");
     }
+
 
     public void OnSkillEquipped()
     {
@@ -193,6 +221,12 @@ public class TutorialController : MonoBehaviour
         {
             hasMovedToNextRoom = true;
         }
+    }
+
+    public void StartTutorialManually()
+    {
+        instructionPanel?.SetActive(true);
+        StartTutorial();
     }
 
 }

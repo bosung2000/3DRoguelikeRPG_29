@@ -349,7 +349,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8936977943536318646}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7641355058674513345, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
+        m_TargetAssemblyTypeName: TutorialController, Assembly-CSharp
+        m_MethodName: StartTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3532149396719179703
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,4 +750,16 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2215149304303160505}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7641355058674513345, guid: cf6ae41293c73c743ae572ba78cc79f4, type: 3}
+        m_TargetAssemblyTypeName: TutorialController, Assembly-CSharp
+        m_MethodName: SkipTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
