@@ -145,9 +145,10 @@ public class Enemy : MonoBehaviour
         {
             GameManager.Instance.MapManager.OnBossDefeated();
             GameManager.Instance.PortalManager._unlockedPortals.Clear();
-            if (StageManager.Instance.CurrentStage ==5)
+            if (StageManager.Instance.CurrentStage ==6)
             {
                 UIManager.Instance.ShowPopupUI<Finish_Clear_UI>();
+                Time.timeScale = 0f;
             }
         }
 
