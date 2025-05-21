@@ -461,7 +461,6 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
             GameManager.Instance?.PlayerManager?.Currency?.SaveCurrency();
 
             _playerController.SetTrigger("Die");
-            DieEffect(3, 1, _dieSpawnPoint, _dieSpawnPoint, 6);
             Time.timeScale = 0f;
             StartCoroutine(PlayDeathAnimThenPauseGame());
             Debug.Log($"{gameObject.name}이(가) 사망했습니다.");
