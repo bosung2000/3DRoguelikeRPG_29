@@ -34,14 +34,12 @@ public class EnhanceManager : MonoBehaviour
     public bool Enhance(ItemData equipment, PlayerManager playerManager)
     {
         if (equipment == null || playerManager == null)
-        {
-            Debug.LogError("장비 또는 플레이어가 null입니다.");
+        {        
             return false;
         }
 
         if (equipment.itemType != ItemType.Equipment || equipment.enhancementLevel >= equipment.maxEnhancementLevel)
-        {
-            Debug.Log("강화할 수 없는 상태입니다.");
+        {          
             return false;
         }
 
@@ -49,8 +47,7 @@ public class EnhanceManager : MonoBehaviour
         int gold = playerManager.Currency.currencies[CurrencyType.Gold];
 
         if (gold < cost)
-        {
-            Debug.Log("골드 부족!");
+        {           
             return false;
         }
 
@@ -70,12 +67,11 @@ public class EnhanceManager : MonoBehaviour
                 }
             }
             OnSucessEnhancs?.Invoke();
-            Debug.Log($"강화 성공! → +{equipment.enhancementLevel}");
+            
             return true;
         }
         else
-        {
-            Debug.Log("강화 실패...");
+        {        
             return false;
         }
     }

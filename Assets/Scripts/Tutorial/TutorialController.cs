@@ -135,7 +135,6 @@ public class TutorialController : MonoBehaviour
     {
         if (steps.Count == 0)
         {
-            Debug.LogWarning("튜토리얼 단계가 비어있습니다.");
             return;
         }
 
@@ -180,7 +179,6 @@ public class TutorialController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("completionPanel 또는 completionText가 설정되지 않았습니다.");
         }
 
         //씬 전환 대기 코루틴 실행
@@ -204,7 +202,6 @@ public class TutorialController : MonoBehaviour
             instructionPanel.SetActive(false);
 
         //완료 메시지도 표시하지 않고, 씬 이동도 없음
-        Debug.Log("튜토리얼을 스킵했습니다.");
     }
 
 
