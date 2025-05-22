@@ -12,6 +12,11 @@ public class EnemyDeadState : IEnemyState
             controller.agent.enabled = true;
         }
         controller.agent.isStopped = true;
+        controller.animator.SetBool("isRun", false);
+        controller.animator.SetBool("isWalk", false);
+        controller.animator.ResetTrigger("Attack");
+        controller.animator.ResetTrigger("Skill");
+        controller.animator.ResetTrigger("Hit");
         controller.animator.SetTrigger("DIe");
     }
 
