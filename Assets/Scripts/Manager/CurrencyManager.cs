@@ -38,8 +38,8 @@ public class CurrencyManager : MonoBehaviour
 
         if (data.gold == 0 && data.soul == 0 && !data.isTutorialDone)
         {
-            currencies[CurrencyType.Gold] = 1000;
-            currencies[CurrencyType.Soul] = 100;
+            currencies[CurrencyType.Gold] = 500;
+            currencies[CurrencyType.Soul] = 200;
 
         }
         else
@@ -144,8 +144,8 @@ public class CurrencyManager : MonoBehaviour
     }
     public void ResetCurrencyToInitial()
     {
-        currencies[CurrencyType.Gold] = 1000; // 초기 골드
-        currencies[CurrencyType.Soul] = 100;  // 초기 소울
+        currencies[CurrencyType.Gold] = 500; // 초기 골드
+        currencies[CurrencyType.Soul] = 200;  // 초기 소울
 
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
