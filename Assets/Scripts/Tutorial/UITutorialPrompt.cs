@@ -49,7 +49,8 @@ public class UITutorialPrompt : PopupUI
 
         gameData.isTutorialDone = true;
         UIManager.Instance.ClosePopupUI(this);
-        GameManager.Instance.SaveManager.SaveData(gameData);
+        //GameManager.Instance.SaveManager.SaveData(gameData);
+        SaveManager.Instance.SaveData(gameData);
     }
 
 
@@ -59,6 +60,7 @@ public class UITutorialPrompt : PopupUI
     {
         gameData.isTutorialDone = true;
         UIManager.Instance.ClosePopupUI(this);
-        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
+        //GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
+        SaveManager.Instance.SaveData(gameData);
     }
 }

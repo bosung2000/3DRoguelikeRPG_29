@@ -23,6 +23,7 @@ public class CurrencyManager : MonoBehaviour
 
     private void Awake()
     {
+        saveManager =SaveManager.Instance;
         init();
     }
 

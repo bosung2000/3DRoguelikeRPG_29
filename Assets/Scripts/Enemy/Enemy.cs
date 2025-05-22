@@ -582,7 +582,7 @@ public class Enemy : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("적 죽음");
+            //Debug.Log("적 죽음");
             Die();
         }
     }

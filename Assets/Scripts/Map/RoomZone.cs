@@ -108,7 +108,7 @@ public class RoomZone : MonoBehaviour
 
         if (spawnedEnemies.Count == 0)
         {
-            Debug.Log($"[RoomZone] {roomName} 클리어!");
+            //Debug.Log($"[RoomZone] {roomName} 클리어!");
             ClearBool = true;
             //nextRoom?.ActivateRoom();
         }
