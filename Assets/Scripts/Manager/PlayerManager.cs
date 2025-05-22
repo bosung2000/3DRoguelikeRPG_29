@@ -29,15 +29,15 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         // 골드 기본값 
-        if (currency != null)
-        {
-            if (currency.currencies == null || currency.currencies.Count == 0)
-            {
-                currency.init();  //딕셔너리 강제 초기화
-            }
-            currency.AddCurrency(CurrencyType.Gold, 1000);  //초기골드추가
-            currency.AddCurrency(CurrencyType.Soul, 100);  //초기소울추가
-        }
+        //if (currency != null)
+        //{
+        //    if (currency.currencies == null || currency.currencies.Count == 0)
+        //    {
+        //        currency.init();  //딕셔너리 강제 초기화
+        //    }
+        //    //currency.AddCurrency(CurrencyType.Gold, 1000);  //초기골드추가
+        //    //currency.AddCurrency(CurrencyType.Soul, 100);  //초기소울추가
+        //}
     }
 
     public void init()

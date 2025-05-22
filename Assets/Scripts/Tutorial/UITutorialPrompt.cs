@@ -34,8 +34,6 @@ public class UITutorialPrompt : PopupUI
             GameObject found = GameObject.Find("TutorialStartPoint");
             if (found != null)
                 tutorialStartPoint = found.transform;
-            else
-                Debug.LogWarning("튜토리얼 스폰 포인트 찾기 실패.");
         }
 
         if (player != null && tutorialStartPoint != null)
@@ -51,7 +49,8 @@ public class UITutorialPrompt : PopupUI
 
         gameData.isTutorialDone = true;
         UIManager.Instance.ClosePopupUI(this);
-        GameManager.Instance.SaveManager.SaveData(gameData);
+        //GameManager.Instance.SaveManager.SaveData(gameData);
+        SaveManager.Instance.SaveData(gameData);
     }
 
 
@@ -61,6 +60,7 @@ public class UITutorialPrompt : PopupUI
     {
         gameData.isTutorialDone = true;
         UIManager.Instance.ClosePopupUI(this);
-        GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
+        //GameManager.Instance.SaveManager.SaveData(gameData); //데이터 저장
+        SaveManager.Instance.SaveData(gameData);
     }
 }

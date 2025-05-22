@@ -16,7 +16,6 @@ public class PlayerTutorialTeleport : MonoBehaviour
             {
                 player.transform.position = target.transform.position;
                 player.transform.rotation = target.transform.rotation;
-                Debug.Log($"[튜토리얼] {teleportKey} 키 입력으로 플레이어를 TutorialStartPoint로 이동했습니다.");
             }
             else
             {

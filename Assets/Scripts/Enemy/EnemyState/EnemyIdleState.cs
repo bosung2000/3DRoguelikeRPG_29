@@ -42,7 +42,7 @@ public class EnemyIdleState : IEnemyState
         //추격 최대거리에 도달하면 추격상태 전환
         if (hit.Length > 0)
         {
-            Debug.Log("플레이어 발견");
+            //Debug.Log("플레이어 발견");
             controller.ChageState(EnemyStateType.Chase);
         }
 

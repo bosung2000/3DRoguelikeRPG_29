@@ -101,7 +101,7 @@ public class ItemManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"총 {allEquipItems.Count}개의 일반 아이템과 {allrelicsItems.Count}개의 유물 아이템이 로드되었습니다.");
+        //Debug.Log($"총 {allEquipItems.Count}개의 일반 아이템과 {allrelicsItems.Count}개의 유물 아이템이 로드되었습니다.");
     }
     
     // 아이템의 새 복사본 생성 (원본 아이템 기반)

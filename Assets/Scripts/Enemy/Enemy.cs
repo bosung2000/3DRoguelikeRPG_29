@@ -98,11 +98,11 @@ public class Enemy : MonoBehaviour
         // 데미지 텍스트 생성
         ShowDamageText(damage, CriBool);
         DieEffect(0, 0, BloodSpawnPoint, BloodSpawnPoint, 4);
-        Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
+        //Debug.Log($" {gameObject.name} {damage} 피해를 입음, 현재 체력: {Stat.GetStatValue(EnemyStatType.HP)}");
 
         if (Stat.GetStatValue(EnemyStatType.HP) <= 0)
         {
-            Debug.Log("데미지를 받아 죽음");
+            //Debug.Log("데미지를 받아 죽음");
             Die();
         }
         else
@@ -145,6 +145,11 @@ public class Enemy : MonoBehaviour
         {
             GameManager.Instance.MapManager.OnBossDefeated();
             GameManager.Instance.PortalManager._unlockedPortals.Clear();
+            if (StageManager.Instance.CurrentStage ==6)
+            {
+                UIManager.Instance.ShowPopupUI<Finish_Clear_UI>();
+                Time.timeScale = 0f;
+            }
         }
 
         if (enemyController != null)
@@ -577,7 +582,7 @@ public class Enemy : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("적 죽음");
+            //Debug.Log("적 죽음");
             Die();
         }
     }

@@ -23,14 +23,20 @@ public class CurrencyManager : MonoBehaviour
 
     private void Awake()
     {
+        saveManager =SaveManager.Instance;
         init();
+
+        
+
     }
 
     private void Start()
     {
         data = saveManager.LoadData();
 
-        if (data.gold == 0 && data.soul == 0)
+        Debug.Log($"Currencymamamger Start :data.gold:{data.gold} data.soul: {data.soul}");
+
+        if (data.gold == 0 && data.soul == 0 && !data.isTutorialDone)
         {
             currencies[CurrencyType.Gold] = 1000;
             currencies[CurrencyType.Soul] = 100;
@@ -42,6 +48,8 @@ public class CurrencyManager : MonoBehaviour
             currencies[CurrencyType.Soul] = data.soul;
 
         }
+
+        Debug.Log($"Currencymamamger Start  end :data.gold:{data.gold} data.soul: {data.soul}");
 
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
@@ -68,7 +76,7 @@ public class CurrencyManager : MonoBehaviour
     }
 
     // 이벤트 액션 가져오기 (필요할 때마다 최신 이벤트 참조 반환)
-    private Action<int> GetCurrencyAction(CurrencyType type)
+    public Action<int> GetCurrencyAction(CurrencyType type)
     {
         switch (type)
         {
@@ -119,6 +127,7 @@ public class CurrencyManager : MonoBehaviour
         data.gold = currencies[CurrencyType.Gold];
         data.soul = currencies[CurrencyType.Soul];
 
+        Debug.Log($"SaveCurrency :data.gold:{data.gold} data.soul: {data.soul}");
         //GameData data = new GameData
         //{
         //    gold = currencies[CurrencyType.Gold],
