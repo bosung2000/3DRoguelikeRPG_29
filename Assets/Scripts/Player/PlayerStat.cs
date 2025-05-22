@@ -609,7 +609,8 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
 
         if (other.gameObject.CompareTag("Gold"))
         {
-            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, currencyData._amount);
+            int goldToAdd = Mathf.RoundToInt(currencyData._amount + currencyData._amount * GetStatValue(PlayerStatType.GoldAcquisition) / 100);
+            GameManager.Instance.PlayerManager.Currency.AddCurrency(CurrencyType.Gold, goldToAdd);
             Destroy(other.gameObject);
         }
         else if (other.gameObject.CompareTag("Soul"))
