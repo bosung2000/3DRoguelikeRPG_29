@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
         if (_isTumbling || Time.time < _lastTumbleTime + dashCooldown||_isSkill)
         {
-            Debug.Log("쿨타임입니다");
+            //Debug.Log("쿨타임입니다");
             return;
         }
 

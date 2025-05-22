@@ -489,7 +489,7 @@ public class MapManager : MonoBehaviour
 
         GameObject spawnedObject = Instantiate(prefab, spawnPosition, spawnPoint.rotation);
 
-        Debug.Log($"프리팹 '{prefab.name}' 생성됨 - 위치: {spawnPosition}, 방: {targetRoom.roomName}, 스폰 포인트 인덱스: {randomIndex}");
+        //Debug.Log($"프리팹 '{prefab.name}' 생성됨 - 위치: {spawnPosition}, 방: {targetRoom.roomName}, 스폰 포인트 인덱스: {randomIndex}");
 
         return spawnedObject;
     }
@@ -549,7 +549,7 @@ public class MapManager : MonoBehaviour
     {
         if (currentActiveObject != null)
         {
-            Debug.Log($"이전 오브젝트 파괴: {currentActiveObject.name}");
+            //Debug.Log($"이전 오브젝트 파괴: {currentActiveObject.name}");
             Destroy(currentActiveObject);
             currentActiveObject = null;
         }

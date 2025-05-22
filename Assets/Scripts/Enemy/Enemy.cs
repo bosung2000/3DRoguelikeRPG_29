@@ -580,10 +580,10 @@ public class Enemy : MonoBehaviour
     //임시 몬스터 제거 키 추후 삭제
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            //Debug.Log("적 죽음");
-            Die();
-        }
+        //if(Input.GetKeyDown(KeyCode.K))
+        //{
+        //    //Debug.Log("적 죽음");
+        //    Die();
+        //}
     }
 }
