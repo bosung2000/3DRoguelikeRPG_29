@@ -74,18 +74,37 @@ public class UISellPopup : PopupUI
                 return;
             }
 
-            //판매 로직 
-            if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
+            if (currentSlotItem.item.itemType ==ItemType.Equipment)
             {
-                //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
-                OnSellEvent?.Invoke(currentSlotItem.item);
-                //아이템 list에 추가 
-                itemManager.AddItemList(currentSlotItem.item);
-                //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
-                inventoryManager.RemoveInventoryitme(currentSlotItem.item);
-                //골드 UI 변경  
-                uIShop.ShowShopCurrency();
-                UIManager.Instance.ClosePopupUI(this);
+                //판매 로직 
+                if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
+                {
+                    //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
+                    OnSellEvent?.Invoke(currentSlotItem.item);
+                    //아이템 list에 추가 
+                    itemManager.AddItemList(currentSlotItem.item);
+                    //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
+                    inventoryManager.RemoveInventoryitme(currentSlotItem.item);
+                    //골드 UI 변경  
+                    uIShop.ShowShopCurrency();
+                    UIManager.Instance.ClosePopupUI(this);
+                }
+            }
+            else if(currentSlotItem.item.itemType ==ItemType.Relics)
+            {
+                //판매 로직 
+                if (playerManager.Currency.AddCurrency(CurrencyType.Soul, currentSlotItem.item.gold))
+                {
+                    //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
+                    OnSellEvent?.Invoke(currentSlotItem.item);
+                    //아이템 list에 추가 
+                    itemManager.AddItemList(currentSlotItem.item);
+                    //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
+                    inventoryManager.RemoveInventoryitme(currentSlotItem.item);
+                    //골드 UI 변경  
+                    uIShop.ShowShopCurrency();
+                    UIManager.Instance.ClosePopupUI(this);
+                }
             }
             else
             {
