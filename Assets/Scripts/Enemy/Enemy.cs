@@ -422,7 +422,7 @@ public class Enemy : MonoBehaviour
     public void SkillShockWave()
     {
         float stompRadius = 4f;
-        int damage = (int)(Stat.GetStatValue(EnemyStatType.Attack) * 0.5);
+        int damage = (int)(Stat.GetStatValue(EnemyStatType.Attack));
 
         Collider[] hits = Physics.OverlapSphere(transform.position, stompRadius, LayerMask.GetMask("Player"));
 
