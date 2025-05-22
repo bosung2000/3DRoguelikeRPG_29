@@ -75,7 +75,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // 즉시 멈추기
+            // 멈췄을 때도 마지막 방향을 계속 바라보게!
+            if (_lastMoveDirection.sqrMagnitude > 0.05f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(_lastMoveDirection);
+                transform.rotation = targetRotation;
+            }
             _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             _rb.angularVelocity = Vector3.zero;
             SetBool("Run", false);
