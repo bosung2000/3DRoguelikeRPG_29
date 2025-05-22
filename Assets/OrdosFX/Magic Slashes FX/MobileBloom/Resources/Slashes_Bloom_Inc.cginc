@@ -5,7 +5,7 @@ sampler2D _BaseTex;
 float2 _MainTex_TexelSize;
 float2 _BaseTex_TexelSize;
 
-4 _MainTex_ST;
+float4 _MainTex_ST;
 half4 _BaseTex_ST;
 
 half _Threshold;
