@@ -33,7 +33,7 @@ public class CurrencyManager : MonoBehaviour
 
         Debug.Log($"Currencymamamger Start :data.gold:{data.gold} data.soul: {data.soul}");
 
-        if (data.gold == 0 && data.soul == 0)
+        if (data.gold == 0 && data.soul == 0 && !data.isTutorialDone)
         {
             currencies[CurrencyType.Gold] = 1000;
             currencies[CurrencyType.Soul] = 100;
