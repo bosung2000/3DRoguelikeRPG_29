@@ -858,7 +858,10 @@ PrefabInstance:
     - {fileID: 2992346152856390205, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3443717085342584873, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1494579738}
   m_SourcePrefab: {fileID: 100100000, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
 --- !u!1 &474322306 stripped
 GameObject:
@@ -1710,7 +1713,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8043427208629531436, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
   m_PrefabInstance: {fileID: 471461611}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1494579737}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e506e7765ff5c54dba3b27d4da902b0, type: 3}
@@ -2737,6 +2740,24 @@ Transform:
   - {fileID: 1105526835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1494579737 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3443717085342584873, guid: 7f699720c11dc7849a48aa105ab07242, type: 3}
+  m_PrefabInstance: {fileID: 471461611}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1494579738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494579737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 569d41a8669032e488c4ec19626d1c1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveManager: {fileID: 1105526836}
 --- !u!1001 &1495975946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3831,7 +3852,7 @@ PrefabInstance:
     - target: {fileID: 7534143809017091284, guid: 67ad52c6f7fcd0e4b9991cce0a1355ff, type: 3}
       propertyPath: _playerManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1494579738}
     - target: {fileID: 8513001025760197550, guid: 67ad52c6f7fcd0e4b9991cce0a1355ff, type: 3}
       propertyPath: m_Name
       value: CurrencyUI
