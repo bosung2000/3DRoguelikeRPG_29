@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     {
         AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
 
-        if (currentState.IsName("GetHit") || currentState.IsTag("Uninterruptible") || _playerController._anim.IsInTransition(0))
+        if (currentState.IsName("GetHit"))
             return;
 
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         if (Time.time < _lastHitTime+attackCooldown) return;
         //_playerController.StopMove();
         _playerController.SetTrigger("Attack");
-        playerSkillController.UseSlashSkill(3);
+        //playerSkillController.UseSlashSkill(3);
         _lastHitTime = Time.time;
 
         //튜토리얼 체크
