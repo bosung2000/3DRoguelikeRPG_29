@@ -6,15 +6,20 @@ using UnityEngine.UI;
 
 public class CurrencyUI : MonoBehaviour
 {
-    [SerializeField] CurrencyManager _playerManager;
+    [SerializeField] CurrencyManager _CurrencyManager;
     [SerializeField] TextMeshProUGUI _GoldText;
     [SerializeField] TextMeshProUGUI _soulText;
 
+    private void Awake()
+    {
+        _CurrencyManager.OnGoldChange += UpdateGold;
+        _CurrencyManager.OnSoulChange += UpdateSoul;
+    }
 
     private void Start()
     {
-        _playerManager.OnGoldChange += UpdateGold;
-        _playerManager.OnSoulChange += UpdateSoul;
+        
+        
     }
 
     private void UpdateGold(int gold)

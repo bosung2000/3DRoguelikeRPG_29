@@ -25,6 +25,9 @@ public class CurrencyManager : MonoBehaviour
     {
         saveManager =SaveManager.Instance;
         init();
+
+        
+
     }
 
     private void Start()
@@ -73,7 +76,7 @@ public class CurrencyManager : MonoBehaviour
     }
 
     // 이벤트 액션 가져오기 (필요할 때마다 최신 이벤트 참조 반환)
-    private Action<int> GetCurrencyAction(CurrencyType type)
+    public Action<int> GetCurrencyAction(CurrencyType type)
     {
         switch (type)
         {

@@ -57,7 +57,7 @@ public class MapManager : MonoBehaviour
                 if (parts.Length > 1 && int.TryParse(parts[1], out int roomIndex))
                 {
                     roomZones[roomIndex] = rz;
-                    //Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
+                    Debug.Log($"Room {roomIndex} 매핑됨: {roomName}");
                 }
             }
         }
