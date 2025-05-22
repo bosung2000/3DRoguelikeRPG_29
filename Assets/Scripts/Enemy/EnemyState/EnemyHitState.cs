@@ -15,8 +15,6 @@ public class EnemyHitState : IEnemyState
         controller.animator.SetTrigger("Hit");
         controller.animator.SetBool("isHit", true);
         controller.ResetAttackCooldown();
-
-        Debug.Log(controller.LastStateType);
     }
 
     public void ExitState(EnemyController controller)
