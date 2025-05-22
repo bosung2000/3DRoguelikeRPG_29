@@ -172,10 +172,10 @@ public class TutorialController : MonoBehaviour
 
         if (completionPanel != null && completionText != null)
         {
+            completionPanel.SetActive(true);
             completionText.text = "튜토리얼이 완료되었습니다! \n" +
                                     "로비로 이동합니다 \n" +
                                     "모험을 떠나세요!!";
-            completionPanel.SetActive(true);
         }
         else
         {

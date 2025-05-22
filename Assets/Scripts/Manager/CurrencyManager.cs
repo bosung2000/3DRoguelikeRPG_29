@@ -13,20 +13,20 @@ public enum CurrencyType
 public class CurrencyManager : MonoBehaviour
 {
     public Dictionary<CurrencyType, int> currencies;
-    public  Dictionary<CurrencyType, Action<int>> currenciesAction;
+    public Dictionary<CurrencyType, Action<int>> currenciesAction;
     public event Action<int> OnGoldChange;
     public event Action<int> OnSoulChange;
-    
+
     public SaveManager saveManager;
     GameData data;
     public static CurrencyManager Instance { get; private set; }
 
     private void Awake()
     {
-        saveManager =SaveManager.Instance;
+        saveManager = SaveManager.Instance;
         init();
 
-        
+
 
     }
 
@@ -34,7 +34,7 @@ public class CurrencyManager : MonoBehaviour
     {
         data = saveManager.LoadData();
 
-        Debug.Log($"Currencymamamger Start :data.gold:{data.gold} data.soul: {data.soul}");
+        //        Debug.Log($"Currencymamamger Start :data.gold:{data.gold} data.soul: {data.soul}");
 
         if (data.gold == 0 && data.soul == 0 && !data.isTutorialDone)
         {
@@ -49,7 +49,7 @@ public class CurrencyManager : MonoBehaviour
 
         }
 
-        Debug.Log($"Currencymamamger Start  end :data.gold:{data.gold} data.soul: {data.soul}");
+        //Debug.Log($"Currencymamamger Start  end :data.gold:{data.gold} data.soul: {data.soul}");
 
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
@@ -127,7 +127,7 @@ public class CurrencyManager : MonoBehaviour
         data.gold = currencies[CurrencyType.Gold];
         data.soul = currencies[CurrencyType.Soul];
 
-        Debug.Log($"SaveCurrency :data.gold:{data.gold} data.soul: {data.soul}");
+        //Debug.Log($"SaveCurrency :data.gold:{data.gold} data.soul: {data.soul}");
         //GameData data = new GameData
         //{
         //    gold = currencies[CurrencyType.Gold],
