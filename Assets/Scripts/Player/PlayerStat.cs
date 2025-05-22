@@ -406,10 +406,10 @@ public class PlayerStat : BaseStat<PlayerStatType>, BaseEntity
     
     public void Attack(Enemy enemy)
     {
-        AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
+        //AnimatorStateInfo currentState = _playerController._anim.GetCurrentAnimatorStateInfo(0);
 
-        if (currentState.IsName("GetHit") || currentState.IsTag("Uninterruptible") || _playerController._anim.IsInTransition(0))
-            return;
+        //if (currentState.IsName("GetHit") || currentState.IsTag("Uninterruptible") || _playerController._anim.IsInTransition(0))
+        //    return;
 
         float baseAttack = GetStatValue(PlayerStatType.Attack);
         float critChance = GetStatValue(PlayerStatType.CriticalChance);
