@@ -31,6 +31,8 @@ public class CurrencyManager : MonoBehaviour
     {
         data = saveManager.LoadData();
 
+        Debug.Log($"Currencymamamger Start :data.gold:{data.gold} data.soul: {data.soul}");
+
         if (data.gold == 0 && data.soul == 0)
         {
             currencies[CurrencyType.Gold] = 1000;
@@ -43,6 +45,8 @@ public class CurrencyManager : MonoBehaviour
             currencies[CurrencyType.Soul] = data.soul;
 
         }
+
+        Debug.Log($"Currencymamamger Start  end :data.gold:{data.gold} data.soul: {data.soul}");
 
         OnGoldChange?.Invoke(currencies[CurrencyType.Gold]);
         OnSoulChange?.Invoke(currencies[CurrencyType.Soul]);
@@ -120,6 +124,7 @@ public class CurrencyManager : MonoBehaviour
         data.gold = currencies[CurrencyType.Gold];
         data.soul = currencies[CurrencyType.Soul];
 
+        Debug.Log($"SaveCurrency :data.gold:{data.gold} data.soul: {data.soul}");
         //GameData data = new GameData
         //{
         //    gold = currencies[CurrencyType.Gold],
