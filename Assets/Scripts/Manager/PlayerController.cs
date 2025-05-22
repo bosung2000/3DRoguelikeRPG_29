@@ -89,7 +89,6 @@ public class PlayerController : MonoBehaviour
 
     public void Dash()
     {
-        _isAttacking = false;
         float dashDistance = _playerStat.GetStatValue(PlayerStatType.DashDistance);
         float dashCooldown = _playerStat.GetStatValue(PlayerStatType.DashCooldown);
 
@@ -98,6 +97,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("쿨타임입니다");
             return;
         }
+        _isAttacking = false;
 
         _isTumbling = true;
         SetTrigger("Dash");
