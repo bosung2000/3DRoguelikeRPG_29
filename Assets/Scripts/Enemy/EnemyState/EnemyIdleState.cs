@@ -1,9 +1,13 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class EnemyIdleState : IEnemyState
 {
     private float _scanRadius;//탐지 범위
+    private float _attackRange;
+    private float _distance;
     private LayerMask _targetLayer;
 
     // 정찰/순찰 시스템
@@ -17,6 +21,7 @@ public class EnemyIdleState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         _scanRadius = controller.GetStat(EnemyStatType.ChaseRange);
+        _attackRange = controller.GetStat(EnemyStatType.AttackRange);
         _targetLayer = LayerMask.GetMask("Player");
 
         if (controller.animator != null)
@@ -39,11 +44,20 @@ public class EnemyIdleState : IEnemyState
     public void UpdateState(EnemyController controller)
     {
         Collider[] hit = Physics.OverlapSphere(controller.transform.position, _scanRadius, _targetLayer);
+
+        _distance = Vector3.Distance(controller.transform.position, controller.GetTarget().position);
+
         //추격 최대거리에 도달하면 추격상태 전환
         if (hit.Length > 0)
         {
-            //Debug.Log("플레이어 발견");
-            controller.ChageState(EnemyStateType.Chase);
+            if (_distance <= _attackRange)
+            {
+                controller.ChageState(EnemyStateType.Attack);
+            }
+            else
+            {
+                controller.ChageState(EnemyStateType.Chase);
+            }
         }
 
         if (controller.Enemy.IsBoss)
