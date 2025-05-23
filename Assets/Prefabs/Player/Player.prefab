@@ -224,8 +224,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 2, z: 0.07}
-  m_Center: {x: 0.00089462084, y: 1.12, z: -0.0008349623}
+  m_Size: {x: 0.25, y: 1.2500153, z: 0.07}
+  m_Center: {x: 0.0008946208, y: 1.0422343, z: -0.000834959}
 --- !u!4 &2642185088956473044 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 4f5854f24c1370b4d887ec9a18399327, type: 3}
@@ -401,6 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 0}
+  _lastMoveDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1056135215285962192
 MonoBehaviour:
   m_ObjectHideFlags: 0
