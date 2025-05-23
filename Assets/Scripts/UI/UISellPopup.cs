@@ -74,41 +74,37 @@ public class UISellPopup : PopupUI
                 return;
             }
 
-            if (currentSlotItem.item.itemType ==ItemType.Equipment)
+            // 아이템 타입에 따른 재화 타입 설정
+            CurrencyType _currencytype;
+            if (currentSlotItem.item.itemType == ItemType.Equipment)
             {
-                //판매 로직 
-                if (playerManager.Currency.AddCurrency(CurrencyType.Gold, currentSlotItem.item.gold))
-                {
-                    //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
-                    OnSellEvent?.Invoke(currentSlotItem.item);
-                    //아이템 list에 추가 
-                    itemManager.AddItemList(currentSlotItem.item);
-                    //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
-                    inventoryManager.RemoveInventoryitme(currentSlotItem.item);
-                    //골드 UI 변경  
-                    uIShop.ShowShopCurrency();
-                    UIManager.Instance.ClosePopupUI(this);
-                }
+                _currencytype = CurrencyType.Gold;
             }
-            else if(currentSlotItem.item.itemType ==ItemType.Relics)
+            else if (currentSlotItem.item.itemType == ItemType.Relics)
             {
-                //판매 로직 
-                if (playerManager.Currency.AddCurrency(CurrencyType.Soul, currentSlotItem.item.gold))
-                {
-                    //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
-                    OnSellEvent?.Invoke(currentSlotItem.item);
-                    //아이템 list에 추가 
-                    itemManager.AddItemList(currentSlotItem.item);
-                    //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
-                    inventoryManager.RemoveInventoryitme(currentSlotItem.item);
-                    //골드 UI 변경  
-                    uIShop.ShowShopCurrency();
-                    UIManager.Instance.ClosePopupUI(this);
-                }
+                _currencytype = CurrencyType.Soul;
             }
             else
             {
-                Debug.Log("골드부족 ");
+                Debug.Log("판매할 수 없는 아이템 타입입니다.");
+                return;
+            }
+
+            if (playerManager.Currency.AddCurrency(_currencytype, currentSlotItem.item.gold))
+            {
+                //판매시 이벤트 실행 >itemManager에 item다시 넣어주기
+                OnSellEvent?.Invoke(currentSlotItem.item);
+                //아이템 list에 추가 
+                itemManager.AddItemList(currentSlotItem.item);
+                //slotitemDatas에 데이터를 삭제해주기만 하면 이벤트로 연결되어있어서 
+                inventoryManager.RemoveInventoryitme(currentSlotItem.item);
+                //골드 UI 변경  
+                uIShop.ShowShopCurrency();
+                UIManager.Instance.ClosePopupUI(this);
+            }
+            else
+            {
+                Debug.Log("재화가 부족합니다.");
                 return;
             }
 

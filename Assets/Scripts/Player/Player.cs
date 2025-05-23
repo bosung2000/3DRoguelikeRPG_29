@@ -35,9 +35,10 @@ public class Player : MonoBehaviour
         if (Time.time < _lastHitTime+attackCooldown) return;
 
         // 공격 시 플레이어의 방향을 마지막 이동 방향으로 설정
-        if (_playerController._lastMoveDirection.sqrMagnitude > 0.05f)
+        Vector3 lastMoveDir = _playerController.GetLastMoveDirection();
+        if (lastMoveDir.sqrMagnitude > 0.05f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_playerController._lastMoveDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(lastMoveDir);
             transform.rotation = targetRotation;
         }
 

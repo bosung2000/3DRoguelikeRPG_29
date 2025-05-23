@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private StatUI _statUI;
     private bool _isAttacking = false;
     private bool _isSkill = false;
-    public Vector3 _lastMoveDirection;
+    [SerializeField] private Vector3 _lastMoveDirection;
     Vector3 inputDir;
     private float _rotationLockEndTime = 0f;
     public bool IsRotationLocked => Time.time < _rotationLockEndTime;
@@ -186,5 +186,10 @@ public class PlayerController : MonoBehaviour
     public void NotSkill()
     {
         _isSkill = false;
+    }
+
+    public Vector3 GetLastMoveDirection()
+    {
+        return _lastMoveDirection;
     }
 }
