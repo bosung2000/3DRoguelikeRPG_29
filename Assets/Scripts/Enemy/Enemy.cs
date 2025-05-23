@@ -223,16 +223,14 @@ public class Enemy : MonoBehaviour
     //ON
     public void EnableWeaponCollider()
     {
-        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
-        
-        _weaponCollider.enabled = true;
+        if (_weaponCollider != null)
+            _weaponCollider.enabled = true;
     }
     //OFF
     public void DisableWeaponCollider()
     {
-        if (!(enemyController._currentState is EnemyAttackState) || _weaponCollider == null) return;
-
-        _weaponCollider.enabled = false;
+        if (_weaponCollider != null)
+            _weaponCollider.enabled = false;
     }
 
     //트리거접촉 시
@@ -331,9 +329,9 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            return skillB switch
+            return skillA switch
             {
-                EnemySkillType.Dash => 10f,
+                EnemySkillType.Dash => 6f,
                 EnemySkillType.SpreadShot => 7f,
                 _ => 0f
             };
@@ -370,43 +368,26 @@ public class Enemy : MonoBehaviour
     private IEnumerator DashCoroutine()
     {
         float dashDistance = GetSkillRange(); //돌진 거리
-        float dashSpeed = 8f;
-        float dashTime = 0.5f; 
-        float timer = 0f;
-        float hitRadius = 1.0f;
-        
-        Vector3 dir = (GetPlayerTarget().position - transform.position ).normalized;
-        dir.y = 0f;
+        float dashSpeed = Stat.StatData.DashSpeed;
 
-        Quaternion initialRotation = Quaternion.LookRotation(dir);
-        transform.rotation = initialRotation;
+        Vector3 dir = (GetPlayerTarget().position - transform.position).normalized;
+        float traveled = 0f;
 
+        Vector3 previousPos = transform.position;
         //agent 비활성
         enemyController.agent.enabled = false;
         enemyController.agent.updateRotation = false;
 
-        while (timer < dashTime)
+        while (traveled < dashDistance)
         {
-            transform.position += dir * dashSpeed * Time.deltaTime;
-            Collider[] hits = Physics.OverlapSphere(transform.position, hitRadius, LayerMask.GetMask("Player"));
-            foreach(var hit in hits)
-            {
-                if(hit.CompareTag("Player"))
-                {
-                    PlayerStat player = hit.GetComponent<PlayerStat>();
-                    if(player != null )
-                    {
-                        int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
-                        //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
-                        player.TakeDamage(damage);
-                    }
+            float step = dashSpeed * Time.deltaTime;
+            transform.position += dir * step;
 
-                    timer = dashTime;
-                    break;
-                }
-            }
+            float moved = Vector3.Distance(transform.position, previousPos);
+            traveled += moved;
+            previousPos = transform.position;
 
-            timer += Time.deltaTime;
+            traveled += step;
             yield return null;
         }
 

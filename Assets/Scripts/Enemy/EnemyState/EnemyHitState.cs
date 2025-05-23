@@ -11,6 +11,7 @@ public class EnemyHitState : IEnemyState
         _timer = 0f;
         controller.agent.isStopped = true;
         controller.agent.ResetPath();
+        controller.Enemy.DisableWeaponCollider();
         controller.animator.ResetTrigger("Attack");
         controller.animator.SetTrigger("Hit");
         controller.animator.SetBool("isHit", true);

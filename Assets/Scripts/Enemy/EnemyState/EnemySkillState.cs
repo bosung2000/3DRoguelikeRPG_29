@@ -44,7 +44,6 @@ public class EnemySkillState : IEnemyState
             {
                 case EnemySkillType.Dash:
                     controller.animator.SetTrigger("Skill_Dash");
-                    Debug.Log("asdf");
                     break;
                 case EnemySkillType.SpreadShot:
                     controller.animator.SetTrigger("Skill_SpreadShot");
