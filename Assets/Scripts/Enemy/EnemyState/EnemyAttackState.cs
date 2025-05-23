@@ -7,7 +7,6 @@ public class EnemyAttackState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
-        Debug.Log($"{controller.name} entered ATTACK state");
         if (_target == null)
         {
             controller.ChageState(EnemyStateType.Idle);
@@ -30,6 +29,7 @@ public class EnemyAttackState : IEnemyState
     public void ExitState(EnemyController controller)
     {
         controller.animator.SetInteger("attackIndex", -1);
+        controller.animator.ResetTrigger("Attack");
     }
 
     public void UpdateState(EnemyController controller)

@@ -382,11 +382,25 @@ public class Enemy : MonoBehaviour
         {
             float step = dashSpeed * Time.deltaTime;
             transform.position += dir * step;
-
+            float hitRadius = 1.0f;
             float moved = Vector3.Distance(transform.position, previousPos);
             traveled += moved;
             previousPos = transform.position;
-
+            Collider[] hits = Physics.OverlapSphere(transform.position, hitRadius, LayerMask.GetMask("Player"));
+            foreach (var hit in hits)
+            {
+                if (hit.CompareTag("Player"))
+                {
+                    PlayerStat player = hit.GetComponent<PlayerStat>();
+                    if (player != null)
+                    {
+                        int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
+                        //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
+                        player.TakeDamage(damage);
+                    }
+                    break;
+                }
+            }
             traveled += step;
             yield return null;
         }
