@@ -15,23 +15,29 @@ public class UIEnhancementInventory : MonoBehaviour
 
     public UIEquipmentEnhance enhanceUI;
 
-    private void Start()
+    private void Awake()
     {
-        UpdateInventory();
-        FilterByTabType(UIPopupInventory.InventoryTabType.Equipment);
+        
+        uiPopupInventory = gameObject.GetComponentInParent<UIPopupInventory>();
+        inventoryManager = GameManager.Instance.InventoryManager;
     }
 
 
-    private void Awake()
+    private void Start()
     {
-        uiPopupInventory = gameObject.GetComponentInParent<UIPopupInventory>();
-        inventoryManager = GameManager.Instance.InventoryManager;
+        inventoryManager.OnSlotChanged += UpdateInventory;
+    }
+
+    private void OnEnable()
+    {
+        
+        UpdateInventory();
     }
 
     // 초기화 (한 번만 실행)
     public void InitSlots()
     {
-        if (!isInitialized)
+        
         {
             InitSlotShow();
             isInitialized = true;
@@ -77,10 +83,10 @@ public class UIEnhancementInventory : MonoBehaviour
     // 데이터 업데이트 (필요할 때마다 실행)
     public void UpdateInventory()
     {
-        // UI가 초기화되지 않았다면 초기화
-        if (!isInitialized)
+        
         {
             InitSlots();
+            FilterByTabType(UIPopupInventory.InventoryTabType.Equipment);
         }
     }
     /// <summary>

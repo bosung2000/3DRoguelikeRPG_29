@@ -4,7 +4,7 @@ using TMPro;
 
 public class UIEquipmentEnhance : PopupUI
 
-{ 
+{
     public TextMeshProUGUI itemNameText;
     public TextMeshProUGUI enhancementLevelText;
     public TextMeshProUGUI successRateText;
@@ -40,6 +40,26 @@ public class UIEquipmentEnhance : PopupUI
         allFloatingjoystick = Resources.FindObjectsOfTypeAll<FloatingJoystick>();
     }
 
+    private void OnEnable()
+    {
+        ResetText();
+
+    }
+
+    private void ResetText()
+    {
+        currentEquipment = null;
+        itemIcon.sprite = null;
+        itemIcon.gameObject.SetActive(false);
+        itemNameText.text = "";
+        enhancementLevelText.text = "";
+        successRateText.text = "";
+        costText.text = "";
+        goldText.text = "";
+        resultText.text = "";
+        startPreviewText.text = "";
+    }
+
     public void SetEquipment(ItemData equipment)
     {
         currentEquipment = equipment;
@@ -62,6 +82,7 @@ public class UIEquipmentEnhance : PopupUI
     {
         if (currentEquipment == null || playerManager == null) return;
 
+        itemIcon.gameObject.SetActive(true);
         itemNameText.text = currentEquipment.itemName;
         enhancementLevelText.text = $"+{currentEquipment.enhancementLevel}";
 

@@ -59,8 +59,8 @@ public class UIPopupInventory : PopupUI
         equipMananger = GameManager.Instance.EquipMananger;
         inventoryMananger = GameManager.Instance.InventoryManager;
         playerManager = GameManager.Instance.PlayerManager;
-        
-        uIHUD =FindObjectOfType<UIHUD>();
+
+        uIHUD = FindObjectOfType<UIHUD>();
         uIInventory.UpdateInventory(inventoryMananger);
 
 
@@ -92,7 +92,7 @@ public class UIPopupInventory : PopupUI
         inventoryMananger.OnSlotChanged += uIInventory.InitSlotShow;
         inventoryMananger.OnSlotChanged += HandleSlotChanged;
         inventoryMananger.OnSlotChanged += RefreshInventory;
-        
+
 
 
     }
@@ -121,12 +121,12 @@ public class UIPopupInventory : PopupUI
     {
         if (item == null) return;
         ItemData selecteditmed = null;
-        
+
         if (item.itemType == ItemType.Equipment)
         {
             if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(item.equipType, out ItemData equipitem1))
             {
-                selecteditmed= equipitem1;
+                selecteditmed = equipitem1;
             }
         }
         else if (item.itemType == ItemType.Relics)
@@ -142,35 +142,35 @@ public class UIPopupInventory : PopupUI
         // 장착한 아이템이 아닌것을 선택할때 
         // 장착된 아이템이 없다면?
         if (GameManager.Instance.EquipMananger.EquipDicionary.TryGetValue(item.equipType, out ItemData equipitem))
+        {
+            var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
+            selectedItemPopup.EquipBtn_interactable_true();
+            //선택한 아이템이 장착아이템과 같은가 ?
+            if (equipitem.id == item.id)
             {
-                var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
-                selectedItemPopup.EquipBtn_interactable_true();
-                //선택한 아이템이 장착아이템과 같은가 ?
-                if (equipitem.id == item.id)
-                {
-                    selectedItemPopup.EquipBtn_interactable_flase();
-                }
-                if (selectedItemPopup != null)
-                {
-                    selectedItemPopup.Show(item, this);
-                }
-                var equipitempopup = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
-                if (equipitempopup != null)
-                {
-                    equipitempopup.Show(GameManager.Instance.EquipMananger.EquipDicionary[item.equipType]);
-                }
+                selectedItemPopup.EquipBtn_interactable_flase();
             }
-            else
+            if (selectedItemPopup != null)
             {
-                var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
-                selectedItemPopup.EquipBtn_interactable_true();
-                UIManager.Instance.ClosePopupUI<UIEquipedItem>();
-                //내가 장착한 아이템이 없을때 
-                if (selectedItemPopup != null)
-                {
-                    selectedItemPopup.Show(item, this);
-                }
+                selectedItemPopup.Show(item, this);
             }
+            var equipitempopup = UIManager.Instance.ShowPopupUI<UIEquipedItem>();
+            if (equipitempopup != null)
+            {
+                equipitempopup.Show(GameManager.Instance.EquipMananger.EquipDicionary[item.equipType]);
+            }
+        }
+        else
+        {
+            var selectedItemPopup = UIManager.Instance.ShowPopupUI<UISelectedItem>();
+            selectedItemPopup.EquipBtn_interactable_true();
+            UIManager.Instance.ClosePopupUI<UIEquipedItem>();
+            //내가 장착한 아이템이 없을때 
+            if (selectedItemPopup != null)
+            {
+                selectedItemPopup.Show(item, this);
+            }
+        }
 
     }
 
@@ -242,21 +242,10 @@ public class UIPopupInventory : PopupUI
     /// <param name="itemData"></param>
     private void HandleSingleItemChanged(EquipType equipType, ItemData itemData, bool AddorRemove)
     {
+        ResetSprite();
         if (AddorRemove == true)
         {
-            // 모든 장비 슬롯 초기화
-            //slotEquipWeapon.sprite = null;
-            //slotEquipCoat.sprite = null;
-            //slotEquipShoes.sprite = null;
-            //slotEquipGlove.sprite = null;
 
-            //// 슬롯별 기본 색상 설정 - 비어있을 때는 약간 투명하게
-            //Color slotEmptyColor = new Color(1f, 1f, 1f, 0.5f);
-            //slotEquipWeapon.color = slotEmptyColor;
-            //slotEquipCoat.color = slotEmptyColor;
-            //slotEquipShoes.color = slotEmptyColor;
-            //slotEquipGlove.color = slotEmptyColor;
-            
 
             switch (equipType)
             {
@@ -280,26 +269,7 @@ public class UIPopupInventory : PopupUI
                     break;
             }
         }
-        else
-        {
-            switch (equipType)
-            {
-                case EquipType.Weapon:
-                    slotEquipWeapon.sprite = null;
-                    break;
-                case EquipType.Coat:
-                    slotEquipCoat.sprite = null;
-                    break;
-                case EquipType.Shoes:
-                    slotEquipShoes.sprite = null;
-                    break;
-                case EquipType.Glove:
-                    slotEquipGlove.sprite = null;
-                    break;
-                default:
-                    break;
-            }
-        }
+
 
         //OnTabChanged(InventoryTabType.All);
     }
@@ -312,15 +282,6 @@ public class UIPopupInventory : PopupUI
         {
             ResetSprite();
 
-            // 슬롯별 기본 색상 설정 - 비어있을 때는 약간 투명하게
-            //Color slotEmptyColor = new Color(1f, 1f, 1f, 1f);
-            //slotEquipWeapon.color = slotEmptyColor;
-            //slotEquipCoat.color = slotEmptyColor;
-            //slotEquipShoes.color = slotEmptyColor;
-            //slotEquipGlove.color = slotEmptyColor;
-            //Slot_Equip_Relics_01.color = slotEmptyColor;
-            //Slot_Equip_Relics_02.color = slotEmptyColor;
-            //Slot_Equip_Relics_03.color = slotEmptyColor;
 
             // 일반 장비 아이템 슬롯 업데이트
             foreach (var item in equipMananger.EquipDicionary.Values)
@@ -391,13 +352,13 @@ public class UIPopupInventory : PopupUI
 
         slotEquipWeapon.color = slotEmptyColor;
         slotEquipCoat.color = slotEmptyColor;
-        slotEquipShoes.color= slotEmptyColor;
-        slotEquipGlove.color= slotEmptyColor;
+        slotEquipShoes.color = slotEmptyColor;
+        slotEquipGlove.color = slotEmptyColor;
 
-        Slot_Equip_Relics_01.color= slotEmptyColor;
-        Slot_Equip_Relics_02.color= slotEmptyColor;
-        Slot_Equip_Relics_03.color= slotEmptyColor;
-        
+        Slot_Equip_Relics_01.color = slotEmptyColor;
+        Slot_Equip_Relics_02.color = slotEmptyColor;
+        Slot_Equip_Relics_03.color = slotEmptyColor;
+
     }
 
     // OnRelicsChanged 이벤트 핸들러 추가 (유물 장착/해제 시 호출됨)
@@ -414,6 +375,7 @@ public class UIPopupInventory : PopupUI
 
     private void HandleSlotChanged()
     {
+
         OnTabChanged(InventoryTabType.All);
     }
 
