@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     {
         _playerStat.InitBaseStat(statData);
     }
-    public void Update()
+    public void FixedUpdate()
     {
         _playerController.DirectionCheck();
     }
