@@ -242,36 +242,7 @@ public class UIPopupInventory : PopupUI
     /// <param name="itemData"></param>
     private void HandleSingleItemChanged(EquipType equipType, ItemData itemData, bool AddorRemove)
     {
-        ResetSprite();
-        if (AddorRemove == true)
-        {
-
-
-            switch (equipType)
-            {
-                case EquipType.Weapon:
-                    slotEquipWeapon.sprite = itemData.Icon;
-                    //slotEquipWeapon.color = Color.white;
-                    break;
-                case EquipType.Coat:
-                    slotEquipCoat.sprite = itemData.Icon;
-                    //slotEquipWeapon.color = Color.white;
-                    break;
-                case EquipType.Shoes:
-                    slotEquipShoes.sprite = itemData.Icon;
-                    //slotEquipWeapon.color = Color.white;
-                    break;
-                case EquipType.Glove:
-                    slotEquipGlove.sprite = itemData.Icon;
-                    //slotEquipWeapon.color = Color.white;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
-        //OnTabChanged(InventoryTabType.All);
+        HandleAllEquipmentReset();
     }
     /// <summary>
     /// 전체 아이템 슬롯 업데이트 /처음에 아이템 초기화를 할때 해야겠지 ?
