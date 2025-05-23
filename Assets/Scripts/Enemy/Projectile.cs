@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float _speed = 10f; //투사체 속도 설정
+    [SerializeField] private float _speed = 8f; //투사체 속도 설정
     [SerializeField] private int _damage;         //데이터에서 가져오기
 
     private Vector3 _direction;

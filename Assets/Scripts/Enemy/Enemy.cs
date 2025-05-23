@@ -446,7 +446,7 @@ public class Enemy : MonoBehaviour
     {
         if (ProjectilePrefab == null || FirePoint == null) return;
 
-        int count = 5; // 발사 갯수
+        int count = 3; // 발사 갯수
         float angleSpread = 30f; //퍼지는 각도
         float angleStep = angleSpread / (count - 1);
         float startAngle = -angleSpread / 2f;
