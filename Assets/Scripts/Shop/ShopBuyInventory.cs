@@ -28,9 +28,11 @@ public class ShopBuyInventory : MonoBehaviour
         foreach (var item in availableItems)
         {
             var slot = Instantiate(slotPrefab, SlotParent);
+            slot.SetCurrentype(shop.GetShopType());
             slot.SetSlotData_Equip(item);
             slot.OnitemClicked += OnShopItemSelected;
             ShopBuyslots.Add(slot);
+            
         }
     }
     
