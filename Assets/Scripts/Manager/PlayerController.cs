@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private StatUI _statUI;
     private bool _isAttacking = false;
     private bool _isSkill = false;
-    private Vector3 _lastMoveDirection;
+    public Vector3 _lastMoveDirection;
     Vector3 inputDir;
     private float _rotationLockEndTime = 0f;
     public bool IsRotationLocked => Time.time < _rotationLockEndTime;
@@ -110,6 +110,10 @@ public class PlayerController : MonoBehaviour
             dir = _lastMoveDirection;
 
         dir = dir.normalized;
+
+        // 대시 시 플레이어의 방향을 입력 방향으로 설정
+        Quaternion targetRotation = Quaternion.LookRotation(dir);
+        transform.rotation = targetRotation;
 
         Vector3 origin = transform.position + Vector3.up * 0.01f;
         Vector3 target = transform.position + dir * dashDistance;

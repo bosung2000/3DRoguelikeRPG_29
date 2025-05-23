@@ -33,9 +33,15 @@ public class Player : MonoBehaviour
         float attackSpeed = _playerStat.GetStatValue(PlayerStatType.AttackSpeed);
         float attackCooldown = 1 / attackSpeed;
         if (Time.time < _lastHitTime+attackCooldown) return;
-        //_playerController.StopMove();
+
+        // 공격 시 플레이어의 방향을 마지막 이동 방향으로 설정
+        if (_playerController._lastMoveDirection.sqrMagnitude > 0.05f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(_playerController._lastMoveDirection);
+            transform.rotation = targetRotation;
+        }
+
         _playerController.SetTrigger("Attack");
-        //playerSkillController.UseSlashSkill(3);
         _lastHitTime = Time.time;
 
         //튜토리얼 체크
