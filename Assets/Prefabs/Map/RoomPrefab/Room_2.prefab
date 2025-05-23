@@ -380,12 +380,18 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 3305681589666183229}
   spawnConfig:
-    normalEnemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
-    spawnnormal: 0
-    normalCount: 7
-    eliteEnemyPrefab: {fileID: 3664294383125131184, guid: 768da0516b0989e418ae9ebe83659e30, type: 3}
-    EliteCount: 3
-    spawnElite: 0
+    normalMeleeEnemyPrefab: {fileID: 3664294383125131184, guid: 3cef5142b82510741a4908b72e49fae7, type: 3}
+    spawnnormalMelee: 0
+    normalMeleeCount: 3
+    normalRangedEnemyPrefab: {fileID: 3664294383125131184, guid: 5e252a113469744409d87b85024c4753, type: 3}
+    spawnnormalRanged: 0
+    normalRangedCount: 2
+    eliteRangeEnemyPrefab: {fileID: 3664294383125131184, guid: 9e2bce3d6e65e434baa5aa75590b6b30, type: 3}
+    spawnEliteRange: 0
+    EliteCountRange: 2
+    eliteMeleeEnemyPrefab: {fileID: 3664294383125131184, guid: 768da0516b0989e418ae9ebe83659e30, type: 3}
+    spawnEliteMelee: 0
+    EliteCountMelee: 1
     bossEnemyPrefab: {fileID: 0}
     BossCount: 0
     spawnBoss: 0

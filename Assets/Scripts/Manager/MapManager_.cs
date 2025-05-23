@@ -388,19 +388,23 @@ public class MapManager : MonoBehaviour
         // 선택한 방 인덱스에 해당하는 RoomZone 찾기
         if (roomZones.TryGetValue(roomIndex, out RoomZone targetRoom))
         {
-            targetRoom.spawnConfig.spawnnormal = false;
-            targetRoom.spawnConfig.spawnElite = false;
+            targetRoom.spawnConfig.spawnnormalMelee = false;
+            targetRoom.spawnConfig.spawnnormalRanged = false;
+            targetRoom.spawnConfig.spawnEliteMelee = false;
+            targetRoom.spawnConfig.spawnEliteRange = false;
             targetRoom.spawnConfig.spawnBoss = false;
             // 해당 방의 타입에 맞는 처리
             switch (rooms[roomIndex].type)
             {
                 case RoomType.Normal:
-                    targetRoom.spawnConfig.spawnnormal = true;
+                    targetRoom.spawnConfig.spawnnormalMelee = true;
+                    targetRoom.spawnConfig.spawnnormalRanged = true;
                     targetRoom.ActivateRoom();
                     break;
                 case RoomType.Elite:
                     // 엘리트용 설정 적용 후 방 활성화
-                    targetRoom.spawnConfig.spawnElite = true;
+                    targetRoom.spawnConfig.spawnEliteMelee = true;
+                    targetRoom.spawnConfig.spawnEliteRange = true;
                     targetRoom.ActivateRoom();
                     break;
                 case RoomType.WeaponShop:
