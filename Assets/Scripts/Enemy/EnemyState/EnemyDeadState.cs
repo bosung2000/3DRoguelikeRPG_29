@@ -12,6 +12,7 @@ public class EnemyDeadState : IEnemyState
             controller.agent.enabled = true;
         }
         controller.agent.isStopped = true;
+        controller.Enemy.DisableWeaponCollider();
         controller.animator.SetBool("isRun", false);
         controller.animator.SetBool("isWalk", false);
         controller.animator.ResetTrigger("Attack");
@@ -28,7 +29,7 @@ public class EnemyDeadState : IEnemyState
     public void UpdateState(EnemyController controller)
     {
         if (enemy == null) return;
-
+        controller.Enemy.DisableWeaponCollider();
         if (enemy.IsDeadAnimationEnded())
         {
             GameObject.Destroy(controller.gameObject);

@@ -7,7 +7,7 @@ public class EnemyAttackState : IEnemyState
     public void EnterState(EnemyController controller)
     {
         _target = controller.GetTarget();
-
+        Debug.Log($"{controller.name} entered ATTACK state");
         if (_target == null)
         {
             controller.ChageState(EnemyStateType.Idle);
