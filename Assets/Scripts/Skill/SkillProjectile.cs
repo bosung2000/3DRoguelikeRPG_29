@@ -37,9 +37,7 @@ public class SkillProjectile : MonoBehaviour
     private int hitCount = 0; // 적중 횟수 카운트
     private Transform homingTarget = null; // 유도 대상
 
-    private void Awake()
-    {
-    }
+
 
     private void Update()
     {

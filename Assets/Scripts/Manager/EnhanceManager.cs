@@ -11,13 +11,7 @@ public class EnhanceManager : MonoBehaviour
 
     public event Action OnSucessEnhancs;
 
-    private void Update()
-    {
-        //if(Input.GetKeyDown(KeyCode.U))
-        //{
-        //    UIManager.Instance.ShowPopupUI<UIEquipmentEnhance>();
-        //}
-    }
+
     public float GetSuccessRate(int level)
     {
         if (level < enhancementSuccessRates.Count)

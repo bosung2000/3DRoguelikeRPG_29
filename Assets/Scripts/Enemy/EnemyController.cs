@@ -54,9 +54,6 @@ public class EnemyController : MonoBehaviour
         ChageState(EnemyStateType.Idle);
     }
 
-    private void Update()
-    {
-    }
     private void FixedUpdate()
     {
         _currentState?.UpdateState(this);

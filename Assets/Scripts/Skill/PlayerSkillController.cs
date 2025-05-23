@@ -19,18 +19,7 @@ public class PlayerSkillController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Update()
-    {
-        // 공격 입력 감지
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    UseSlashSkill(0); // 첫번째 이펙트 사용
-        //}
-        //else if (Input.GetMouseButtonDown(1))
-        //{
-        //    UseSlashSkill(1); // 두번째 이펙트 사용
-        //}
-    }
+
 
     // 이 메서드는 외부에서 호출하거나 버튼 이벤트로 연결할 수 있습니다
     public void UseSlashSkill(int effectIndex)

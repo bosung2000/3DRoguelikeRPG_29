@@ -63,10 +63,7 @@ public class Portal : MonoBehaviour
     {
         return this.name;
     }
-    private void Update()
-    {
 
-    }
 
     public void TutorialMove()
     {

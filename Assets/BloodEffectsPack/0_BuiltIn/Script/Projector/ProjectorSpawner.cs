@@ -74,10 +74,6 @@ namespace BloodEffectsPack
         }
 
 
-        void Update()
-        {
-
-        }
 
         private IEnumerator Spawn()
         {

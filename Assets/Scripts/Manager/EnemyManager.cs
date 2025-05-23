@@ -12,18 +12,15 @@ public class EnemyManager : MonoBehaviour
         _enemy = GetComponent<Enemy>();
     }
 
-    private void Start()
-    {
 
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(damageKey))
-        {
-            ReceiveDamage(testDamage);
-        }
-    }
+    //private void Update()
+    //{
+    //    //if (Input.GetKeyDown(damageKey))
+    //    //{
+    //    //    ReceiveDamage(testDamage);
+    //    //}
+    //}
 
     public void ReceiveDamage(int damage)
     {
