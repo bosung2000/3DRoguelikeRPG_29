@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
         Stat = GetComponent<EnemyStat>();
         enemyController = GetComponent<EnemyController>();
         CachePlayer();
-        
+
         // 부모 RoomZone 찾기
         _parentRoomZone = GetComponentInParent<RoomZone>();
     }
@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        if(_weaponCollider != null)
+        if (_weaponCollider != null)
             _weaponCollider.enabled = false;
     }
 
@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
         return PlayerTarget;
     }
     //데미지를 받음
-    public void TakeDamage(int damage,bool CriBool)
+    public void TakeDamage(int damage, bool CriBool)
     {
         if (_isDead) return;
 
@@ -141,11 +141,11 @@ public class Enemy : MonoBehaviour
         if (_isDead) return;
         _isDead = true;
 
-        if (IsBoss ==true)
+        if (IsBoss == true)
         {
             GameManager.Instance.MapManager.OnBossDefeated();
             GameManager.Instance.PortalManager._unlockedPortals.Clear();
-            if (StageManager.Instance.CurrentStage ==6)
+            if (StageManager.Instance.CurrentStage == 6)
             {
                 UIManager.Instance.ShowPopupUI<Finish_Clear_UI>();
                 Time.timeScale = 0f;
@@ -167,7 +167,7 @@ public class Enemy : MonoBehaviour
         FindObjectOfType<TutorialController>()?.OnEnemyKilled();
 
     }
-    
+
     //재화 드랍
     private void DropCurrency()
     {
@@ -196,7 +196,7 @@ public class Enemy : MonoBehaviour
         Vector3 randomXZ = new Vector3(circle.x, 0f, circle.y);
         Vector3 dropPos = center + randomXZ;
 
-        if(NavMesh.SamplePosition(dropPos, out NavMeshHit hit, radius, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(dropPos, out NavMeshHit hit, radius, NavMesh.AllAreas))
         {
             return hit.position + Vector3.up * 0.3f;
         }
@@ -237,9 +237,9 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (_weaponCollider == null || !_weaponCollider.enabled) return;
-        if(!other.CompareTag("Player")) return;
+        if (!other.CompareTag("Player")) return;
 
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             if (other.TryGetComponent(out PlayerStat playerStat))
             {
@@ -254,7 +254,7 @@ public class Enemy : MonoBehaviour
     //공격 끝나는 시간 체크
     public void OnAttackAnimationEnd()
     {
-        if(enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
+        if (enemyController != null && enemyController.CurrentStateType == EnemyStateType.Attack)
         {
             enemyController.ChageState(EnemyStateType.Chase);
         }
@@ -310,7 +310,7 @@ public class Enemy : MonoBehaviour
         if (!IsBoss)
             return skillA;
 
-        return  (CurrentSkillChoice == 0 ? skillA : skillB);
+        return (CurrentSkillChoice == 0 ? skillA : skillB);
     }
 
     //스킬별 범위
@@ -378,6 +378,9 @@ public class Enemy : MonoBehaviour
         enemyController.agent.enabled = false;
         enemyController.agent.updateRotation = false;
 
+
+        Debug.Log("Dash Start");
+
         while (traveled < dashDistance)
         {
             float step = dashSpeed * Time.deltaTime;
@@ -397,6 +400,7 @@ public class Enemy : MonoBehaviour
                         int damage = (int)Stat.GetStatValue(EnemyStatType.Attack);
                         //향후 돌진 추가 수정 후 데미지 추가(일직선 돌진으로 수정)
                         player.TakeDamage(damage);
+                        Debug.Log("Dash step: " + transform.position);
                     }
                     break;
                 }
@@ -417,6 +421,9 @@ public class Enemy : MonoBehaviour
         enemyController.agent.enabled = true;
         enemyController.agent.updateRotation = true;
         enemyController.agent.Warp(transform.position);
+
+        Debug.Log("Dash End");
+
     }
     //충격파
     public void SkillShockWave()
@@ -573,12 +580,12 @@ public class Enemy : MonoBehaviour
     }
 
     //임시 몬스터 제거 키 추후 삭제
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.K))
-    //    {
-    //        //Debug.Log("적 죽음");
-    //        Die();
-    //    }
-    //}
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //Debug.Log("적 죽음");
+            Die();
+        }
+    }
 }

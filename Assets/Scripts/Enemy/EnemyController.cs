@@ -56,6 +56,9 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+    }
+    private void FixedUpdate()
+    {
         _currentState?.UpdateState(this);
     }
 

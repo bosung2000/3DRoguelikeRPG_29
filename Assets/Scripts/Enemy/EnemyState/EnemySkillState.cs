@@ -173,15 +173,7 @@ public class EnemySkillState : IEnemyState
                     
             enemy.DashLineWarning(enemy.transform.position, playerPos, dashProgress);
 
-            Vector3 toPlayer = playerPos - enemy.transform.position;
-            toPlayer.y = 0f;
-
-            if (toPlayer != Vector3.zero)
-            {
-                Quaternion lookRot = Quaternion.LookRotation(toPlayer);
-                enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, lookRot, Time.deltaTime * 10f);
-            }
-            if (!isMoving && stateInfo.normalizedTime >= 0.99f)
+            if (!isMoving && stateInfo.normalizedTime >= 0.95f)
             {
                 enemy.SkillDash();
                 enemy.DestroyWarningSign();
@@ -198,14 +190,14 @@ public class EnemySkillState : IEnemyState
 
         if (skillEnd)
         {
-            switch (enemy.GetCurrentSkillType())
-            {
-                case EnemySkillType.Dash:
-                    controller.Enemy.SkillDash();
-                    break;
-                case EnemySkillType.SpreadShot:
-                    break;
-            }
+            //switch (enemy.GetCurrentSkillType())
+            //{
+            //    case EnemySkillType.Dash:
+            //        controller.Enemy.SkillDash();
+            //        break;
+            //    case EnemySkillType.SpreadShot:
+            //        break;
+            //}
             controller.ChageState(EnemyStateType.Chase);
         }
     }
